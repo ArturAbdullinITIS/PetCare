@@ -1,13 +1,13 @@
-# MitUp
+# MeetUp
 
-MitUp is a mobile application designed to help people easily organize and join meetings with friends.  
+MeetUp is a mobile application designed to help people easily organize and join meetings with friends.  
 The app allows users to create events on a map, invite friends, chat inside meetings, and manage social connections in one place.
 
 ---
 
 ## Project Goal
 
-The goal of the MitUp project is to build a mobile application that simplifies the process of organizing real-life meetups with friends by combining maps, social features, and chat functionality.
+The goal of the MeetUp project is to build a mobile application that simplifies the process of organizing real-life meetups with friends by combining maps, social features, and chat functionality.
 
 ---
 
