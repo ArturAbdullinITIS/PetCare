@@ -8,8 +8,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
-import ru.tbank.petcare.util.ResourceProvider
-import ru.tbank.petcare.util.ResourceProviderImpl
+import ru.tbank.petcare.utils.ResourceProvider
+import ru.tbank.petcare.utils.ResourceProviderImpl
 
 @Module
 @InstallIn(SingletonComponent::class)

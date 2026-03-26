@@ -15,4 +15,5 @@ interface PetsRepository {
     fun getPetById(petId: String): Flow<Pet>
 
     fun getAllPublicPets(): Flow<List<Pet>>
+
 }

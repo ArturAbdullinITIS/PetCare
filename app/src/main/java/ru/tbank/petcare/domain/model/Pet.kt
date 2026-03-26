@@ -13,7 +13,7 @@ data class Pet(
     val gameScore: Int = 0,
     val ownerId: String = "",
     val weight: Double = 0.0,
-    val dateOfBirth: Date? = null,
+    val dateOfBirth: Long = 0L,
     val iconStatus: IconStatus = IconStatus.NONE,
     val photoUrl: String = ""
 )

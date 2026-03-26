@@ -21,7 +21,7 @@ data class PetDto(
 
     @ServerTimestamp
     @PropertyName("date_of_birth")
-    val dateOfBirth: Date? = null,
+    val dateOfBirth: Long = 0L,
 
     @PropertyName("game_score")
     val gameScore: Int = 0,

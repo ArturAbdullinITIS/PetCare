@@ -1,4 +1,4 @@
-package ru.tbank.petcare.util
+package ru.tbank.petcare.utils
 
 import android.graphics.drawable.Drawable
 import androidx.annotation.ColorRes
