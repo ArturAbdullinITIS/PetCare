@@ -1,6 +1,6 @@
 package ru.tbank.petcare.data.repository
 
-import android.util.Log.e
+import android.util.Log
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.input.key.Key.Companion.I
@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
@@ -41,7 +42,7 @@ class PetsRepositoryImpl @Inject constructor(
             return@callbackFlow
         }
 
-        collection.whereEqualTo("owner_id", currentUser.uid)
+        val listener = collection.whereEqualTo("owner_id", currentUser.uid)
             .orderBy("name", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -54,6 +55,9 @@ class PetsRepositoryImpl @Inject constructor(
 
                 trySend(pets)
             }
+        awaitClose {
+            listener.remove()
+        }
     }.flowOn(Dispatchers.IO)
         .catch { e ->
             emit(emptyList())
@@ -163,7 +167,7 @@ class PetsRepositoryImpl @Inject constructor(
             close(IllegalArgumentException("Pet ID cannot be blank"))
             return@callbackFlow
         }
-        collection.document(petId)
+        val listener = collection.document(petId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -176,13 +180,16 @@ class PetsRepositoryImpl @Inject constructor(
                     close(IllegalStateException("Pet not found"))
                 }
             }
+        awaitClose {
+            listener.remove()
+        }
     }.flowOn(Dispatchers.IO)
         .catch { e ->
             emit(Pet())
         }
 
     override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow{
-        collection.whereEqualTo("is_public", true)
+        val listener = collection.whereEqualTo("is_public", true)
             .orderBy("name", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -195,27 +202,40 @@ class PetsRepositoryImpl @Inject constructor(
 
                 trySend(pets)
             }
+        awaitClose {
+            listener.remove()
+        }
     }.flowOn(Dispatchers.IO)
         .catch {e ->
             emit(emptyList())
         }
 
-    override fun getAllTips(): Flow<List<Tip>> = callbackFlow{
-        val snapshot = firestore.collection("tips")
+    override fun getAllTips(): Flow<List<Tip>> = callbackFlow {
+        val listener = firestore.collection("tips")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
+                if (snapshot == null) {
+                    trySend(emptyList())
+                    return@addSnapshotListener
+                }
 
-        snapshot.addSnapshotListener { snapshot, error ->
-            if(error != null) {
-                close(error)
-                return@addSnapshotListener
+
+                val tips = snapshot.documents.mapNotNull { doc ->
+                    val dto = doc.toObject(TipDto::class.java)
+                    if (dto == null) {
+                        null
+                    } else {
+                        dto.toDomain()
+                    }
+                }
+
+                trySend(tips)
             }
-            val tips = snapshot?.documents?.mapNotNull { documentSnapshot ->
-                documentSnapshot.toObject(TipDto::class.java)?.toDomain()
-            } ?: emptyList()
-
-            trySend(tips)
+        awaitClose {
+            listener.remove()
         }
     }.flowOn(Dispatchers.IO)
-        .catch { e ->
-            emit(emptyList())
-        }
 }
