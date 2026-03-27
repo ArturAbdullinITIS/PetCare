@@ -60,25 +60,25 @@ class MyPetsViewModel @Inject constructor(
 
     private fun loadTips() {
         viewModelScope.launch {
-            _state.update { state ->
-                state.copy(
-                    isTipsLoading = true
-                )
-            }
+            _state.update { it.copy(isTipsLoading = true) }
+
             getAllTipsUseCase()
                 .catch { e ->
-                    _state.update { state ->
-                        state.copy(
+                    _state.update {
+                        it.copy(
                             isTipsLoading = false,
-                            errorMessage = e.message ?: resourceProvider.getString(R.string.unknown_error_mypets)
+                            errorMessage = e.message
+                                ?: resourceProvider.getString(R.string.unknown_error_mypets)
                         )
                     }
                 }
                 .collect { tips ->
-                    _state.update { state ->
-                        state.copy(
+                    val list = tips.shuffled()
+                    _state.update {
+                        it.copy(
                             isTipsLoading = false,
-                            tips = tips,
+                            tips = list,
+                            currentTipIndex = 0,
                             errorMessage = null
                         )
                     }
@@ -86,9 +86,18 @@ class MyPetsViewModel @Inject constructor(
         }
     }
 
-    private fun refresh() {
+    fun refresh() {
         loadPets()
     }
+
+    fun nextTip() {
+        _state.update { state ->
+            val size = state.tips.size
+            if (size == 0) state
+            else state.copy(currentTipIndex = (state.currentTipIndex + 1) % size)
+        }
+    }
+
 
 }
 
@@ -97,5 +106,9 @@ data class MyPetsState(
     val pets: List<Pet> = emptyList(),
     val isPetsLoading: Boolean = false,
     val isTipsLoading: Boolean = false,
-    val errorMessage: String? = null
-)
+    val errorMessage: String? = null,
+    val currentTipIndex: Int = 0
+) {
+    val currentTip: Tip?
+        get() = tips.getOrNull(currentTipIndex)
+}

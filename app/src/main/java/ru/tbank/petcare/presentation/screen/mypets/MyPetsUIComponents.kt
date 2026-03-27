@@ -2,6 +2,11 @@ package ru.tbank.petcare.presentation.screen.mypets
 
 import android.R.attr.fontWeight
 import android.R.attr.text
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,8 +40,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -175,17 +185,18 @@ fun IconStatusUI(
 
 @Composable
 fun TipCard(
-    text: String
+    text: String,
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(48.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        )
+        ),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier.padding(16.dp)
@@ -197,17 +208,26 @@ fun TipCard(
             Spacer(modifier = Modifier.width(8.dp))
             Column(
             ) {
+
                 Text(
                     text = stringResource(R.string.pet_health_tip),
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp
                 )
-                Text(
-                    text = text,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
-                )
+                AnimatedContent(
+                    targetState = text,
+                    transitionSpec = {
+                        fadeIn(animationSpec = tween(300)) togetherWith
+                                fadeOut(animationSpec = tween(300))
+                    }
+                ) { targetText ->
+                    Text(
+                        text = targetText,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f)
+                    )
+                }
             }
         }
     }
@@ -258,12 +278,10 @@ fun QuickActionRow(
     onWalkClick: () -> Unit,
     onGroomingClick: () -> Unit,
     onVetClick: () -> Unit
-
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         QuickActionCard(
@@ -284,6 +302,55 @@ fun QuickActionRow(
     }
 }
 
+@Composable
+fun QuickActionsTitleRow() {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.quick_actions_title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = stringResource(R.string.create_activity).uppercase(),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+        )
+    }
+}
+
+@Composable
+fun YourFamilyTitle() {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+       Text(
+           text = stringResource(R.string.your_family_title),
+           fontSize = 20.sp,
+           fontWeight = FontWeight.ExtraBold
+       )
+    }
+}
+
+@Composable
+fun EmptyPetsTitle(modifier: Modifier = Modifier) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.add_your_first_pet_to_get_started),
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+        )
+    }
+}
 
 @Preview
 @Composable
@@ -324,7 +391,8 @@ fun TipCardPreview() {
         TipCard(
             text = "Consistency is key! Logging daily walks\n" +
                     "helps track long-term mobility and\n" +
-                    "cardiovascular health for your furry friend."
+                    "cardiovascular health for your furry friend.",
+            onClick = {}
         )
     }
 }

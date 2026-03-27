@@ -5,7 +5,7 @@ import com.google.firebase.firestore.PropertyName
 
 data class TipDto(
     @DocumentId
-    var id: String,
+    var id: String = "",
     @PropertyName("text")
-    val text: String
+    var text: String = ""
 )
