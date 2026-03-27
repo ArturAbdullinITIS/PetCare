@@ -24,6 +24,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -72,7 +73,7 @@ fun MyPetsPetCard(
             containerColor = MaterialTheme.colorScheme.surface
         ),
         onClick = {
-            onPetClick
+            onPetClick(pet.id)
         }
     ) {
         Row(
@@ -83,24 +84,26 @@ fun MyPetsPetCard(
         ) {
 
             Box {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .clip(CircleShape)
-                        .background(Color.White)
-                        .padding(3.dp)
+                Surface(
+                    modifier = Modifier.size(80.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.surface,
+                    shadowElevation = 1.dp
                 ) {
-                    AsyncImage(
-                        model = pet.photoUrl,
-                        contentDescription = stringResource(R.string.pets_photo),
-                        modifier = Modifier
-                            .size(80.dp)
-                            .clip(CircleShape),
-                        placeholder = painterResource(R.drawable.photo_placeholder),
-                        contentScale = ContentScale.FillBounds,
-                        error = painterResource(R.drawable.photo_placeholder)
-                    )
+                    Box(modifier = Modifier.padding(3.dp)) {
+                        AsyncImage(
+                            model = pet.photoUrl,
+                            contentDescription = stringResource(R.string.pets_photo),
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .clip(CircleShape),
+                            placeholder = painterResource(R.drawable.photo_placeholder),
+                            contentScale = ContentScale.Crop,
+                            error = painterResource(R.drawable.photo_placeholder)
+                        )
+                    }
                 }
+
                 IconStatusUI(
                     status = pet.iconStatus,
                     modifier = Modifier
@@ -116,7 +119,7 @@ fun MyPetsPetCard(
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceEvenly,
 
-            ) {
+                ) {
                 Text(
                     text = pet.name,
                     fontSize = 18.sp,
@@ -149,7 +152,7 @@ fun IconStatusUI(
         modifier = modifier
             .size(24.dp)
             .clip(CircleShape)
-            .background(Color.White)
+            .background(MaterialTheme.colorScheme.surface)
             .padding(2.dp)
     ) {
         Box(
@@ -175,7 +178,9 @@ fun TipCard(
     text: String
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
         shape = RoundedCornerShape(48.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
@@ -221,13 +226,18 @@ fun QuickActionCard(
         colors = CardDefaults.cardColors(
             containerColor = model.containerColor,
         ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 4.dp,
+            pressedElevation = 8.dp,
+            hoveredElevation = 6.dp
+        ),
         onClick = onClick
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ) {
             Icon(
                 imageVector = model.icon,
                 contentDescription = stringResource(R.string.quick_action, model.title),
