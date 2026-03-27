@@ -19,7 +19,9 @@ import kotlinx.coroutines.withContext
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
 import ru.tbank.petcare.data.remote.firebase.PetDto
+import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.repository.PetsRepository
 import java.io.IOException
 import javax.inject.Inject
@@ -195,6 +197,25 @@ class PetsRepositoryImpl @Inject constructor(
             }
     }.flowOn(Dispatchers.IO)
         .catch {e ->
+            emit(emptyList())
+        }
+
+    override fun getAllTips(): Flow<List<Tip>> = callbackFlow{
+        val snapshot = firestore.collection("tips")
+
+        snapshot.addSnapshotListener { snapshot, error ->
+            if(error != null) {
+                close(error)
+                return@addSnapshotListener
+            }
+            val tips = snapshot?.documents?.mapNotNull { documentSnapshot ->
+                documentSnapshot.toObject(TipDto::class.java)?.toDomain()
+            } ?: emptyList()
+
+            trySend(tips)
+        }
+    }.flowOn(Dispatchers.IO)
+        .catch { e ->
             emit(emptyList())
         }
 }

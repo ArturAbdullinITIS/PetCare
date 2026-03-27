@@ -3,4 +3,9 @@
     <string name="unknown_error_mypets">Unknown error</string>
     <string name="pets_photo">Pets photo</string>
     <string name="icon_status">Icon Status</string>
+    <string name="quick_action">Quick Action %1$s</string>
+    <string name="walk_quick_action_title">Walk</string>
+    <string name="vet_quick_action_title">Vet</string>
+    <string name="grooming_quick_action_title">Grooming</string>
+    <string name="pet_health_tip">Pet Health Tip</string>
 </resources>

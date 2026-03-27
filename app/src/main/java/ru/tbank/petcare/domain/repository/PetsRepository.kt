@@ -2,6 +2,7 @@ package ru.tbank.petcare.domain.repository
 
 import kotlinx.coroutines.flow.Flow
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.Tip
 
 interface PetsRepository {
 
@@ -15,5 +16,7 @@ interface PetsRepository {
     fun getPetById(petId: String): Flow<Pet>
 
     fun getAllPublicPets(): Flow<List<Pet>>
+
+    fun getAllTips(): Flow<List<Tip>>
 
 }

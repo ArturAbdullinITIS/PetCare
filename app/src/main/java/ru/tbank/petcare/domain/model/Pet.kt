@@ -19,12 +19,9 @@ data class Pet(
 )
 
 enum class IconStatus(name: String) {
-    STAR("star"),
     HEART("heart"),
-    SUN("sun"),
-    MOON("moon"),
-    FLAME("flame"),
-    BOLT("bolt"),
+    SPARKLES("sparkles"),
+    STAR("star"),
     NONE("");
 
     companion object {
