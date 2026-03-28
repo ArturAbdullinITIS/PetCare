@@ -16,4 +16,16 @@
     <string name="your_family_title">Your Family</string>
     <string name="create_activity">Create Activity</string>
     <string name="add_your_first_pet_to_get_started">Add your first pet to get started!</string>
+    <string name="icon">%1$s icon</string>
+    <string name="back_icon">Back Icon</string>
+    <string name="nav_bar_icon">Nav Bar Icon</string>
+    <string name="my_pets_title">My Pets</string>
+    <string name="pet_runner_title">Pet Runner</string>
+    <string name="profile_title">Profile</string>
+    <string name="public_profiles_title">Public Profiles</string>
+    <string name="add_pet_title">Add Pet</string>
+    <string name="pet_profile_title">Pet Profile</string>
+    <string name="edit_pet_title">Edit Pet</string>
+    <string name="screen_icon_title">Screen icon</string>
+    <string name="missing_title">Missing title</string>
 </resources>

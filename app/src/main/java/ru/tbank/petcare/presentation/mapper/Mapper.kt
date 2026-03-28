@@ -2,12 +2,15 @@ package ru.tbank.petcare.presentation.mapper
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
+import ru.tbank.petcare.presentation.navigation.NavigationBarRoute
+import ru.tbank.petcare.presentation.navigation.Route
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus

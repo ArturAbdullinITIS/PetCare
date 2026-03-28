@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.AndroidEntryPoint
+import ru.tbank.petcare.presentation.navigation.NavHost
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import java.net.InetAddress
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
         FirebaseFirestore.setLoggingEnabled(true)
         setContent {
             PetCareTheme {
-                MyPetsScreen()
+                NavHost()
             }
         }
     }

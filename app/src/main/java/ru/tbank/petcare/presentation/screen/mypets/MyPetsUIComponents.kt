@@ -193,7 +193,7 @@ fun TipCard(
             .fillMaxWidth(),
         shape = RoundedCornerShape(48.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.8f),
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
             contentColor = MaterialTheme.colorScheme.onSecondaryContainer
         ),
         onClick = onClick
@@ -346,6 +346,7 @@ fun EmptyPetsTitle(modifier: Modifier = Modifier) {
         Text(
             text = stringResource(R.string.add_your_first_pet_to_get_started),
             fontSize = 16.sp,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )

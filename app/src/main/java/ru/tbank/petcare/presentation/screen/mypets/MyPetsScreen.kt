@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 
 
@@ -54,94 +56,62 @@ private fun MyPetsContent(
 ) {
     val state by viewModel.state.collectAsState()
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {},
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(),
-                contentColor = MaterialTheme.colorScheme.surface,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 4.dp,
-                    hoveredElevation = 6.dp,
-                    pressedElevation = 8.dp
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = stringResource(R.string.add_pet_button)
-                )
-            }
-        },
-        topBar = {
-            TopAppBar(
-                title = {
-                    ScreenTitleRow(
-                        name = stringResource(R.string.my_pets_screen_title),
-                        icon = painterResource(R.drawable.ic_pet_care_main)
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background
-                )
+    Column(
+        modifier = modifier.fillMaxSize().padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        QuickActionsTitleRow()
+        QuickActionRow(
+            onWalkClick = {},
+            onGroomingClick = {},
+            onVetClick = {}
+        )
+        if (state.isTipsLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(96.dp),
+                contentAlignment = Alignment.Center
+            ) { CircularProgressIndicator() }
+        } else {
+            TipCard(
+                text = state.currentTip?.text ?: stringResource(R.string.no_tips_available),
+                onClick = { viewModel.nextTip() }
             )
         }
-    ) { innerPadding ->
-        Box(
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-        ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item { QuickActionsTitleRow() }
-
-                item {
-                    QuickActionRow(
-                        onWalkClick = {},
-                        onGroomingClick = {},
-                        onVetClick = {}
-                    )
-                }
-
-                item {
-                    if (state.isTipsLoading) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(96.dp),
-                            contentAlignment = Alignment.Center
-                        ) { CircularProgressIndicator() }
-                    } else {
-                        TipCard(
-                            text = state.currentTip?.text ?: stringResource(R.string.no_tips_available),
-                            onClick = { viewModel.nextTip() }
-                        )
-                    }
-                }
-
-                item { YourFamilyTitle() }
-
-                items(
-                    items = state.pets,
-                    key = { it.id }
-                ) { pet ->
-                    MyPetsPetCard(pet = pet, onPetClick = {})
+        YourFamilyTitle()
+        when {
+            state.isPetsLoading -> {
+                Box(
+                    modifier = Modifier,
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-            if (!state.isPetsLoading && state.pets.isEmpty()) {
+
+            state.pets.isEmpty() -> {
                 EmptyPetsTitle(
                     modifier = Modifier
-                        .align(Alignment.Center)
+                        .fillMaxSize()
                         .padding(horizontal = 16.dp)
                 )
             }
-            if (state.isPetsLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(vertical = 16.dp)
+                    ) {
+                    items(
+                        items = state.pets,
+                        key = { it.id }
+                    ) { pet ->
+                        MyPetsPetCard(pet = pet, onPetClick = {})
+                    }
+                }
             }
         }
     }
 }
+
