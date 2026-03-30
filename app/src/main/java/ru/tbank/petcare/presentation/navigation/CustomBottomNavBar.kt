@@ -62,6 +62,7 @@ fun CustomBottomNavBar(
                 NavigationBarItem(
                     selected = currentRoute == item.route,
                     onClick = { },
+                    enabled = false,
                     icon = {
                         val interactionSource = remember { MutableInteractionSource() }
 

@@ -45,13 +45,17 @@ import ru.tbank.petcare.presentation.common.ScreenTitleRow
 
 @Composable
 fun MyPetsScreen(
+    onNavigateToProfile: (String) -> Unit
 ) {
-    MyPetsContent()
+    MyPetsContent(
+        onNavigateToProfile = onNavigateToProfile
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun MyPetsContent(
+    onNavigateToProfile: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPetsViewModel = hiltViewModel()
 ) {
@@ -109,7 +113,10 @@ private fun MyPetsContent(
                         items = state.pets,
                         key = { it.id }
                     ) { pet ->
-                        MyPetsPetCard(pet = pet, onPetClick = {})
+                        MyPetsPetCard(pet = pet, onPetClick = {
+                            onNavigateToProfile(pet.id)
+                        }
+                        )
                     }
                 }
             }

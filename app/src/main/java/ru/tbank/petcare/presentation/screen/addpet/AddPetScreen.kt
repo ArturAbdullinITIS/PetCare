@@ -55,7 +55,7 @@ fun AddPetScreen(
 }
 
 @Composable
-fun AddPetContent(
+private fun AddPetContent(
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddPetViewModel = hiltViewModel()
@@ -239,7 +239,5 @@ private fun filterWeightInput(raw: String, maxLen: Int = 5): String {
         }
     }
 
-    val noTrailingDot = filtered.trimEnd('.')
-
-    return noTrailingDot.take(maxLen)
+    return filtered.take(maxLen)
 }

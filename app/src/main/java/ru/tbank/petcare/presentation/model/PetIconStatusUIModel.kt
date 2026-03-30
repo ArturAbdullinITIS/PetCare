@@ -10,5 +10,4 @@ data class PetIconStatusUIModel(
     val imageVector: ImageVector,
     val backgroundColor: Color,
     val iconTint: Color,
-    val iconSize: Dp = 14.dp
 )

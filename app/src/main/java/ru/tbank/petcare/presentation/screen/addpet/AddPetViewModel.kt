@@ -123,5 +123,5 @@ data class AddPetState(
 ) {
     val isButtonEnabled: Boolean
         get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank()
-                && petUIModel.dateOfBirth != 0L
+                && petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
 }

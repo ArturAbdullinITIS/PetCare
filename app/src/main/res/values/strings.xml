@@ -52,4 +52,13 @@
     <string name="pet_profile_placeholder">Pet profile placeholder</string>
     <string name="pet_profile_picture">Pet Profile Picture</string>
     <string name="calendar_icon">Calendar Icon</string>
+    <string name="pet_profile_pic">Pet Profile Pic</string>
+    <string name="features_notes_card">Features / Notes</string>
+    <string name="age">Age</string>
+    <string name="gender_parameter">Gender</string>
+    <string name="weight">Weight</string>
+    <string name="pet_is_public_icon">Pet is public Icon</string>
+    <string name="create_activity_button">Create Activity</string>
+    <string name="profile_button">Profile button</string>
+    <string name="edit_profile">Edit Profile</string>
 </resources>

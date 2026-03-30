@@ -23,6 +23,7 @@ import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
+import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 
 
@@ -93,7 +94,11 @@ fun NavHost(
             },
             entryProvider = entryProvider {
                 entry<NavigationBarRoute.MyPets> {
-                    MyPetsScreen()
+                    MyPetsScreen(
+                        onNavigateToProfile = { petId ->
+                            backStack.add(Route.PetProfile(petId))
+                        }
+                    )
                 }
                 entry<NavigationBarRoute.Public> {
                     PublicProfilesScreen()
@@ -102,6 +107,14 @@ fun NavHost(
                     AddPetScreen(
                         onAddClick = {
                             backStack.removeLastOrNull()
+                        }
+                    )
+                }
+                entry<Route.PetProfile> { route ->
+                    PetProfileScreen(
+                        petId = route.petId,
+                        onNavigateToEdit = {
+                            backStack.add(Route.EditPet(route.petId))
                         }
                     )
                 }

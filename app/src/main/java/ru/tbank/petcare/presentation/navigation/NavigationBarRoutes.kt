@@ -14,7 +14,7 @@ sealed interface Route {
     data object AddPet : Route
 
     @Serializable
-    data object EditPet : Route
+    data class EditPet(val petId: String) : Route
 }
 
 @Serializable

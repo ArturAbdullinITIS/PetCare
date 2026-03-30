@@ -32,9 +32,9 @@ enum class IconStatus(name: String) {
     }
 }
 
-enum class Gender(name: String) {
-    MALE("male"),
-    FEMALE("female"),
+enum class Gender(value: String) {
+    MALE("Male"),
+    FEMALE("Female"),
     UNKNOWN("");
 
     companion object {

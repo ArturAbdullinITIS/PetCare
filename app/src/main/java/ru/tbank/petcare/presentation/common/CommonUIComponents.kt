@@ -10,11 +10,14 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.expandVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -42,6 +45,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -52,6 +56,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.presentation.mapper.getIconStatusUI
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
 
@@ -178,6 +184,38 @@ fun CustomButtonPreview() {
             text = "Custom Button",
             enabled = true
         )
+    }
+}
+
+@Composable
+fun IconStatusUI(
+    status: IconStatus,
+    modifier: Modifier = Modifier,
+    iconSize: Int
+) {
+    val model = getIconStatusUI(status) ?: return
+
+    Box(
+        modifier = modifier
+            .size(iconSize.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(2.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(CircleShape)
+                .background(model.backgroundColor),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = model.imageVector,
+                contentDescription = stringResource(R.string.icon_status),
+                tint = model.iconTint,
+                modifier = Modifier.size((iconSize/3).dp)
+            )
+        }
     }
 }
 

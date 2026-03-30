@@ -31,7 +31,6 @@ fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
                 imageVector = HeartIconStatus,
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                 iconTint = MaterialTheme.colorScheme.onPrimaryContainer,
-                iconSize = 8.dp
             )
         }
         IconStatus.SPARKLES -> {
@@ -39,7 +38,6 @@ fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
                 imageVector = SparklesIconStatus,
                 backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
                 iconTint = MaterialTheme.colorScheme.onTertiaryContainer,
-                iconSize = 10.dp
             )
         }
         IconStatus.STAR -> {
@@ -47,7 +45,6 @@ fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
                 imageVector = StarIconStatus,
                 backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                 iconTint = MaterialTheme.colorScheme.onSecondaryContainer,
-                iconSize = 10.dp
             )
         }
     }
@@ -112,6 +109,5 @@ fun PetForm.toDomain(): Pet {
         photoUrl = photoUrl
     )
 }
-
 
 

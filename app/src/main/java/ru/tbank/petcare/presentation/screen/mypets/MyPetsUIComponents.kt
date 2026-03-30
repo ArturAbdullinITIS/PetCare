@@ -55,6 +55,7 @@ import coil3.compose.AsyncImage
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.utils.DateFormater
 import ru.tbank.petcare.presentation.mapper.getIconStatusUI
@@ -113,7 +114,8 @@ fun MyPetsPetCard(
                     status = pet.iconStatus,
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(2.dp)
+                        .padding(2.dp),
+                    iconSize = 24
                 )
             }
 
@@ -146,36 +148,7 @@ fun MyPetsPetCard(
 }
 
 
-@Composable
-fun IconStatusUI(
-    status: IconStatus,
-    modifier: Modifier = Modifier
-) {
-    val model = getIconStatusUI(status) ?: return
 
-    Box(
-        modifier = modifier
-            .size(24.dp)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(2.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(CircleShape)
-                .background(model.backgroundColor),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = model.imageVector,
-                contentDescription = stringResource(R.string.icon_status),
-                tint = model.iconTint,
-                modifier = Modifier.size(model.iconSize)
-            )
-        }
-    }
-}
 
 
 @Composable
@@ -366,7 +339,7 @@ fun MyPetsPetCardPreview() {
                 breed = "Golden Retriever",
                 photoUrl = "",
                 dateOfBirth = System.currentTimeMillis() - 1000L * 60 * 60 * 24 * 365 * 3,
-                iconStatus = IconStatus.STAR
+                iconStatus = IconStatus.SPARKLES
             ),
             onPetClick = {}
         )
