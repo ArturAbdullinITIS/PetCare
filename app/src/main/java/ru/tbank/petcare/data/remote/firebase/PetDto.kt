@@ -10,38 +10,48 @@ data class PetDto(
     @DocumentId
     var id: String = "",
 
-    @PropertyName("name")
-    val name: String = "",
+    @get:PropertyName("name")
+    @set:PropertyName("name")
+    var name: String = "",
 
-    @PropertyName("gender")
-    val gender: String = "",
+    @get:PropertyName("gender")
+    @set:PropertyName("gender")
+    var gender: String = "",
 
-    @PropertyName("breed")
-    val breed: String = "",
+    @get:PropertyName("breed")
+    @set:PropertyName("breed")
+    var breed: String = "",
 
     @ServerTimestamp
-    @PropertyName("date_of_birth")
-    val dateOfBirth: Long = 0L,
+    @get:PropertyName("date_of_birth")
+    @set:PropertyName("date_of_birth")
+    var dateOfBirth: Long = 0L,
 
-    @PropertyName("game_score")
-    val gameScore: Int = 0,
+    @get:PropertyName("game_score")
+    @set:PropertyName("game_score")
+    var gameScore: Int = 0,
 
-    @PropertyName("icon_status")
-    val iconStatus: String = "",
+    @get:PropertyName("icon_status")
+    @set:PropertyName("icon_status")
+    var iconStatus: String = "",
 
-    @PropertyName("is_public")
-    val isPublic: Boolean = false,
+    @get:PropertyName("is_public")
+    @set:PropertyName("is_public")
+    var isPublic: Boolean = false,
 
-    @PropertyName("notes")
-    val notes: String = "",
+    @get:PropertyName("note")
+    @set:PropertyName("note")
+    var note: String = "",
 
-    @PropertyName("owner_id")
-    val ownerId: String = "",
+    @get:PropertyName("owner_id")
+    @set:PropertyName("owner_id")
+    var ownerId: String = "",
 
-    @PropertyName("photo_url")
-    val photoUrl: String = "",
+    @get:PropertyName("photo_url")
+    @set:PropertyName("photo_url")
+    var photoUrl: String = "",
 
-    @PropertyName("weight")
-    val weight: Double = 0.0
-
+    @get:PropertyName("weight")
+    @set:PropertyName("weight")
+    var weight: Double = 0.0
 )

@@ -44,7 +44,8 @@ import ru.tbank.petcare.presentation.common.ScreenTitleRow
 
 
 @Composable
-fun MyPetsScreen() {
+fun MyPetsScreen(
+) {
     MyPetsContent()
 }
 
@@ -83,7 +84,7 @@ private fun MyPetsContent(
         when {
             state.isPetsLoading -> {
                 Box(
-                    modifier = Modifier,
+                    modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator()
@@ -101,7 +102,8 @@ private fun MyPetsContent(
             else -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(vertical = 16.dp)
+                    contentPadding = PaddingValues(vertical = 16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                     items(
                         items = state.pets,

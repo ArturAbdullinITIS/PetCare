@@ -36,23 +36,17 @@ class PetsRepositoryImpl @Inject constructor(
 
     override fun getCurrentUsersPets(): Flow<List<Pet>> = callbackFlow {
         val currentUser = firebaseAuth.currentUser
-        if (currentUser == null) {
-            trySend(emptyList())
-            close(IllegalStateException("Not Authenticated"))
-            return@callbackFlow
-        }
-
-        val listener = collection.whereEqualTo("owner_id", currentUser.uid)
-            .orderBy("name", Query.Direction.ASCENDING)
+        val listener = collection.whereEqualTo("owner_id", "test_owner_id_2")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    Log.e("PetsRepository", "getCurrentUsersPets listen failed", error)
                     close(error)
                     return@addSnapshotListener
                 }
                 val pets = snapshot?.documents?.mapNotNull { document ->
                     document.toObject(PetDto::class.java)?.toDomain()
                 } ?: emptyList()
-
+                Log.d("PetsRepo", "Fetched ${pets.size} pets for current user")
                 trySend(pets)
             }
         awaitClose {
@@ -61,14 +55,15 @@ class PetsRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
         .catch { e ->
             emit(emptyList())
+            Log.d("PetsRepo","failed to fetch: $e")
         }
 
     override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO){
         try {
-            if (pet.name.isBlank()) {
-                return@withContext Result.failure(IllegalStateException("Name cannot be blank"))
-            }
-            val dto = pet.toDto()
+
+            val petToSave = pet.copy(id = "", ownerId = "test_owner_id_2")
+
+            val dto = petToSave.toDto()
 
             val docRef = collection.add(dto).await()
 

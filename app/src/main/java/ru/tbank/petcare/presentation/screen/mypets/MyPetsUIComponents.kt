@@ -1,6 +1,7 @@
 package ru.tbank.petcare.presentation.screen.mypets
 
 import android.R.attr.fontWeight
+import android.R.attr.onClick
 import android.R.attr.text
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -71,13 +72,7 @@ fun MyPetsPetCard(
     val age = DateFormater.formatAgeYearsMonths(pet.dateOfBirth)
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp,
-            hoveredElevation = 6.dp
-        ),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(36.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -245,11 +240,6 @@ fun QuickActionCard(
         modifier = modifier.aspectRatio(1.1f),
         colors = CardDefaults.cardColors(
             containerColor = model.containerColor,
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp,
-            hoveredElevation = 6.dp
         ),
         onClick = onClick
     ) {

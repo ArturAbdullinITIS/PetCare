@@ -60,8 +60,20 @@ val bottomBarRoutesList = listOf(
     )
 )
 
-fun Route.getConfig(): RouteConfig? {
+fun NavigationBarRoute.getConfig(): RouteConfig? {
     return bottomBarRoutesList.find { it.route == this }
+}
+
+fun getRouteTitle(route: Route): Int {
+    return when (route) {
+        is NavigationBarRoute.MyPets -> R.string.my_pets_screen_title
+        is NavigationBarRoute.Public -> R.string.public_profiles_title
+        is NavigationBarRoute.PetRunner -> R.string.pet_runner_title
+        is NavigationBarRoute.Profile -> R.string.profile_title
+        is Route.PetProfile -> R.string.pet_profile_title
+        is Route.AddPet -> R.string.add_pet_screen_title
+        is Route.EditPet -> R.string.edit_pet_screen_title
+    }
 }
 
 

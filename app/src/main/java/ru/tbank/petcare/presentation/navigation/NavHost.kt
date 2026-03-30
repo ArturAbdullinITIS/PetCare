@@ -21,6 +21,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
+import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 
@@ -41,14 +42,17 @@ fun NavHost(
         topBar = {
             TopAppBar(
                 title = {
-                    if(isBottomBar) {
+                    if (isBottomBar) {
                         MainScreenTitleRow(
                             name = currentRoute.getConfig()?.titleRes ?: R.string.missing_title,
                             icon = currentRoute.getConfig()?.icon ?: R.drawable.photo_placeholder
                         )
                     } else {
                         ScreenTitleRow(
-                            name = currentRoute.getConfig()?.titleRes ?: R.string.missing_title
+                            name = getRouteTitle(currentRoute),
+                            onClick = {
+                                backStack.removeLastOrNull()
+                            }
                         )
                     }
                 },
@@ -58,14 +62,16 @@ fun NavHost(
             )
         },
         floatingActionButton = {
-            if(currentRoute is NavigationBarRoute.MyPets) {
+            if (currentRoute is NavigationBarRoute.MyPets) {
                 CustomFAB(
-                    onClick = {}
+                    onClick = {
+                        backStack.add(Route.AddPet)
+                    }
                 )
             }
         },
         bottomBar = {
-            if(isBottomBar) {
+            if (isBottomBar) {
                 CustomBottomNavBar(
                     currentRoute = currentRoute,
                     onSelected = { route ->
@@ -81,7 +87,7 @@ fun NavHost(
             modifier = modifier.padding(innerPadding),
             backStack = backStack,
             onBack = {
-                if(backStack.size > 1) {
+                if (backStack.size > 1) {
                     backStack.removeLastOrNull()
                 }
             },
@@ -91,6 +97,13 @@ fun NavHost(
                 }
                 entry<NavigationBarRoute.Public> {
                     PublicProfilesScreen()
+                }
+                entry<Route.AddPet> {
+                    AddPetScreen(
+                        onAddClick = {
+                            backStack.removeLastOrNull()
+                        }
+                    )
                 }
             }
         )

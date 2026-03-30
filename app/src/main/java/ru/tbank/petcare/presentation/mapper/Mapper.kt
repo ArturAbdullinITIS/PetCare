@@ -5,7 +5,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
@@ -82,4 +85,33 @@ fun getQuickActionUI(type: QuickActionType): QuickActionUIModel {
         }
     }
 }
+
+
+@Composable
+fun Gender.toIndex(): Int {
+    return when(this) {
+        Gender.MALE -> 0
+        Gender.FEMALE -> 1
+        Gender.UNKNOWN -> 2
+    }
+}
+
+fun PetForm.toDomain(): Pet {
+    return Pet(
+        id = "",
+        ownerId = "",
+        gameScore = 0,
+        name = name,
+        breed = breed,
+        gender = gender,
+        isPublic = isPublic,
+        note = note,
+        weight = weight.toDouble(),
+        dateOfBirth = dateOfBirth,
+        iconStatus = iconStatus,
+        photoUrl = photoUrl
+    )
+}
+
+
 

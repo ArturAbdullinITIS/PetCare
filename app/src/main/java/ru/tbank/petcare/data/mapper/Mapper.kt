@@ -15,7 +15,7 @@ fun PetDto.toDomain(): Pet {
         breed = breed,
         gender = Gender.getGenderFromValue(gender),
         isPublic = isPublic,
-        notes = notes,
+        note = note,
         gameScore = gameScore,
         ownerId = ownerId,
         weight = weight,
@@ -27,7 +27,6 @@ fun PetDto.toDomain(): Pet {
 
 fun Pet.toDto(): PetDto {
     return PetDto(
-        id = id,
         name = name,
         gender = gender.name,
         breed = breed,
@@ -35,7 +34,7 @@ fun Pet.toDto(): PetDto {
         gameScore = gameScore,
         iconStatus = iconStatus.name,
         isPublic = isPublic,
-        notes = notes,
+        note = note,
         ownerId = ownerId,
         photoUrl = photoUrl,
         weight = weight
