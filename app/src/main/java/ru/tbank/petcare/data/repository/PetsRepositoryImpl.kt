@@ -36,66 +36,73 @@ class PetsRepositoryImpl @Inject constructor(
     private val collection = firestore.collection("pets")
 
     override fun getCurrentUsersPets(): Flow<List<Pet>> = callbackFlow {
-        val currentUser = firebaseAuth.currentUser
-        val listener = collection.whereEqualTo("owner_id", "test_owner_id_2")
+        val currentUserId = firebaseAuth.currentUser?.uid
+        if (currentUserId == null) {
+            trySend(emptyList())
+            close(IllegalStateException("Not Authenticated"))
+            return@callbackFlow
+        }
+
+        val listener = collection
+            .whereEqualTo("owner_id", currentUserId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e("PetsRepository", "getCurrentUsersPets listen failed", error)
                     close(error)
                     return@addSnapshotListener
                 }
+
                 val pets = snapshot?.documents?.mapNotNull { document ->
                     document.toObject(PetDto::class.java)?.toDomain()
                 } ?: emptyList()
-                Log.d("PetsRepo", "Fetched ${pets.size} pets for current user")
+
+                Log.d("PetsRepo", "Fetched ${pets.size} pets for current user=$currentUserId")
                 trySend(pets)
             }
-        awaitClose {
-            listener.remove()
-        }
+
+        awaitClose { listener.remove() }
     }.flowOn(Dispatchers.IO)
         .catch { e ->
             emit(emptyList())
-            Log.d("PetsRepo","failed to fetch: $e")
+            Log.d("PetsRepo", "failed to fetch: $e")
         }
 
-    override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO){
+    override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO) {
         try {
+            val currentUserId = firebaseAuth.currentUser?.uid
+                ?: return@withContext Result.failure(IllegalStateException("Not Authenticated"))
 
-            val petToSave = pet.copy(id = "", ownerId = "test_owner_id_2")
-
+            val petToSave = pet.copy(id = "", ownerId = currentUserId)
             val dto = petToSave.toDto()
 
             val docRef = collection.add(dto).await()
-
             val savedPet = dto.copy(id = docRef.id)
 
             Result.success(savedPet.toDomain())
         } catch (e: FirebaseFirestoreException) {
             when (e.code) {
-                FirebaseFirestoreException.Code.PERMISSION_DENIED -> {
+                FirebaseFirestoreException.Code.PERMISSION_DENIED ->
                     Result.failure(SecurityException("Not authorized to add pet"))
-                }
 
-                FirebaseFirestoreException.Code.UNAVAILABLE -> {
+                FirebaseFirestoreException.Code.UNAVAILABLE ->
                     Result.failure(IOException("Network unavailable"))
-                }
 
-                else -> {
-                    Result.failure(e)
-                }
+                else -> Result.failure(e)
             }
         } catch (e: Exception) {
             Result.failure(e)
         }
-
     }
+
 
     override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO) {
         try {
             if (pet.id.isBlank()) {
                 return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
             }
+
+            val currentUserId = firebaseAuth.currentUser?.uid
+                ?: return@withContext Result.failure(IllegalStateException("Not Authenticated"))
 
             val updates = mapOf(
                 "name" to pet.name,
@@ -107,7 +114,8 @@ class PetsRepositoryImpl @Inject constructor(
                 "is_public" to pet.isPublic,
                 "note" to pet.note,
                 "photo_url" to pet.photoUrl,
-                "game_score" to pet.gameScore
+                "game_score" to pet.gameScore,
+                "owner_id" to currentUserId
             )
 
             collection.document(pet.id).set(updates, SetOptions.merge()).await()
@@ -174,27 +182,26 @@ class PetsRepositoryImpl @Inject constructor(
             emit(Pet())
         }
 
-    override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow{
-        val listener = collection.whereEqualTo("is_public", true)
+    override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow {
+        val listener = collection
+            .whereEqualTo("is_public", true)
             .orderBy("name", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
                     return@addSnapshotListener
                 }
+
                 val pets = snapshot?.documents?.mapNotNull { document ->
                     document.toObject(PetDto::class.java)?.toDomain()
                 } ?: emptyList()
 
                 trySend(pets)
             }
-        awaitClose {
-            listener.remove()
-        }
+
+        awaitClose { listener.remove() }
     }.flowOn(Dispatchers.IO)
-        .catch {e ->
-            emit(emptyList())
-        }
+        .catch { e -> emit(emptyList()) }
 
     override fun getAllTips(): Flow<List<Tip>> = callbackFlow {
         val listener = firestore.collection("tips")
