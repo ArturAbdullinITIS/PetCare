@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.googleid)
 
     // Hilt
     ksp(libs.hilt.android.compiler)
@@ -63,6 +64,7 @@ dependencies {
     // Navigation
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)
+
 
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)

@@ -23,9 +23,11 @@ import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
+import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
+import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +36,7 @@ fun NavHost(
     modifier: Modifier = Modifier
 ) {
     val backStack = rememberSaveable {
-        mutableStateListOf<Route>(NavigationBarRoute.MyPets)
+        mutableStateListOf<Route>(Route.Register)
     }
     val currentRoute = backStack.lastOrNull() ?: NavigationBarRoute.MyPets
 
@@ -124,6 +126,28 @@ fun NavHost(
                         petId = route.petId,
                         onEditClick = {
                             backStack.removeLastOrNull()
+                        }
+                    )
+                }
+                entry<Route.Login> { route ->
+                    LoginScreen(
+                        onLoginSuccess = {
+                            backStack.clear()
+                            backStack.add(NavigationBarRoute.MyPets)
+                        },
+                        onNavigateToRegistration = {
+                            backStack.add(Route.Register)
+                        }
+                    )
+                }
+                entry<Route.Register> { route ->
+                    RegistrationScreen(
+                        onNavigateToLogin = {
+                            backStack.add(Route.Login)
+                        },
+                        onRegisterSuccess = {
+                            backStack.clear()
+                            backStack.add(NavigationBarRoute.MyPets)
                         }
                     )
                 }
