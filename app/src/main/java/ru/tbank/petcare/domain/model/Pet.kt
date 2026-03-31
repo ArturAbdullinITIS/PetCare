@@ -1,8 +1,5 @@
 package ru.tbank.petcare.domain.model
 
-import com.google.firebase.firestore.ServerTimestamp
-import java.util.Date
-
 data class Pet(
     val id: String = "",
     val name: String = "",
@@ -23,7 +20,6 @@ enum class IconStatus(name: String) {
     HEART("heart"),
     SPARKLES("sparkles"),
     STAR("star");
-
 
     companion object {
         fun getIconStatusFromValue(value: String): IconStatus {

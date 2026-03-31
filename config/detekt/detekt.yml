@@ -1,0 +1,5 @@
+build:
+  maxIssues: 0
+
+formatting:
+  active: true

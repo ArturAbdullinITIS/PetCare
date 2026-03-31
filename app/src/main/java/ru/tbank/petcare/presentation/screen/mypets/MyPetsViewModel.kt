@@ -2,13 +2,11 @@ package ru.tbank.petcare.presentation.screen.mypets
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.common.cache.LoadingCache
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.flow.updateAndGet
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Pet
@@ -93,12 +91,13 @@ class MyPetsViewModel @Inject constructor(
     fun nextTip() {
         _state.update { state ->
             val size = state.tips.size
-            if (size == 0) state
-            else state.copy(currentTipIndex = (state.currentTipIndex + 1) % size)
+            if (size == 0) {
+                state
+            } else {
+                state.copy(currentTipIndex = (state.currentTipIndex + 1) % size)
+            }
         }
     }
-
-
 }
 
 data class MyPetsState(

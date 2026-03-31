@@ -45,12 +45,8 @@ import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
-import ru.tbank.petcare.presentation.screen.addpet.AddPetCommand
-import ru.tbank.petcare.presentation.screen.addpet.AddPetViewModel
-import ru.tbank.petcare.presentation.screen.petProfile.PetProfileViewModel
 import ru.tbank.petcare.utils.DateFormater
 import ru.tbank.petcare.utils.filterWeightInput
-
 
 @Composable
 fun EditPetScreen(
@@ -158,7 +154,6 @@ private fun EditPetContent(
                     value = state.petUIModel.weight,
                     onValueChange = { text ->
                         viewModel.processCommand(EditPetCommand.InputWeight(filterWeightInput(text)))
-
                     },
                     placeholder = stringResource(R.string.weight_pet_placeholder),
                     label = stringResource(R.string.weight_kg),
@@ -236,4 +231,3 @@ private fun EditPetContent(
         }
     }
 }
-

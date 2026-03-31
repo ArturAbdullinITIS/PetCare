@@ -26,7 +26,6 @@ val OnTertiaryLight = Color(0xFF1E2466)
 val OutlineLight = Color(0xFF1B1B1B).copy(alpha = 0.12f)
 val OutlineVariantLight = Color(0xFF1B1B1B).copy(alpha = 0.08f)
 
-
 // Pet Care dark theme
 val PrimaryDark = Color(0xFF94EFCA)
 val SecondaryDark = Color(0xFFFFBCD7)

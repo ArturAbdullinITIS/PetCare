@@ -65,7 +65,6 @@ import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
 import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import java.util.Locale
-import kotlin.math.min
 
 @Composable
 fun PublicProfileCardSwitch(
@@ -128,7 +127,6 @@ fun PublicProfileCardSwitch(
     }
 }
 
-
 @Composable
 fun CustomTextField(
     modifier: Modifier = Modifier,
@@ -180,7 +178,6 @@ fun CustomTextField(
             minLines = minLines
         )
     }
-
 }
 
 @Composable
@@ -195,6 +192,7 @@ fun LabelText(
         letterSpacing = 1.1.sp
     )
 }
+
 @Composable
 fun SelectableIconStatus(
     content: @Composable () -> Unit,
@@ -206,17 +204,27 @@ fun SelectableIconStatus(
         shape = CircleShape,
         border = if (isSelected) {
             BorderStroke(2.dp, MaterialTheme.colorScheme.primaryContainer)
-        } else null,
-        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f) else MaterialTheme.colorScheme.onSurface.copy(
-            alpha = 0.1f
-        ),
+        } else {
+            null
+        },
+        color = if (isSelected) {
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.1f)
+        } else {
+            MaterialTheme.colorScheme.onSurface.copy(
+                alpha = 0.1f
+            )
+        },
     ) {
         IconButton(
             onClick = onClick,
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(
-                    alpha = 0.5f
-                )
+                contentColor = if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.5f
+                    )
+                }
             )
         ) {
             content()
@@ -267,7 +275,7 @@ fun SelectableIconStatusRow(
     Column(
         modifier = Modifier.fillMaxWidth(),
 
-        ) {
+    ) {
         LabelText(
             text = stringResource(R.string.select_icon)
         )
@@ -301,11 +309,10 @@ fun SelectableIconStatusRow(
                 )
                 Spacer(modifier = Modifier.width(16.dp))
             }
-
         }
     }
-
 }
+
 @Composable
 fun CustomSegmentedControlButton(
     currentGender: Gender,
@@ -347,10 +354,11 @@ fun CustomSegmentedControlButton(
                         contentPadding = ButtonDefaults.ContentPadding,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (isSelected) MaterialTheme.colorScheme.surface else Color.Transparent,
-                            contentColor = if (isSelected)
+                            contentColor = if (isSelected) {
                                 MaterialTheme.colorScheme.onPrimaryContainer
-                            else
+                            } else {
                                 MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                            }
                         ),
                     ) {
                         Row(
@@ -387,7 +395,6 @@ fun CustomSegmentedControlButton(
             }
         }
     }
-
 }
 
 @Composable
@@ -396,7 +403,7 @@ fun AddPetProfilePicture(
     imageUrl: String
 ) {
     Column {
-        Box{
+        Box {
             Box(
                 modifier = Modifier
                     .size(128.dp)
@@ -404,17 +411,19 @@ fun AddPetProfilePicture(
                     .background(MaterialTheme.colorScheme.background)
                     .padding(4.dp),
             ) {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .clip(CircleShape)
-                    .background(
-                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
-                    )
-                    .clickable(
-                        onClick = onClick
-                    ),
-                    contentAlignment = Alignment.Center) {
-                    if(imageUrl.isBlank()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .clip(CircleShape)
+                        .background(
+                            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.2f)
+                        )
+                        .clickable(
+                            onClick = onClick
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (imageUrl.isBlank()) {
                         Icon(
                             imageVector = Icons.Default.Photo,
                             contentDescription = stringResource(R.string.pet_profile_placeholder),
@@ -475,7 +484,6 @@ fun AddPetProfilePicturePreview() {
     PetCareTheme {
         AddPetProfilePicture(
             onClick = {
-
             },
             imageUrl = ""
         )
@@ -493,12 +501,11 @@ fun SelectableIconStatusRowPreview() {
     }
 }
 
-
 @Preview
 @Composable
 fun PublicProfileCardPreview() {
     PetCareTheme {
-        PublicProfileCardSwitch (
+        PublicProfileCardSwitch(
             onCheckedChanged = {}
         )
     }
@@ -535,14 +542,3 @@ fun CustomTextFieldPreview() {
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
-

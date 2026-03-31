@@ -7,7 +7,6 @@ import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.Tip
 
-
 fun PetDto.toDomain(): Pet {
     return Pet(
         id = id,

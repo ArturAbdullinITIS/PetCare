@@ -17,15 +17,13 @@ import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.presentation.model.PetForm
-import ru.tbank.petcare.presentation.screen.addpet.AddPetCommand
-
 
 @HiltViewModel(assistedFactory = EditPetViewModel.Factory::class)
 class EditPetViewModel @AssistedInject constructor(
     @Assisted("pet_id") private val petId: String,
     private val getPetUseCase: GetPetUseCase,
     private val editPetUseCase: EditPetUseCase
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(EditPetState())
     val state = _state.asStateFlow()
 
@@ -35,14 +33,14 @@ class EditPetViewModel @AssistedInject constructor(
 
     private fun loadPet() {
         viewModelScope.launch {
-            getPetUseCase(petId).collect{ pet ->
+            getPetUseCase(petId).collect { pet ->
                 _state.value = EditPetState(petUIModel = pet.toForm())
             }
         }
     }
 
     fun processCommand(command: EditPetCommand) {
-        when(command) {
+        when (command) {
             EditPetCommand.EditPet -> {
                 val pet = state.value.petUIModel.toDomain()
                 viewModelScope.launch {
@@ -125,23 +123,22 @@ class EditPetViewModel @AssistedInject constructor(
 }
 
 sealed interface EditPetCommand {
-    data class InputName(val name: String): EditPetCommand
-    data class ChangeIconStatus(val iconStatus: IconStatus): EditPetCommand
-    data class InputBreed(val breed: String): EditPetCommand
-    data class InputWeight(val weight: String): EditPetCommand
-    data class InputDateOfBirth(val dateOfBirth: Long): EditPetCommand
-    data class ChangeGender(val gender: Gender): EditPetCommand
-    data class InputNotes(val note: String): EditPetCommand
-    data class AddPhotoUrl(val url: String): EditPetCommand
-    object IsPublic: EditPetCommand
-    object EditPet: EditPetCommand
+    data class InputName(val name: String) : EditPetCommand
+    data class ChangeIconStatus(val iconStatus: IconStatus) : EditPetCommand
+    data class InputBreed(val breed: String) : EditPetCommand
+    data class InputWeight(val weight: String) : EditPetCommand
+    data class InputDateOfBirth(val dateOfBirth: Long) : EditPetCommand
+    data class ChangeGender(val gender: Gender) : EditPetCommand
+    data class InputNotes(val note: String) : EditPetCommand
+    data class AddPhotoUrl(val url: String) : EditPetCommand
+    object IsPublic : EditPetCommand
+    object EditPet : EditPetCommand
 }
-
 
 data class EditPetState(
     val petUIModel: PetForm = PetForm()
 ) {
     val isButtonEnabled: Boolean
-        get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank()
-                && petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
+        get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank() &&
+            petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
 }

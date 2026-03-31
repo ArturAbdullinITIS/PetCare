@@ -18,7 +18,6 @@ class ImageFileManager @Inject constructor(
         val fileName = "IMG_${UUID.randomUUID()}.jpg"
         val file = File(imagesDir, fileName)
 
-
         withContext(Dispatchers.IO) {
             context.contentResolver.openInputStream(url.toUri()).use { inputStream ->
                 file.outputStream().use { outputStream ->
@@ -43,4 +42,3 @@ class ImageFileManager @Inject constructor(
         return url.startsWith(imagesDir.absolutePath)
     }
 }
-

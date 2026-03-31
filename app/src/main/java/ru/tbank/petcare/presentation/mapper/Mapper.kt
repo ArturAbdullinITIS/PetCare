@@ -2,8 +2,6 @@ package ru.tbank.petcare.presentation.mapper
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
@@ -12,15 +10,12 @@ import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
-import ru.tbank.petcare.presentation.navigation.NavigationBarRoute
-import ru.tbank.petcare.presentation.navigation.Route
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
 import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import ru.tbank.petcare.presentation.ui.theme.VetQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
-import javax.inject.Inject
 
 @Composable
 fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
@@ -49,7 +44,6 @@ fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
         }
     }
 }
-
 
 @Composable
 fun getQuickActionUI(type: QuickActionType): QuickActionUIModel {
@@ -83,10 +77,9 @@ fun getQuickActionUI(type: QuickActionType): QuickActionUIModel {
     }
 }
 
-
 @Composable
 fun Gender.toIndex(): Int {
-    return when(this) {
+    return when (this) {
         Gender.MALE -> 0
         Gender.FEMALE -> 1
         Gender.UNKNOWN -> 2
@@ -124,6 +117,3 @@ fun Pet.toForm(): PetForm {
         photoUrl = photoUrl
     )
 }
-
-
-

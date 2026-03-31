@@ -11,7 +11,6 @@ import ru.tbank.petcare.data.repository.PetsRepositoryImpl
 import ru.tbank.petcare.domain.repository.PetsRepository
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 interface FirebaseModule {

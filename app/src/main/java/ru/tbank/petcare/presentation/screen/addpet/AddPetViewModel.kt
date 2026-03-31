@@ -17,13 +17,13 @@ import javax.inject.Inject
 @HiltViewModel
 class AddPetViewModel @Inject constructor(
     private val addPetUseCase: AddPetUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _state = MutableStateFlow(AddPetState())
     val state = _state.asStateFlow()
 
     fun processCommand(command: AddPetCommand) {
-        when(command) {
+        when (command) {
             AddPetCommand.AddPet -> {
                 val pet = state.value.petUIModel.toDomain()
                 viewModelScope.launch {
@@ -98,27 +98,23 @@ class AddPetViewModel @Inject constructor(
     }
 }
 
-
 sealed interface AddPetCommand {
-    data class InputName(val name: String): AddPetCommand
-    data class ChangeIconStatus(val iconStatus: IconStatus): AddPetCommand
-    data class InputBreed(val breed: String): AddPetCommand
-    data class InputWeight(val weight: String): AddPetCommand
-    data class InputDateOfBirth(val dateOfBirth: Long): AddPetCommand
-    data class ChangeGender(val gender: Gender): AddPetCommand
-    data class InputNotes(val note: String): AddPetCommand
-    data class AddPhotoUrl(val url: String): AddPetCommand
-    object IsPublic: AddPetCommand
-    object AddPet: AddPetCommand
+    data class InputName(val name: String) : AddPetCommand
+    data class ChangeIconStatus(val iconStatus: IconStatus) : AddPetCommand
+    data class InputBreed(val breed: String) : AddPetCommand
+    data class InputWeight(val weight: String) : AddPetCommand
+    data class InputDateOfBirth(val dateOfBirth: Long) : AddPetCommand
+    data class ChangeGender(val gender: Gender) : AddPetCommand
+    data class InputNotes(val note: String) : AddPetCommand
+    data class AddPhotoUrl(val url: String) : AddPetCommand
+    object IsPublic : AddPetCommand
+    object AddPet : AddPetCommand
 }
-
-
-
 
 data class AddPetState(
     val petUIModel: PetForm = PetForm(),
 ) {
     val isButtonEnabled: Boolean
-        get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank()
-                && petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
+        get() = petUIModel.name.isNotBlank() && petUIModel.breed.isNotBlank() && petUIModel.weight.isNotBlank() &&
+            petUIModel.dateOfBirth != 0L && !petUIModel.weight.endsWith(".")
 }

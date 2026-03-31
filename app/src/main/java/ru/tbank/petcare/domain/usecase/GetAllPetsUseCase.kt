@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetAllPetsUseCase @Inject constructor(
     private val petsRepository: PetsRepository
-){
+) {
     operator fun invoke(): Flow<List<Pet>> {
         return petsRepository.getCurrentUsersPets()
     }

@@ -8,8 +8,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.windowInsetsEndWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -36,34 +33,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.presentation.common.IconStatusUI
-import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
-import ru.tbank.petcare.utils.DateFormater
-import ru.tbank.petcare.presentation.mapper.getIconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
+import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
-import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
+import ru.tbank.petcare.utils.DateFormater
 
 @Composable
 fun MyPetsPetCard(
@@ -88,7 +77,6 @@ fun MyPetsPetCard(
                 .padding(16.dp)
                 .height(80.dp)
         ) {
-
             Box {
                 Surface(
                     modifier = Modifier.size(80.dp),
@@ -119,14 +107,13 @@ fun MyPetsPetCard(
                 )
             }
 
-
             Column(
                 modifier = Modifier
                     .padding(start = 16.dp)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.SpaceEvenly,
 
-                ) {
+            ) {
                 Text(
                     text = pet.name,
                     fontSize = 18.sp,
@@ -146,10 +133,6 @@ fun MyPetsPetCard(
         }
     }
 }
-
-
-
-
 
 @Composable
 fun TipCard(
@@ -174,9 +157,7 @@ fun TipCard(
                 contentDescription = stringResource(R.string.pet_health_tip)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Column(
-            ) {
-
+            Column {
                 Text(
                     text = stringResource(R.string.pet_health_tip),
                     fontWeight = FontWeight.Bold,
@@ -186,7 +167,7 @@ fun TipCard(
                     targetState = text,
                     transitionSpec = {
                         fadeIn(animationSpec = tween(300)) togetherWith
-                                fadeOut(animationSpec = tween(300))
+                            fadeOut(animationSpec = tween(300))
                     }
                 ) { targetText ->
                     Text(
@@ -200,7 +181,6 @@ fun TipCard(
         }
     }
 }
-
 
 @Composable
 fun QuickActionCard(
@@ -292,11 +272,11 @@ fun YourFamilyTitle() {
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-       Text(
-           text = stringResource(R.string.your_family_title),
-           fontSize = 20.sp,
-           fontWeight = FontWeight.ExtraBold
-       )
+        Text(
+            text = stringResource(R.string.your_family_title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
     }
 }
 
@@ -344,9 +324,7 @@ fun MyPetsPetCardPreview() {
             onPetClick = {}
         )
     }
-
 }
-
 
 @Preview
 @Composable
@@ -354,13 +332,9 @@ fun TipCardPreview() {
     PetCareTheme {
         TipCard(
             text = "Consistency is key! Logging daily walks\n" +
-                    "helps track long-term mobility and\n" +
-                    "cardiovascular health for your furry friend.",
+                "helps track long-term mobility and\n" +
+                "cardiovascular health for your furry friend.",
             onClick = {}
         )
     }
 }
-
-
-
-

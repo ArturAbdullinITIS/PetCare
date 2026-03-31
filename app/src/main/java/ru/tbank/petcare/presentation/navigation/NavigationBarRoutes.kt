@@ -75,5 +75,3 @@ fun getRouteTitle(route: Route): Int {
         is Route.EditPet -> R.string.edit_pet_screen_title
     }
 }
-
-
