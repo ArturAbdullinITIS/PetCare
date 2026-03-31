@@ -1,0 +1,10 @@
+build:
+  maxIssues: 0
+
+formatting:
+  active: true
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 100

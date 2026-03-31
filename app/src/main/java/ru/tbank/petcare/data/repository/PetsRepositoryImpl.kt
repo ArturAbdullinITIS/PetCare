@@ -1,14 +1,8 @@
 package ru.tbank.petcare.data.repository
 
-import android.util.Log
-import androidx.compose.runtime.snapshotFlow
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.input.key.Key.Companion.I
-import com.google.android.play.integrity.internal.l
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
@@ -33,7 +27,13 @@ class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth
 ) : PetsRepository {
-    private val collection = firestore.collection("pets")
+    companion object {
+        private const val OWNER_ID_KEY = "owner_id"
+        private const val COLLECTION_PATH = "pets"
+        private const val IS_PUBLIC_KEY = "is_public"
+        private const val TIPS_KEY = "tips"
+    }
+    private val collection = firestore.collection(COLLECTION_PATH)
 
     override fun getCurrentUsersPets(): Flow<List<Pet>> = callbackFlow {
         val currentUserId = firebaseAuth.currentUser?.uid
@@ -44,10 +44,9 @@ class PetsRepositoryImpl @Inject constructor(
         }
 
         val listener = collection
-            .whereEqualTo("owner_id", currentUserId)
+            .whereEqualTo(OWNER_ID_KEY, currentUserId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e("PetsRepository", "getCurrentUsersPets listen failed", error)
                     close(error)
                     return@addSnapshotListener
                 }
@@ -56,7 +55,6 @@ class PetsRepositoryImpl @Inject constructor(
                     document.toObject(PetDto::class.java)?.toDomain()
                 } ?: emptyList()
 
-                Log.d("PetsRepo", "Fetched ${pets.size} pets for current user=$currentUserId")
                 trySend(pets)
             }
 
@@ -64,7 +62,6 @@ class PetsRepositoryImpl @Inject constructor(
     }.flowOn(Dispatchers.IO)
         .catch { e ->
             emit(emptyList())
-            Log.d("PetsRepo", "failed to fetch: $e")
         }
 
     override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO) {
@@ -93,7 +90,6 @@ class PetsRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
-
 
     override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO) {
         try {
@@ -125,13 +121,13 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deletePet(petId: String): Result<Unit> = withContext(Dispatchers.IO){
+    override suspend fun deletePet(petId: String): Result<Unit> = withContext(Dispatchers.IO) {
         try {
-            if(petId.isBlank()) {
+            if (petId.isBlank()) {
                 return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
             }
             val currentUserId = firebaseAuth.currentUser?.uid
-            if(currentUserId == null) {
+            if (currentUserId == null) {
                 return@withContext Result.failure(IllegalStateException("Not Authenticated"))
             }
 
@@ -156,8 +152,8 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPetById(petId: String): Flow<Pet> = callbackFlow{
-        if(petId.isBlank()) {
+    override fun getPetById(petId: String): Flow<Pet> = callbackFlow {
+        if (petId.isBlank()) {
             close(IllegalArgumentException("Pet ID cannot be blank"))
             return@callbackFlow
         }
@@ -184,8 +180,7 @@ class PetsRepositoryImpl @Inject constructor(
 
     override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow {
         val listener = collection
-            .whereEqualTo("is_public", true)
-            .orderBy("name", Query.Direction.ASCENDING)
+            .whereEqualTo(IS_PUBLIC_KEY, true)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     close(error)
@@ -204,7 +199,7 @@ class PetsRepositoryImpl @Inject constructor(
         .catch { e -> emit(emptyList()) }
 
     override fun getAllTips(): Flow<List<Tip>> = callbackFlow {
-        val listener = firestore.collection("tips")
+        val listener = firestore.collection(TIPS_KEY)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     trySend(emptyList())
@@ -214,7 +209,6 @@ class PetsRepositoryImpl @Inject constructor(
                     trySend(emptyList())
                     return@addSnapshotListener
                 }
-
 
                 val tips = snapshot.documents.mapNotNull { doc ->
                     val dto = doc.toObject(TipDto::class.java)

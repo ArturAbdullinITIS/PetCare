@@ -7,11 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,7 +33,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.decapitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,12 +44,10 @@ import coil3.compose.AsyncImagePainter.State.Empty.painter
 import org.w3c.dom.Text
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.IconStatus
-import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.utils.DateFormater
-import java.util.Locale
 
 @Composable
 fun PetProfileCard(pet: PetForm) {
@@ -168,7 +163,7 @@ fun PetProfileButton(
     bg: Color,
     fg: Color,
     onClick: () -> Unit
-    ) {
+) {
     Button(
         shape = RoundedCornerShape(48.dp),
         colors = ButtonDefaults.buttonColors(
@@ -263,15 +258,21 @@ fun ParameterCard(
         }
     }
 }
+
 @Composable
 fun PublicPetIcon(
     isPublic: Boolean = false
 ) {
-
     Surface(
         modifier = Modifier.size(28.dp),
         shape = CircleShape,
-        color = if(isPublic) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f)
+        color = if (isPublic) {
+            MaterialTheme.colorScheme.primaryContainer
+        } else {
+            MaterialTheme.colorScheme.onSurface.copy(
+                alpha = 0.2f
+            )
+        }
     ) {
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -280,13 +281,18 @@ fun PublicPetIcon(
             Icon(
                 painter = painterResource(R.drawable.ic_public),
                 contentDescription = stringResource(R.string.pet_is_public_icon),
-                tint = if(isPublic)MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                tint = if (isPublic){
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(
+                        alpha = 0.7f
+                    )
+                },
                 modifier = Modifier.size(16.dp)
             )
         }
     }
 }
-
 
 @Composable
 fun NotesCard(
@@ -333,7 +339,6 @@ fun ParameterCardPreview() {
         )
     }
 }
-
 
 @Composable
 @Preview

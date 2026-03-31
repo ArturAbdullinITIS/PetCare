@@ -13,7 +13,6 @@ import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 interface FirebaseModule {

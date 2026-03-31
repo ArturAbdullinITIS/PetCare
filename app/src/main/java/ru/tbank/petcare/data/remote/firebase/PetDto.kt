@@ -3,8 +3,6 @@ package ru.tbank.petcare.data.remote.firebase
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
 import com.google.firebase.firestore.ServerTimestamp
-import ru.tbank.petcare.domain.model.Gender
-import java.util.Date
 
 data class PetDto(
     @DocumentId

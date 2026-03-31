@@ -83,5 +83,3 @@ fun getRouteTitle(route: Route): Int {
         Route.Register -> R.string.register
     }
 }
-
-

@@ -3,10 +3,9 @@ package ru.tbank.petcare.utils
 import android.content.Context
 import android.graphics.drawable.Drawable
 
-
 class ResourceProviderImpl(
     private val context: Context
-): ResourceProvider {
+) : ResourceProvider {
 
     override fun getString(resId: Int): String {
         return context.getString(resId)

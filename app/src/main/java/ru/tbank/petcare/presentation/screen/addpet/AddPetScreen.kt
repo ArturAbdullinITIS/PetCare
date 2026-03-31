@@ -45,7 +45,7 @@ import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
 import ru.tbank.petcare.utils.DateFormater
-
+import ru.tbank.petcare.utils.filterWeightInput
 
 @Composable
 fun AddPetScreen(
@@ -142,8 +142,7 @@ private fun AddPetContent(
                     modifier = Modifier.weight(0.3f),
                     value = state.petUIModel.weight,
                     onValueChange = { text ->
-                            viewModel.processCommand(AddPetCommand.InputWeight(filterWeightInput(text)))
-
+                        viewModel.processCommand(AddPetCommand.InputWeight(filterWeightInput(text)))
                     },
                     placeholder = stringResource(R.string.weight_pet_placeholder),
                     label = stringResource(R.string.weight_kg),
@@ -220,24 +219,4 @@ private fun AddPetContent(
             )
         }
     }
-}
-
-private fun filterWeightInput(raw: String, maxLen: Int = 5): String {
-    val normalized = raw.replace(',', '.')
-
-    val filtered = buildString {
-        var dotUsed = false
-        for (ch in normalized) {
-            when {
-                ch.isDigit() -> append(ch)
-                ch == '.' && !dotUsed -> {
-                    if (isEmpty()) continue
-                    append('.')
-                    dotUsed = true
-                }
-            }
-        }
-    }
-
-    return filtered.take(maxLen)
 }

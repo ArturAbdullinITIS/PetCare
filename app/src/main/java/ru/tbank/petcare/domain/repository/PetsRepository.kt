@@ -18,5 +18,4 @@ interface PetsRepository {
     fun getAllPublicPets(): Flow<List<Pet>>
 
     fun getAllTips(): Flow<List<Tip>>
-
 }

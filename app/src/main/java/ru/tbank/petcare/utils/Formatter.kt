@@ -1,6 +1,5 @@
 package ru.tbank.petcare.utils
 
-
 fun filterWeightInput(raw: String, maxLen: Int = 5): String {
     val normalized = raw.replace(',', '.')
 

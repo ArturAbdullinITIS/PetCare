@@ -2,10 +2,8 @@ package ru.tbank.petcare.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.group
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
@@ -41,7 +39,6 @@ val HeartIconStatus: ImageVector
     }
 
 private var _FontAwesomeHeart: ImageVector? = null
-
 
 val StarIconStatus: ImageVector
     get() {
@@ -153,9 +150,6 @@ val SparklesIconStatus: ImageVector
     }
 
 private var _HeroiconsSparkles: ImageVector? = null
-
-
-
 
 val WalkQuickActionIcon: ImageVector
     get() {
@@ -407,13 +401,3 @@ val PetTipsIcon: ImageVector
     }
 
 private var _MaterialSymbolsLightbulb: ImageVector? = null
-
-
-
-
-
-
-
-
-
-
