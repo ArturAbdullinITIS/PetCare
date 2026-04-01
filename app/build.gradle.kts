@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
+    implementation(libs.googleid)
 
     // Hilt
     ksp(libs.hilt.android.compiler)
