@@ -1,10 +1,13 @@
 package ru.tbank.petcare.data.repository
 
+import android.R.attr.data
+import android.R.attr.name
+import android.util.Log.e
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,24 +17,35 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
+import ru.tbank.petcare.data.mapper.toEntities
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
+import ru.tbank.petcare.data.remote.network.AnimalsApiService
+import ru.tbank.petcare.di.IoDispatcher
+import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
+import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.PetsRepository
-import java.io.IOException
 import javax.inject.Inject
 import kotlin.jvm.java
 
 class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
+    private val animalsApiService: AnimalsApiService
 ) : PetsRepository {
     companion object {
         private const val OWNER_ID_KEY = "owner_id"
         private const val COLLECTION_PATH = "pets"
         private const val IS_PUBLIC_KEY = "is_public"
         private const val TIPS_KEY = "tips"
+
+        private const val PET_ID_ERROR = "Pet ID cannot be blank"
+        private const val NOT_AUTHENTICATED_ERROR = "Not Authenticated"
+        private const val PET_NOT_FOUND_ERROR = "Pet not found"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -39,7 +53,7 @@ class PetsRepositoryImpl @Inject constructor(
         val currentUserId = firebaseAuth.currentUser?.uid
         if (currentUserId == null) {
             trySend(emptyList())
-            close(IllegalStateException("Not Authenticated"))
+            close(IllegalStateException(NOT_AUTHENTICATED_ERROR))
             return@callbackFlow
         }
 
@@ -59,15 +73,19 @@ class PetsRepositoryImpl @Inject constructor(
             }
 
         awaitClose { listener.remove() }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcherIO)
         .catch { e ->
             emit(emptyList())
         }
 
-    override suspend fun addPet(pet: Pet): Result<Pet> = withContext(Dispatchers.IO) {
+    override suspend fun addPet(pet: Pet): ValidationResult<Pet> = withContext(dispatcherIO) {
         try {
             val currentUserId = firebaseAuth.currentUser?.uid
-                ?: return@withContext Result.failure(IllegalStateException("Not Authenticated"))
+                ?: return@withContext ValidationResult(
+                    error = ErrorType.AuthenticationError(
+                        NOT_AUTHENTICATED_ERROR
+                    )
+                )
 
             val petToSave = pet.copy(id = "", ownerId = currentUserId)
             val dto = petToSave.toDto()
@@ -75,30 +93,45 @@ class PetsRepositoryImpl @Inject constructor(
             val docRef = collection.add(dto).await()
             val savedPet = dto.copy(id = docRef.id)
 
-            Result.success(savedPet.toDomain())
+            ValidationResult(
+                data = savedPet.toDomain(),
+                isSuccess = true
+            )
         } catch (e: FirebaseFirestoreException) {
             when (e.code) {
                 FirebaseFirestoreException.Code.PERMISSION_DENIED ->
-                    Result.failure(SecurityException("Not authorized to add pet"))
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
 
                 FirebaseFirestoreException.Code.UNAVAILABLE ->
-                    Result.failure(IOException("Network unavailable"))
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
 
-                else -> Result.failure(e)
+                else -> ValidationResult(
+                    error = ErrorType.NetworkError(e.message ?: "")
+                )
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            ValidationResult(
+                error = ErrorType.CommonError(e.message ?: "")
+            )
         }
     }
 
-    override suspend fun editPet(pet: Pet): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun editPet(pet: Pet): ValidationResult<Unit> = withContext(dispatcherIO) {
         try {
             if (pet.id.isBlank()) {
-                return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
+                return@withContext ValidationResult(
+                    error = ErrorType.CommonError(PET_ID_ERROR)
+                )
             }
 
             val currentUserId = firebaseAuth.currentUser?.uid
-                ?: return@withContext Result.failure(IllegalStateException("Not Authenticated"))
+                ?: return@withContext ValidationResult(
+                    error = ErrorType.AuthenticationError(NOT_AUTHENTICATED_ERROR)
+                )
 
             val updates = mapOf(
                 "name" to pet.name,
@@ -115,46 +148,64 @@ class PetsRepositoryImpl @Inject constructor(
             )
 
             collection.document(pet.id).set(updates, SetOptions.merge()).await()
-            Result.success(Unit)
+            ValidationResult(
+                isSuccess = true
+            )
         } catch (e: Exception) {
-            Result.failure(e)
+            ValidationResult(
+                error = ErrorType.CommonError(e.message ?: "")
+            )
         }
     }
 
-    override suspend fun deletePet(petId: String): Result<Unit> = withContext(Dispatchers.IO) {
+    override suspend fun deletePet(petId: String): ValidationResult<Unit> = withContext(dispatcherIO) {
         try {
             if (petId.isBlank()) {
-                return@withContext Result.failure(IllegalArgumentException("Pet ID cannot be blank"))
+                return@withContext ValidationResult(
+                    error = ErrorType.CommonError(NOT_AUTHENTICATED_ERROR)
+                )
             }
             val currentUserId = firebaseAuth.currentUser?.uid
             if (currentUserId == null) {
-                return@withContext Result.failure(IllegalStateException("Not Authenticated"))
+                return@withContext ValidationResult(
+                    error = ErrorType.AuthenticationError(NOT_AUTHENTICATED_ERROR)
+                )
             }
 
             collection.document(petId).delete().await()
-            Result.success(Unit)
+            ValidationResult(
+                isSuccess = true
+            )
         } catch (e: FirebaseFirestoreException) {
             when (e.code) {
                 FirebaseFirestoreException.Code.PERMISSION_DENIED -> {
-                    Result.failure(SecurityException("Not authorized to delete pet"))
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
                 }
 
                 FirebaseFirestoreException.Code.UNAVAILABLE -> {
-                    Result.failure(IOException("Network unavailable"))
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
                 }
 
                 else -> {
-                    Result.failure(e)
+                    ValidationResult(
+                        error = ErrorType.NetworkError(e.message ?: "")
+                    )
                 }
             }
         } catch (e: Exception) {
-            Result.failure(e)
+            ValidationResult(
+                error = ErrorType.CommonError(e.message ?: "")
+            )
         }
     }
 
     override fun getPetById(petId: String): Flow<Pet> = callbackFlow {
         if (petId.isBlank()) {
-            close(IllegalArgumentException("Pet ID cannot be blank"))
+            close(IllegalArgumentException(PET_ID_ERROR))
             return@callbackFlow
         }
         val listener = collection.document(petId)
@@ -167,13 +218,13 @@ class PetsRepositoryImpl @Inject constructor(
                 if (pet != null) {
                     trySend(pet)
                 } else {
-                    close(IllegalStateException("Pet not found"))
+                    close()
                 }
             }
         awaitClose {
             listener.remove()
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcherIO)
         .catch { e ->
             emit(Pet())
         }
@@ -195,7 +246,7 @@ class PetsRepositoryImpl @Inject constructor(
             }
 
         awaitClose { listener.remove() }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcherIO)
         .catch { e -> emit(emptyList()) }
 
     override fun getAllTips(): Flow<List<Tip>> = callbackFlow {
@@ -224,5 +275,26 @@ class PetsRepositoryImpl @Inject constructor(
         awaitClose {
             listener.remove()
         }
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(dispatcherIO)
+
+    override suspend fun getPetInfo(breed: String): ValidationResult<PetInfo> = withContext(dispatcherIO) {
+        try {
+            val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
+            val animal = animalsResponse.find { it.commonName.equals(breed, ignoreCase = true) }
+            return@withContext if (animal != null) {
+                ValidationResult(
+                    data = animal,
+                    isSuccess = true
+                )
+            } else {
+                ValidationResult(
+                    error = ErrorType.NotFoundError(PET_NOT_FOUND_ERROR)
+                )
+            }
+        } catch (e: Exception) {
+            ValidationResult(
+                error = ErrorType.NetworkError(e.message ?: "")
+            )
+        }
+    }
 }

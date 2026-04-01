@@ -23,6 +23,7 @@ interface CoreModule {
     ): ResourceProvider
 
     companion object {
+
         @Provides
         @Singleton
         fun provideResourceProvider(@ApplicationContext context: Context): ResourceProviderImpl {
@@ -31,7 +32,9 @@ interface CoreModule {
 
         @Provides
         @Singleton
-        fun provideErrorParser(resourceProvider: ResourceProvider): ErrorParser{
+        fun provideErrorParser(
+            resourceProvider: ResourceProvider
+        ): ErrorParser {
             return ErrorParser(resourceProvider)
         }
     }

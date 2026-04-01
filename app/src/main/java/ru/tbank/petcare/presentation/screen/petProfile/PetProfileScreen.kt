@@ -17,6 +17,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -43,7 +46,17 @@ private fun PetProfileContent(
 ) {
     val state by viewModel.state.collectAsState()
     val pet = state.petProfileUIModel
+    val petInfo = state.petInfoUIModel
     val scrollState = rememberScrollState()
+    var showBreedSheet by remember { mutableStateOf(false) }
+
+    if (showBreedSheet) {
+        BreedInfoBottomSheet(
+            petInfoUIModel = petInfo,
+            error = state.errorMessage,
+            onDismiss = { showBreedSheet = false }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -57,7 +70,12 @@ private fun PetProfileContent(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            PetProfileCard(pet)
+            PetProfileCard(
+                pet = pet,
+                onBreedClick = {
+                    showBreedSheet = true
+                }
+            )
             NotesCard(pet.note)
             Spacer(modifier = Modifier.height(16.dp))
         }

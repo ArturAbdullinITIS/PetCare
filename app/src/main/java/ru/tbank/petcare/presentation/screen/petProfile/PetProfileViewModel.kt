@@ -11,13 +11,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.model.PetForm
+import ru.tbank.petcare.utils.ErrorParser
+
+private const val PET_ID = "pet_id"
 
 @HiltViewModel(assistedFactory = PetProfileViewModel.Factory::class)
 class PetProfileViewModel @AssistedInject constructor(
     private val getPetUseCase: GetPetUseCase,
-    @Assisted("pet_id") private val petId: String
+    private val getPetInfoUseCase: GetPetInfoUseCase,
+    private val errorParser: ErrorParser,
+    @Assisted(PET_ID) private val petId: String,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PetProfileState())
@@ -52,7 +58,35 @@ class PetProfileViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            @Assisted("pet_id") petId: String
+            @Assisted(PET_ID) petId: String
         ): PetProfileViewModel
     }
+
+    fun processCommand(command: PetProfileCommand) {
+        when (command) {
+            is PetProfileCommand.ShowPetInfo -> {
+                viewModelScope.launch {
+                    val petInfo = getPetInfoUseCase(command.breed)
+                    if (petInfo.isSuccess && petInfo.data != null) {
+                        _state.update { state ->
+                            state.copy(
+                                petInfoUIModel = petInfo.data
+                            )
+                        }
+                    } else {
+                        val errorMessage = errorParser.getErrorMessage(petInfo.error)
+                        _state.update { state ->
+                            state.copy(
+                                errorMessage = errorMessage
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+sealed interface PetProfileCommand {
+    data class ShowPetInfo(val breed: String) : PetProfileCommand
 }

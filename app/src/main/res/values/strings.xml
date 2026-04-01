@@ -62,6 +62,11 @@
     <string name="profile_button">Profile button</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="edit_pet">Edit Pet</string>
+    <string name="authentication_error">Authentication error: %1$s</string>
+    <string name="common_error">Common error: %1$s</string>
+    <string name="network_error">Network error: %1$s</string>
+    <string name="not_found_error">Not found error: %1$s</string>
+    <string name="unknown_error">Unknown error</string>
 
     <string name="login">Login</string>
     <string name="welcome_back_login_title">Welcome back!</string>

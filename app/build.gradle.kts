@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -15,6 +17,16 @@ android {
         version = release(36)
     }
 
+    val localProperties = Properties()
+    val file = rootProject.file("local.properties")
+    if (file.exists()) {
+        file.inputStream().use { inputStream ->
+            localProperties.load(inputStream)
+        }
+    }
+
+    val baseUrl = localProperties.getProperty("BASE_URL") ?: ""
+
     defaultConfig {
         applicationId = "ru.tbank.petcare"
         minSdk = 26
@@ -23,6 +35,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -43,6 +56,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -77,7 +91,12 @@ dependencies {
 
     // Formating
     detektPlugins(libs.detekt.formatting)
+    detektPlugins(libs.detekt)
 
+    // Network
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
 
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)

@@ -1,7 +1,10 @@
 package ru.tbank.petcare.presentation.screen.petProfile
 
+import android.R.attr.fontWeight
+import android.R.attr.text
 import android.view.Surface
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +28,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,21 +41,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Empty.painter
 import org.w3c.dom.Text
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.model.PetForm
-import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 import ru.tbank.petcare.utils.DateFormater
 
 @Composable
-fun PetProfileCard(pet: PetForm) {
+fun PetProfileCard(
+    pet: PetForm,
+    onBreedClick: () -> Unit
+) {
     val pictureSize = 192.dp
     val overlap = 8.dp
     val topPadding = (pictureSize / 5) - overlap
@@ -105,7 +110,12 @@ fun PetProfileCard(pet: PetForm) {
                     }
                 }
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable(
+                            onClick = {
+                                onBreedClick()
+                            }
+                        ),
                     textAlign = TextAlign.Center,
                     text = pet.breed.uppercase(),
                     fontWeight = FontWeight.SemiBold,
@@ -281,7 +291,7 @@ fun PublicPetIcon(
             Icon(
                 painter = painterResource(R.drawable.ic_public),
                 contentDescription = stringResource(R.string.pet_is_public_icon),
-                tint = if (isPublic){
+                tint = if (isPublic) {
                     MaterialTheme.colorScheme.onPrimaryContainer
                 } else {
                     MaterialTheme.colorScheme.onSurface.copy(
@@ -326,32 +336,5 @@ fun NotesCard(
                 overflow = TextOverflow.Ellipsis
             )
         }
-    }
-}
-
-@Composable
-@Preview
-fun ParameterCardPreview() {
-    PetCareTheme {
-        ParameterCard(
-            parameterName = "Age",
-            parameterValue = "2 years"
-        )
-    }
-}
-
-@Composable
-@Preview
-fun PetCardPreview() {
-    PetCareTheme {
-        PetProfileCard(
-            pet = PetForm(
-                name = "Cooper",
-                breed = "Golden Retriever",
-                photoUrl = "",
-                iconStatus = IconStatus.STAR,
-                weight = 25.4.toString()
-            )
-        )
     }
 }

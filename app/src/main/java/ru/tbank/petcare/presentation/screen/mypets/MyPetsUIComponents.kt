@@ -154,7 +154,7 @@ fun TipCard(
                 contentDescription = stringResource(R.string.pet_health_tip)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Column() {
+            Column {
                 Text(
                     text = stringResource(R.string.pet_health_tip),
                     fontWeight = FontWeight.Bold,

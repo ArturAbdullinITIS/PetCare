@@ -1,24 +1,31 @@
 package ru.tbank.petcare.utils
 
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.ValidationError
+import ru.tbank.petcare.domain.model.ErrorType
 
-class ErrorParser(private val resourceProvider: ResourceProvider) {
-    fun parse(error: ValidationError): String {
+class ErrorParser(
+    private val resourceProvider: ResourceProvider
+) {
+    fun getErrorMessage(error: ErrorType?): String {
         return when (error) {
-            ValidationError.EMAIL_BLANK ->
-                resourceProvider.getString(R.string.error_email_blank)
-            ValidationError.EMAIL_INVALID ->
-                resourceProvider.getString(R.string.error_email_invalid)
-            ValidationError.PASSWORD_SHORT ->
-                resourceProvider.getString(R.string.error_password_short)
+            is ErrorType.AuthenticationError -> resourceProvider.getString(
+                R.string.authentication_error,
+                error.message
+            )
+            is ErrorType.CommonError -> resourceProvider.getString(
+                R.string.common_error,
+                error.message
+            )
+            is ErrorType.NetworkError -> resourceProvider.getString(
+                R.string.network_error,
+                error.message
+            )
+            is ErrorType.NotFoundError -> resourceProvider.getString(
+                R.string.not_found_error,
+                error.message
+            )
 
-            ValidationError.PASSWORDS_DO_NOT_MATCH ->
-                resourceProvider.getString(R.string.error_passwords_do_not_match)
-
-            ValidationError.NAME_SHORT -> TODO()
-            ValidationError.WEIGHT_INVALID -> TODO()
-            ValidationError.DATE_OF_BIRTH_INVALID -> TODO()
+            null -> resourceProvider.getString(R.string.unknown_error)
         }
     }
 }
