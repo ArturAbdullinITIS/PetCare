@@ -9,4 +9,8 @@ enum class ValidationError {
     NAME_SHORT,
     WEIGHT_INVALID,
     DATE_OF_BIRTH_INVALID,
+    EMAIL_BLANK,
+    EMAIL_INVALID,
+    PASSWORD_SHORT,
+    PASSWORDS_DO_NOT_MATCH
 }

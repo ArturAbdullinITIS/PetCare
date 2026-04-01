@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import jakarta.inject.Singleton
+import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
 import ru.tbank.petcare.utils.ResourceProviderImpl
 
@@ -26,6 +27,12 @@ interface CoreModule {
         @Singleton
         fun provideResourceProvider(@ApplicationContext context: Context): ResourceProviderImpl {
             return ResourceProviderImpl(context)
+        }
+
+        @Provides
+        @Singleton
+        fun provideErrorParser(resourceProvider: ResourceProvider): ErrorParser{
+            return ErrorParser(resourceProvider)
         }
     }
 }
