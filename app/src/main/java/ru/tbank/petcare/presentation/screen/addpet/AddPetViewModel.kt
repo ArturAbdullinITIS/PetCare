@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.screen.addpet
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,12 +11,14 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.usecase.AddPetUseCase
+import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import javax.inject.Inject
 
 @HiltViewModel
 class AddPetViewModel @Inject constructor(
-    private val addPetUseCase: AddPetUseCase
+    private val addPetUseCase: AddPetUseCase,
+    private val uploadPetPhotoUseCase: UploadPetPhotoUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddPetState())
@@ -25,8 +28,36 @@ class AddPetViewModel @Inject constructor(
         when (command) {
             AddPetCommand.AddPet -> {
                 val pet = state.value.petUIModel.toDomain()
+                val uri = state.value.selectedPhotoUri
+
                 viewModelScope.launch {
-                    addPetUseCase(pet)
+                    _state.update { state ->
+                        state.copy(
+                            isUploadingPhoto = uri != null
+                        )
+                    }
+
+                    val photoUrl = if (uri != null) {
+                        val upload = uploadPetPhotoUseCase(uri)
+                        if (!upload.isSuccess || upload.data == null) {
+                            _state.update { state ->
+                                state.copy(
+                                    isUploadingPhoto = false
+                                )
+                            }
+                            return@launch
+                        }
+                        upload.data
+                    } else {
+                        ""
+                    }
+
+                    addPetUseCase(pet.copy(photoUrl = photoUrl))
+                    _state.update { state ->
+                        state.copy(
+                            isUploadingPhoto = false
+                        )
+                    }
                 }
             }
             is AddPetCommand.ChangeGender -> {
@@ -86,10 +117,10 @@ class AddPetViewModel @Inject constructor(
                 }
             }
 
-            is AddPetCommand.AddPhotoUrl -> {
+            is AddPetCommand.SelectPhoto -> {
                 _state.update { state ->
                     state.copy(
-                        petUIModel = state.petUIModel.copy(photoUrl = command.url)
+                        selectedPhotoUri = command.uri
                     )
                 }
             }
@@ -105,7 +136,7 @@ sealed interface AddPetCommand {
     data class InputDateOfBirth(val dateOfBirth: Long) : AddPetCommand
     data class ChangeGender(val gender: Gender) : AddPetCommand
     data class InputNotes(val note: String) : AddPetCommand
-    data class AddPhotoUrl(val url: String) : AddPetCommand
+    data class SelectPhoto(val uri: Uri) : AddPetCommand
     object IsPublic : AddPetCommand
     object AddPet : AddPetCommand
 }

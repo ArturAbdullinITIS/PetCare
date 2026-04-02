@@ -1,2 +1,2 @@
-package ru.tbank.petcare.data.remote.network
+package ru.tbank.petcare.data.remote.network.animals
 class AnimalsResponseDto : ArrayList<AnimalDtoItem>()

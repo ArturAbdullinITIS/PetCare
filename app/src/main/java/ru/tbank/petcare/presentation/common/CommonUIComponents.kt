@@ -1,10 +1,5 @@
 package ru.tbank.petcare.presentation.common
 
-import android.R.attr.name
-import android.R.attr.onClick
-import android.R.attr.text
-import android.graphics.drawable.Icon
-import android.widget.Button
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
@@ -24,7 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -32,10 +27,12 @@ import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -126,21 +123,24 @@ fun CustomFAB(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun CustomButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: (@Composable () -> Unit)? = null,
     text: String,
-    enabled: Boolean
+    enabled: Boolean,
+    bg: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+    fg: Color = MaterialTheme.colorScheme.primaryContainer
 ) {
     Button(
         modifier = modifier.height(52.dp),
         onClick = onClick,
         shape = RoundedCornerShape(48.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            contentColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = bg,
+            contentColor = fg
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 4.dp,
@@ -158,6 +158,7 @@ fun CustomButton(
         content?.invoke()
     }
 }
+
 
 @Preview
 @Composable
@@ -202,4 +203,37 @@ fun IconStatusUI(
             )
         }
     }
+}
+
+@Suppress("LongParameterList")
+@Composable
+fun ConfirmDeleteDialog(
+    title: String,
+    text: String,
+    confirmText: String,
+    dismissText: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = { Text(text) },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(
+                    text = confirmText,
+                    color = MaterialTheme.colorScheme.error
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(
+                    text = dismissText,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+        }
+    )
 }

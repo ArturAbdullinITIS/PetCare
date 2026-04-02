@@ -124,6 +124,10 @@ fun NavHost(
                         petId = route.petId,
                         onEditClick = {
                             backStack.removeLastOrNull()
+                        },
+                        onDeleteClick = {
+                            backStack.clear()
+                            backStack.add(NavigationBarRoute.MyPets)
                         }
                     )
                 }

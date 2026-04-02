@@ -91,4 +91,10 @@
     <string name="repeat_password">Repeat password</string>
     <string name="error_passwords_do_not_match">Password do not match.</string>
     <string name="close">Close</string>
+    <string name="delete_pet_button">Delete Pet Button</string>
+    <string name="delete_profile">Delete Profile</string>
+    <string name="delete_your_pet">Delete your pet?</string>
+    <string name="you_can_not_restore_it">You can not restore it.</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 </resources>

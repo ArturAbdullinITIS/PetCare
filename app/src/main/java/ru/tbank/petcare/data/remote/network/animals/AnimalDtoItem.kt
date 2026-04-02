@@ -1,4 +1,4 @@
-package ru.tbank.petcare.data.remote.network
+package ru.tbank.petcare.data.remote.network.animals
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 @Serializable

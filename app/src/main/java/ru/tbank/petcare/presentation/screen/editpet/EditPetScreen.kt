@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,10 +37,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import okhttp3.internal.platform.android.AndroidSocketAdapter.Companion.factory
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.AddPetProfilePicture
+import ru.tbank.petcare.presentation.common.ConfirmDeleteDialog
 import ru.tbank.petcare.presentation.common.CustomButton
 import ru.tbank.petcare.presentation.common.CustomSegmentedControlButton
 import ru.tbank.petcare.presentation.common.CustomTextField
@@ -52,10 +53,12 @@ import ru.tbank.petcare.utils.filterWeightInput
 fun EditPetScreen(
     petId: String,
     onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     EditPetContent(
         petId,
-        onEditClick
+        onEditClick,
+        onDeleteClick
     )
 }
 
@@ -63,6 +66,7 @@ fun EditPetScreen(
 private fun EditPetContent(
     petId: String,
     onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: EditPetViewModel = hiltViewModel(
         key = petId,
@@ -79,10 +83,26 @@ private fun EditPetContent(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                viewModel.processCommand(EditPetCommand.AddPhotoUrl(it.toString()))
+                viewModel.processCommand(EditPetCommand.SelectPhoto(it))
             }
         }
     )
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        ConfirmDeleteDialog(
+            onConfirm = {
+                showDeleteDialog = false
+                viewModel.processCommand(EditPetCommand.DeletePetProfile)
+                onDeleteClick()
+            },
+            onDismiss = { showDeleteDialog = false },
+            title = stringResource(R.string.delete_your_pet),
+            text = stringResource(R.string.you_can_not_restore_it),
+            confirmText = stringResource(R.string.delete),
+            dismissText = stringResource(R.string.cancel)
+        )
+    }
 
     Card(
         modifier = modifier
@@ -227,6 +247,22 @@ private fun EditPetContent(
                 },
                 content = {},
                 text = stringResource(R.string.edit_pet)
+            )
+            CustomButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    showDeleteDialog = true
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete_pet_button)
+                    )
+                },
+                text = stringResource(R.string.delete_profile),
+                enabled = true,
+                bg = MaterialTheme.colorScheme.error.copy(alpha = 0.7f),
+                fg = MaterialTheme.colorScheme.onError
             )
         }
     }

@@ -1,5 +1,6 @@
 package ru.tbank.petcare.domain.repository
 
+import android.net.Uri
 import kotlinx.coroutines.flow.Flow
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
@@ -22,4 +23,5 @@ interface PetsRepository {
     fun getAllTips(): Flow<List<Tip>>
 
     suspend fun getPetInfo(breed: String): ValidationResult<PetInfo>
+    suspend fun uploadPetPhoto(uri: Uri): ValidationResult<String>
 }

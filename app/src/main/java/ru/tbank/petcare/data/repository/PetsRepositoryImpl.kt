@@ -1,9 +1,8 @@
 package ru.tbank.petcare.data.repository
 
-import android.R.attr.data
-import android.R.attr.name
+import android.net.Uri
 import android.util.Log
-import android.util.Log.e
+import coil3.network.HttpException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -16,12 +15,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import ru.tbank.petcare.BuildConfig
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
 import ru.tbank.petcare.data.mapper.toEntities
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
-import ru.tbank.petcare.data.remote.network.AnimalsApiService
+import ru.tbank.petcare.data.remote.network.animals.AnimalsApiService
+import ru.tbank.petcare.data.remote.network.cloudinary.CloudinaryApiService
+import ru.tbank.petcare.data.remote.network.cloudinary.ImageBytesProvider
 import ru.tbank.petcare.di.IoDispatcher
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.Pet
@@ -36,7 +41,9 @@ class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
     @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
-    private val animalsApiService: AnimalsApiService
+    private val animalsApiService: AnimalsApiService,
+    private val cloudinaryApiService: CloudinaryApiService,
+    private val imageBytesProvider: ImageBytesProvider
 ) : PetsRepository {
     companion object {
         private const val OWNER_ID_KEY = "owner_id"
@@ -47,6 +54,10 @@ class PetsRepositoryImpl @Inject constructor(
         private const val PET_ID_ERROR = "Pet ID cannot be blank"
         private const val NOT_AUTHENTICATED_ERROR = "Not Authenticated"
         private const val NO_BREED_INFO = "No breed info"
+        private const val NAME = "file"
+        private const val FILE_NAME = "pet_photo"
+        private const val CONTENT_TYPE = "text/plain"
+        private const val CLOUDINARY_ERROR = "Cloudinary error"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -297,6 +308,38 @@ class PetsRepositoryImpl @Inject constructor(
             ValidationResult(
                 error = ErrorType.NetworkError(e.message ?: "")
             )
+        }
+    }
+
+    override suspend fun uploadPetPhoto(uri: Uri): ValidationResult<String> = withContext(dispatcherIO) {
+        try {
+            val bytes = imageBytesProvider.readBytes(uri)
+            val mime = imageBytesProvider.getMimeType(uri)
+
+            val filePart = MultipartBody.Part.createFormData(
+                NAME,
+                FILE_NAME,
+                bytes.toRequestBody(mime.toMediaType())
+            )
+
+            val presetBody = BuildConfig.CLOUDINARY_PRESET_NAME
+                .toRequestBody(CONTENT_TYPE.toMediaType())
+
+            val response = cloudinaryApiService.uploadImage(
+                cloudName = BuildConfig.CLOUDINARY_CLOUD_NAME,
+                file = filePart,
+                uploadPreset = presetBody
+            )
+
+            ValidationResult(data = response.secureUrl, isSuccess = true)
+        } catch (e: HttpException) {
+            ValidationResult(
+                error = ErrorType.NetworkError(
+                    "$CLOUDINARY_ERROR ${e.response.code}: ${e.message}"
+                )
+            )
+        } catch (e: Exception) {
+            ValidationResult(error = ErrorType.NetworkError(e.message ?: ""))
         }
     }
 }

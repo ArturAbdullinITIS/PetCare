@@ -1,4 +1,4 @@
-package ru.tbank.petcare.data.remote.network
+package ru.tbank.petcare.data.remote.network.animals
 
 import retrofit2.http.GET
 import retrofit2.http.Query

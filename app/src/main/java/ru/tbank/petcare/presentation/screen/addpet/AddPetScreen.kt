@@ -68,7 +68,7 @@ private fun AddPetContent(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                viewModel.processCommand(AddPetCommand.AddPhotoUrl(it.toString()))
+                viewModel.processCommand(AddPetCommand.SelectPhoto(it))
             }
         }
     )
@@ -99,7 +99,7 @@ private fun AddPetContent(
                         "image/*"
                     )
                 },
-                imageUrl = state.petUIModel.photoUrl
+                imageUrl = state.selectedPhotoUri.toString()
             )
             Text(
                 text = stringResource(R.string.add_profile_photo),

@@ -25,8 +25,11 @@ android {
         }
     }
 
-    val baseUrl = localProperties.getProperty("BASE_URL") ?: ""
-    val apiKey = localProperties.getProperty("API_KEY") ?: ""
+    val baseUrlAnimals = localProperties.getProperty("BASE_URL_ANIMALS") ?: ""
+    val apiKeyAnimals = localProperties.getProperty("API_KEY_ANIMALS") ?: ""
+    val baseUrlCloudinary = localProperties.getProperty("BASE_URL_CLOUDINARY") ?: ""
+    val cloudinaryName = localProperties.getProperty("CLOUDINARY_CLOUD_NAME") ?: ""
+    val presetName = localProperties.getProperty("CLOUDINARY_PRESET_NAME") ?: ""
 
     defaultConfig {
         applicationId = "ru.tbank.petcare"
@@ -36,8 +39,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
-        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+        buildConfigField("String", "BASE_URL_ANIMALS", "\"$baseUrlAnimals\"")
+        buildConfigField("String", "API_KEY_ANIMALS", "\"$apiKeyAnimals\"")
+        buildConfigField("String", "BASE_URL_CLOUDINARY", "\"$baseUrlCloudinary\"")
+        buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryName\"")
+        buildConfigField("String", "CLOUDINARY_PRESET_NAME", "\"$presetName\"")
     }
 
     buildTypes {
