@@ -26,6 +26,7 @@ android {
     }
 
     val baseUrl = localProperties.getProperty("BASE_URL") ?: ""
+    val apiKey = localProperties.getProperty("API_KEY") ?: ""
 
     defaultConfig {
         applicationId = "ru.tbank.petcare"
@@ -36,6 +37,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {

@@ -1,21 +1,21 @@
 package ru.tbank.petcare.data.remote.network
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Characteristics(
-    @SerialName("common_name")
+    @SerializedName("common_name")
     val commonName: String = "",
-    @SerialName("diet")
+    @SerializedName("diet")
     val diet: String = "",
-    @SerialName("group")
+    @SerializedName("group")
     val group: String = "",
-    @SerialName("lifespan")
+    @SerializedName("lifespan")
     val lifespan: String = "",
-    @SerialName("skin_type")
+    @SerializedName("skin_type")
     val skinType: String = "",
-    @SerialName("slogan")
+    @SerializedName("slogan")
     val slogan: String = "",
-    @SerialName("weight")
+    @SerializedName("weight")
     val weight: String = ""
 )

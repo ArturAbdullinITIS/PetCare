@@ -2,6 +2,7 @@ package ru.tbank.petcare.data.repository
 
 import android.R.attr.data
 import android.R.attr.name
+import android.util.Log
 import android.util.Log.e
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -45,7 +46,7 @@ class PetsRepositoryImpl @Inject constructor(
 
         private const val PET_ID_ERROR = "Pet ID cannot be blank"
         private const val NOT_AUTHENTICATED_ERROR = "Not Authenticated"
-        private const val PET_NOT_FOUND_ERROR = "Pet not found"
+        private const val NO_BREED_INFO = "No breed info"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -280,6 +281,7 @@ class PetsRepositoryImpl @Inject constructor(
     override suspend fun getPetInfo(breed: String): ValidationResult<PetInfo> = withContext(dispatcherIO) {
         try {
             val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
+            Log.d("ANIMAL_RESPONSE", animalsResponse.toString())
             val animal = animalsResponse.find { it.commonName.equals(breed, ignoreCase = true) }
             return@withContext if (animal != null) {
                 ValidationResult(
@@ -288,7 +290,7 @@ class PetsRepositoryImpl @Inject constructor(
                 )
             } else {
                 ValidationResult(
-                    error = ErrorType.FirebaseAuthenticationError(PET_NOT_FOUND_ERROR)
+                    error = ErrorType.CommonError(NO_BREED_INFO)
                 )
             }
         } catch (e: Exception) {

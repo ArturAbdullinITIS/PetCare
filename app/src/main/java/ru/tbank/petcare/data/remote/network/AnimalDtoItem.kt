@@ -1,10 +1,10 @@
 package ru.tbank.petcare.data.remote.network
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 @Serializable
 data class AnimalDtoItem(
-    @SerialName("characteristics")
+    @SerializedName("characteristics")
     val characteristics: Characteristics = Characteristics(),
-    @SerialName("locations")
+    @SerializedName("locations")
     val locations: List<String> = listOf(),
 )

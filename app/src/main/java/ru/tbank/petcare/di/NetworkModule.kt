@@ -26,6 +26,15 @@ interface NetworkModule {
                 .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .addInterceptor { chain ->
+                    val original = chain.request()
+                    val new = original.newBuilder().header(
+                        "X-Api-Key",
+                        BuildConfig.API_KEY
+                    )
+                        .build()
+                    chain.proceed(new)
+                }
                 .addInterceptor(
                     HttpLoggingInterceptor().apply {
                         level = HttpLoggingInterceptor.Level.BODY

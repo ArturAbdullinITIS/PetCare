@@ -73,6 +73,7 @@ private fun PetProfileContent(
             PetProfileCard(
                 pet = pet,
                 onBreedClick = {
+                    viewModel.processCommand(PetProfileCommand.ShowPetInfo(pet.breed))
                     showBreedSheet = true
                 }
             )

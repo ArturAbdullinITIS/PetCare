@@ -154,6 +154,7 @@ fun CustomButton(
             fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold
         )
+        Spacer(modifier = Modifier.width(8.dp))
         content?.invoke()
     }
 }

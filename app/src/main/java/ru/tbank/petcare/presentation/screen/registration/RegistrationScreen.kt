@@ -11,6 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -144,9 +147,20 @@ fun RegistrationContent(
             }
             Spacer(modifier = Modifier.height(16.dp))
             CustomButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    viewModel.processCommand(RegistrationCommand.RegisterUserFromEmailAndPassword)
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = stringResource(R.string.arrow_forward_icon_description)
+                    )
+                },
                 text = stringResource(R.string.register),
-                onClick = { viewModel.processCommand(RegistrationCommand.RegisterUserFromEmailAndPassword) }
+                enabled = true
             )
+
             Spacer(modifier = Modifier.height(16.dp))
             CustomDivider()
             Spacer(modifier = Modifier.height(16.dp))

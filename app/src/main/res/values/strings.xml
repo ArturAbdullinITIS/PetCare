@@ -90,4 +90,5 @@
     <string name="error_password_short">The password length must be at least 6 characters.</string>
     <string name="repeat_password">Repeat password</string>
     <string name="error_passwords_do_not_match">Password do not match.</string>
+    <string name="close">Close</string>
 </resources>

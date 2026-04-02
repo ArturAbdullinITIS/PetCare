@@ -1,5 +1,7 @@
 package ru.tbank.petcare.presentation.screen.login
 
+import android.R.attr.enabled
+import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -81,7 +86,10 @@ fun LoginContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(2f)
-                .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(32.dp))
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(32.dp)
+                )
                 .padding(vertical = 16.dp, horizontal = 16.dp),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -125,8 +133,18 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             CustomButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    viewModel.processCommand(LoginCommand.LoginUserFromEmailAndPassword)
+                },
+                content = {
+                    Icon(
+                        imageVector = Icons.Default.ArrowForward,
+                        contentDescription = stringResource(R.string.arrow_forward_icon_description)
+                    )
+                },
                 text = stringResource(R.string.login),
-                onClick = { viewModel.processCommand(LoginCommand.LoginUserFromEmailAndPassword) }
+                enabled = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))
