@@ -54,7 +54,8 @@ private fun PetProfileContent(
         BreedInfoBottomSheet(
             petInfoUIModel = petInfo,
             error = state.errorMessage,
-            onDismiss = { showBreedSheet = false }
+            onDismiss = { showBreedSheet = false },
+            isLoading = state.isInfoLoading
         )
     }
 
@@ -73,8 +74,8 @@ private fun PetProfileContent(
             PetProfileCard(
                 pet = pet,
                 onBreedClick = {
-                    viewModel.processCommand(PetProfileCommand.ShowPetInfo(pet.breed))
                     showBreedSheet = true
+                    viewModel.processCommand(PetProfileCommand.ShowPetInfo(pet.breed))
                 }
             )
             NotesCard(pet.note)

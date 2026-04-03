@@ -7,4 +7,5 @@ data class PetProfileState(
     val petProfileUIModel: PetForm = PetForm(),
     val petInfoUIModel: PetInfo? = null,
     val errorMessage: String? = null,
+    val isInfoLoading: Boolean = false
 )

@@ -13,6 +13,7 @@ interface CloudinaryApiService {
     suspend fun uploadImage(
         @Path("cloudName") cloudName: String,
         @Part file: MultipartBody.Part,
-        @Part("upload_preset") uploadPreset: RequestBody
+        @Part("upload_preset") uploadPreset: RequestBody,
+        @Part("folder") folder: RequestBody
     ): CloudinaryUploadResponse
 }

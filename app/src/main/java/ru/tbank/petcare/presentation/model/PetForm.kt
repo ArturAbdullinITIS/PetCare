@@ -2,6 +2,7 @@ package ru.tbank.petcare.presentation.model
 
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
+import java.util.Date
 
 data class PetForm(
     val id: String = "",
@@ -11,7 +12,8 @@ data class PetForm(
     val isPublic: Boolean = false,
     val note: String = "",
     val weight: String = "",
-    val dateOfBirth: Long = 0L,
+    val dateOfBirth: Date? = null,
+    val dateOfBirthText: String = "",
     val iconStatus: IconStatus = IconStatus.NONE,
     val photoUrl: String = ""
 )

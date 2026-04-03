@@ -3,6 +3,7 @@ package ru.tbank.petcare.data.repository
 import android.net.Uri
 import android.util.Log
 import coil3.network.HttpException
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
@@ -149,7 +150,7 @@ class PetsRepositoryImpl @Inject constructor(
                 "name" to pet.name,
                 "breed" to pet.breed,
                 "weight" to pet.weight,
-                "date_of_birth" to pet.dateOfBirth,
+                "date_of_birth" to (pet.dateOfBirth?.let { Timestamp(it) }),
                 "gender" to pet.gender.name,
                 "icon_status" to pet.iconStatus.name,
                 "is_public" to pet.isPublic,
@@ -293,7 +294,7 @@ class PetsRepositoryImpl @Inject constructor(
         try {
             val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
             Log.d("ANIMAL_RESPONSE", animalsResponse.toString())
-            val animal = animalsResponse.find { it.commonName.equals(breed, ignoreCase = true) }
+            val animal = animalsResponse.find { it.breedName.equals(breed, ignoreCase = true) }
             return@withContext if (animal != null) {
                 ValidationResult(
                     data = animal,
@@ -325,10 +326,14 @@ class PetsRepositoryImpl @Inject constructor(
             val presetBody = BuildConfig.CLOUDINARY_PRESET_NAME
                 .toRequestBody(CONTENT_TYPE.toMediaType())
 
+            val folderBody = BuildConfig.CLOUDINARY_PETS_FOLDER
+                .toRequestBody(CONTENT_TYPE.toMediaType())
+
             val response = cloudinaryApiService.uploadImage(
                 cloudName = BuildConfig.CLOUDINARY_CLOUD_NAME,
                 file = filePart,
-                uploadPreset = presetBody
+                uploadPreset = presetBody,
+                folder = folderBody
             )
 
             ValidationResult(data = response.secureUrl, isSuccess = true)

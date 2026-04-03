@@ -3,7 +3,6 @@ package ru.tbank.petcare.presentation.common
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -25,6 +24,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -78,19 +78,19 @@ fun ScreenTitleRow(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
     ) {
-        Icon(
-            modifier = Modifier.clickable(
-                onClick = onClick
-            ),
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = stringResource(R.string.back_icon),
-            tint = MaterialTheme.colorScheme.onPrimaryContainer
-        )
+        IconButton(
+            onClick = onClick
+        ) {
+            Icon(
+                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                contentDescription = stringResource(R.string.back_icon),
+                tint = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
         Spacer(modifier = Modifier.width(4.dp))
         Text(
             text = stringResource(name),
@@ -129,7 +129,7 @@ fun CustomButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: (@Composable () -> Unit)? = null,
-    text: String,
+    text: String? = null,
     enabled: Boolean,
     bg: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     fg: Color = MaterialTheme.colorScheme.primaryContainer
@@ -149,16 +149,17 @@ fun CustomButton(
         ),
         enabled = enabled
     ) {
-        Text(
-            text = text,
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-        Spacer(modifier = Modifier.width(8.dp))
+        if (text != null) {
+            Text(
+                text = text,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+        }
         content?.invoke()
     }
 }
-
 
 @Preview
 @Composable

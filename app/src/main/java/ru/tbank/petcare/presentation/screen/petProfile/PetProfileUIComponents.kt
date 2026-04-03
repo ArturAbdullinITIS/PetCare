@@ -49,7 +49,6 @@ import org.w3c.dom.Text
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.model.PetForm
-import ru.tbank.petcare.utils.DateFormater
 
 @Composable
 fun PetProfileCard(
@@ -119,7 +118,7 @@ fun PetProfileCard(
                     textAlign = TextAlign.Center,
                     text = pet.breed.uppercase(),
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
+                    fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
 
@@ -133,7 +132,7 @@ fun PetProfileCard(
                 ) {
                     ParameterCard(
                         parameterName = stringResource(R.string.age),
-                        parameterValue = DateFormater.formatAgeYearsMonths(pet.dateOfBirth)
+                        parameterValue = pet.dateOfBirthText
                     )
                     Spacer(modifier = Modifier.width(16.dp))
                     ParameterCard(

@@ -30,6 +30,8 @@ android {
     val baseUrlCloudinary = localProperties.getProperty("BASE_URL_CLOUDINARY") ?: ""
     val cloudinaryName = localProperties.getProperty("CLOUDINARY_CLOUD_NAME") ?: ""
     val presetName = localProperties.getProperty("CLOUDINARY_PRESET_NAME") ?: ""
+    val petsFolder = localProperties.getProperty("CLOUDINARY_PETS_FOLDER") ?: ""
+    val usersFolder = localProperties.getProperty("CLOUDINARY_USERS_FOLDER") ?: ""
 
     defaultConfig {
         applicationId = "ru.tbank.petcare"
@@ -44,6 +46,8 @@ android {
         buildConfigField("String", "BASE_URL_CLOUDINARY", "\"$baseUrlCloudinary\"")
         buildConfigField("String", "CLOUDINARY_CLOUD_NAME", "\"$cloudinaryName\"")
         buildConfigField("String", "CLOUDINARY_PRESET_NAME", "\"$presetName\"")
+        buildConfigField("String", "CLOUDINARY_PETS_FOLDER", "\"$petsFolder\"")
+        buildConfigField("String", "CLOUDINARY_USERS_FOLDER", "\"$usersFolder\"")
     }
 
     buildTypes {
@@ -106,6 +110,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
 
+    implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

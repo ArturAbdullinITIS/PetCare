@@ -1,8 +1,8 @@
 package ru.tbank.petcare.data.remote.firebase
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
-import com.google.firebase.firestore.ServerTimestamp
 
 data class PetDto(
     @DocumentId
@@ -20,10 +20,9 @@ data class PetDto(
     @set:PropertyName("breed")
     var breed: String = "",
 
-    @ServerTimestamp
     @get:PropertyName("date_of_birth")
     @set:PropertyName("date_of_birth")
-    var dateOfBirth: Long = 0L,
+    var dateOfBirth: Timestamp? = null,
 
     @get:PropertyName("game_score")
     @set:PropertyName("game_score")

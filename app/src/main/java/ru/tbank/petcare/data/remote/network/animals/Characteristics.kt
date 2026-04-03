@@ -4,8 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Characteristics(
-    @SerializedName("common_name")
-    val commonName: String = "",
     @SerializedName("diet")
     val diet: String = "",
     @SerializedName("group")

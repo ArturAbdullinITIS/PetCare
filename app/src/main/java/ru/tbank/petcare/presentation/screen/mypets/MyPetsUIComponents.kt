@@ -43,20 +43,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
+import ru.tbank.petcare.presentation.model.PetCardUiModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
-import ru.tbank.petcare.utils.DateFormater
 
 @Composable
 fun MyPetsPetCard(
-    pet: Pet,
+    pet: PetCardUiModel,
     onPetClick: (String) -> Unit
 ) {
-    val age = DateFormater.formatAgeYearsMonths(pet.dateOfBirth)
     Card(
         modifier = Modifier
             .fillMaxWidth(),
@@ -119,7 +117,7 @@ fun MyPetsPetCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = pet.breed + " • " + age,
+                    text = pet.subtitle,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),

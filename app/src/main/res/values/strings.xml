@@ -61,7 +61,7 @@
     <string name="create_activity_button">Create Activity</string>
     <string name="profile_button">Profile button</string>
     <string name="edit_profile">Edit Profile</string>
-    <string name="edit_pet">Edit Pet</string>
+    <string name="edit_pet">Save</string>
     <string name="authentication_error">Authentication error: %1$s</string>
     <string name="common_error">Common error: %1$s</string>
     <string name="network_error">Network error: %1$s</string>
@@ -91,9 +91,22 @@
     <string name="error_passwords_do_not_match">Password do not match.</string>
     <string name="close">Close</string>
     <string name="delete_pet_button">Delete Pet Button</string>
-    <string name="delete_profile">Delete Profile</string>
+    <string name="delete_profile">Delete</string>
     <string name="delete_your_pet">Delete your pet?</string>
     <string name="you_can_not_restore_it">You can not restore it.</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
+    <string name="nothing_to_share">Nothing to share!</string>
+    <string name="info_title">Info Title</string>
+    <string name="breed_information">Breed Information</string>
+    <string name="group">Group</string>
+    <string name="lifespan">Lifespan</string>
+    <string name="skin_type">Skin Type</string>
+    <string name="diet">Diet</string>
+    <string name="locations">Locations</string>
+    <string name="unknown">Unknown</string>
+    <string name="could_not_save_pet">Could not save pet</string>
+    <string name="could_not_edit">Could not edit</string>
+    <string name="could_not_upload_photo">Could not upload photo</string>
+    <string name="date_placeholder">dd.mm.yyyy</string>
 </resources>

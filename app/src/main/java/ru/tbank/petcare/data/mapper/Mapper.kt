@@ -1,5 +1,6 @@
 package ru.tbank.petcare.data.mapper
 
+import com.google.firebase.Timestamp
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.data.remote.network.animals.AnimalsResponseDto
@@ -20,7 +21,7 @@ fun PetDto.toDomain(): Pet {
         gameScore = gameScore,
         ownerId = ownerId,
         weight = weight,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth?.toDate(),
         iconStatus = IconStatus.getIconStatusFromValue(iconStatus),
         photoUrl = photoUrl
     )
@@ -31,7 +32,7 @@ fun Pet.toDto(): PetDto {
         name = name,
         gender = gender.name,
         breed = breed,
-        dateOfBirth = dateOfBirth,
+        dateOfBirth = dateOfBirth?.let { Timestamp(it) },
         gameScore = gameScore,
         iconStatus = iconStatus.name,
         isPublic = isPublic,
@@ -52,7 +53,7 @@ fun TipDto.toDomain(): Tip {
 fun AnimalsResponseDto.toEntities(): List<PetInfo> {
     return this.map { animalDtoItem ->
         PetInfo(
-            commonName = animalDtoItem.characteristics.commonName,
+            breedName = animalDtoItem.name,
             diet = animalDtoItem.characteristics.diet,
             group = animalDtoItem.characteristics.group,
             lifespan = animalDtoItem.characteristics.lifespan,

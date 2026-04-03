@@ -23,7 +23,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Female
 import androidx.compose.material.icons.filled.Male
-import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -425,14 +424,6 @@ fun AddPetProfilePicture(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    if (imageUrl.isBlank()) {
-                        Icon(
-                            imageVector = Icons.Default.Photo,
-                            contentDescription = stringResource(R.string.pet_profile_placeholder),
-                            modifier = Modifier.size(48.dp),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
-                    }
                     AsyncImage(
                         model = imageUrl,
                         contentDescription = stringResource(R.string.pet_profile_picture),

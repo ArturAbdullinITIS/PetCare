@@ -1,5 +1,8 @@
 package ru.tbank.petcare.presentation.screen.addpet
 
+import android.R.attr.label
+import android.R.attr.maxLines
+import android.R.attr.singleLine
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -17,10 +20,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,8 +49,8 @@ import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
-import ru.tbank.petcare.utils.DateFormater
 import ru.tbank.petcare.utils.filterWeightInput
+import java.util.Date
 
 @Composable
 fun AddPetScreen(
@@ -72,6 +77,17 @@ private fun AddPetContent(
             }
         }
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is AddPetEvent.Error -> {
+                }
+
+                AddPetEvent.Saved -> onAddClick()
+            }
+        }
+    }
 
     Card(
         modifier = modifier
@@ -155,9 +171,9 @@ private fun AddPetContent(
                 )
             }
             CustomTextField(
-                value = DateFormater.formatDob(state.petUIModel.dateOfBirth),
+                value = state.petUIModel.dateOfBirthText,
                 onValueChange = { },
-                placeholder = "dd.mm.yyyy",
+                placeholder = stringResource(R.string.date_placeholder),
                 label = stringResource(R.string.date_of_birth),
                 maxLines = 1,
                 readOnly = true,
@@ -177,11 +193,12 @@ private fun AddPetContent(
             )
             if (showDobPicker) {
                 DobDatePickerDialog(
-                    initialMillisUtc = state.petUIModel.dateOfBirth,
+                    initialMillisUtc = state.petUIModel.dateOfBirth?.time ?: 0L,
                     onDismiss = { showDobPicker = false },
                     onConfirm = { millisUtc ->
                         showDobPicker = false
-                        viewModel.processCommand(AddPetCommand.InputDateOfBirth(millisUtc))
+                        val pickedDate: Date? = if (millisUtc == 0L) null else Date(millisUtc)
+                        viewModel.processCommand(AddPetCommand.InputDateOfBirth(pickedDate))
                     }
                 )
             }
@@ -212,10 +229,13 @@ private fun AddPetContent(
                 enabled = state.isButtonEnabled,
                 onClick = {
                     viewModel.processCommand(AddPetCommand.AddPet)
-                    onAddClick()
                 },
-                content = {},
-                text = stringResource(R.string.add_pet)
+                content = {
+                    if (state.isAdding) {
+                        CircularProgressIndicator()
+                    }
+                },
+                text = if (!state.isAdding) stringResource(R.string.add_pet) else null
             )
         }
     }

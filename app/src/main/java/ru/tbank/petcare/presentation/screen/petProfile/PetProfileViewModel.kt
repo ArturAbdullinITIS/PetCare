@@ -11,10 +11,13 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.model.PetForm
+import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ErrorParser
+import ru.tbank.petcare.utils.ResourceProvider
 
 private const val PET_ID = "pet_id"
 
@@ -24,6 +27,7 @@ class PetProfileViewModel @AssistedInject constructor(
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val errorParser: ErrorParser,
     @Assisted(PET_ID) private val petId: String,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(PetProfileState())
@@ -36,6 +40,7 @@ class PetProfileViewModel @AssistedInject constructor(
     private fun loadPet() {
         viewModelScope.launch {
             getPetUseCase(petId).collect { pet ->
+                val note = pet.note.ifBlank { resourceProvider.getString(R.string.nothing_to_share) }
                 _state.update { state ->
                     state.copy(
                         petProfileUIModel = PetForm(
@@ -43,9 +48,10 @@ class PetProfileViewModel @AssistedInject constructor(
                             breed = pet.breed,
                             gender = pet.gender,
                             isPublic = pet.isPublic,
-                            note = pet.note,
+                            note = note,
                             weight = pet.weight.toString(),
                             dateOfBirth = pet.dateOfBirth,
+                            dateOfBirthText = DateFormatter.formatAgeYearsMonths(pet.dateOfBirth),
                             iconStatus = pet.iconStatus,
                             photoUrl = pet.photoUrl
                         )
@@ -66,17 +72,26 @@ class PetProfileViewModel @AssistedInject constructor(
         when (command) {
             is PetProfileCommand.ShowPetInfo -> {
                 viewModelScope.launch {
+                    _state.update { state ->
+                        state.copy(
+                            isInfoLoading = true,
+                            errorMessage = null
+                        )
+                    }
                     val petInfo = getPetInfoUseCase(command.breed)
+
                     if (petInfo.isSuccess && petInfo.data != null) {
                         _state.update { state ->
                             state.copy(
-                                petInfoUIModel = petInfo.data
+                                petInfoUIModel = petInfo.data,
+                                isInfoLoading = false
                             )
                         }
                     } else {
                         val errorMessage = errorParser.getErrorMessage(petInfo.error)
                         _state.update { state ->
                             state.copy(
+                                isInfoLoading = false,
                                 errorMessage = errorMessage
                             )
                         }

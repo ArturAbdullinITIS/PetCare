@@ -1,4 +1,5 @@
 package ru.tbank.petcare.domain.model
+import java.util.Date
 
 data class Pet(
     val id: String = "",
@@ -10,7 +11,7 @@ data class Pet(
     val gameScore: Int = 0,
     val ownerId: String = "",
     val weight: Double = 0.0,
-    val dateOfBirth: Long = 0L,
+    val dateOfBirth: Date? = null,
     val iconStatus: IconStatus = IconStatus.NONE,
     val photoUrl: String = ""
 )
