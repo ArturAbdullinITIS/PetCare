@@ -22,7 +22,9 @@ import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toForm
+import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ResourceProvider
+import java.lang.Compiler.command
 import java.util.Date
 
 @HiltViewModel(assistedFactory = EditPetViewModel.Factory::class)
@@ -138,7 +140,16 @@ class EditPetViewModel @AssistedInject constructor(
     }
 
     private fun setDateOfBirth(dateOfBirth: Date?) {
-        _state.update { it.copy(petUIModel = it.petUIModel.copy(dateOfBirth = dateOfBirth)) }
+        val normalized = dateOfBirth?.let { DateFormatter.normalizeToStartOfDayUtc(it) }
+        val text = DateFormatter.formatDob(normalized)
+        _state.update {
+            it.copy(
+                petUIModel = it.petUIModel.copy(
+                    dateOfBirth = dateOfBirth,
+                    dateOfBirthText = text
+                )
+            )
+        }
     }
 
     private fun setNote(note: String) {

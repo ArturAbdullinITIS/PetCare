@@ -1,5 +1,8 @@
 package ru.tbank.petcare.presentation.screen.addpet
 
+import android.R.attr.label
+import android.R.attr.maxLines
+import android.R.attr.singleLine
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -46,7 +49,6 @@ import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
-import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.filterWeightInput
 import java.util.Date
 
@@ -81,6 +83,7 @@ private fun AddPetContent(
             when (event) {
                 is AddPetEvent.Error -> {
                 }
+
                 AddPetEvent.Saved -> onAddClick()
             }
         }
@@ -168,9 +171,9 @@ private fun AddPetContent(
                 )
             }
             CustomTextField(
-                value = DateFormatter.formatDob(state.petUIModel.dateOfBirth),
+                value = state.petUIModel.dateOfBirthText,
                 onValueChange = { },
-                placeholder = "dd.mm.yyyy",
+                placeholder = stringResource(R.string.date_placeholder),
                 label = stringResource(R.string.date_of_birth),
                 maxLines = 1,
                 readOnly = true,
@@ -194,8 +197,8 @@ private fun AddPetContent(
                     onDismiss = { showDobPicker = false },
                     onConfirm = { millisUtc ->
                         showDobPicker = false
-                        val normalizedDate = DateFormatter.normalizeToStartOfDayUtc(Date(millisUtc))
-                        viewModel.processCommand(AddPetCommand.InputDateOfBirth(normalizedDate))
+                        val pickedDate: Date? = if (millisUtc == 0L) null else Date(millisUtc)
+                        viewModel.processCommand(AddPetCommand.InputDateOfBirth(pickedDate))
                     }
                 )
             }

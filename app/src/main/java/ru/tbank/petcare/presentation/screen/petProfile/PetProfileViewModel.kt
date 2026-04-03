@@ -15,6 +15,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.model.PetForm
+import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
 
@@ -50,6 +51,7 @@ class PetProfileViewModel @AssistedInject constructor(
                             note = note,
                             weight = pet.weight.toString(),
                             dateOfBirth = pet.dateOfBirth,
+                            dateOfBirthText = DateFormatter.formatAgeYearsMonths(pet.dateOfBirth),
                             iconStatus = pet.iconStatus,
                             photoUrl = pet.photoUrl
                         )

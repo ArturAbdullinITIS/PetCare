@@ -13,6 +13,7 @@ data class PetForm(
     val note: String = "",
     val weight: String = "",
     val dateOfBirth: Date? = null,
+    val dateOfBirthText: String = "",
     val iconStatus: IconStatus = IconStatus.NONE,
     val photoUrl: String = ""
 )

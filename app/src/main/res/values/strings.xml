@@ -109,4 +109,5 @@
     <string name="could_not_save_pet">Could not save pet</string>
     <string name="could_not_edit">Could not edit</string>
     <string name="could_not_upload_photo">Could not upload photo</string>
+    <string name="date_placeholder">dd.mm.yyyy</string>
 </resources>

@@ -6,6 +6,7 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.presentation.model.PetCardUiModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
@@ -16,6 +17,7 @@ import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
 import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import ru.tbank.petcare.presentation.ui.theme.VetQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
+import ru.tbank.petcare.utils.DateFormatter
 
 @Composable
 fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
@@ -113,7 +115,21 @@ fun Pet.toForm(): PetForm {
         note = note,
         weight = weight.toString(),
         dateOfBirth = dateOfBirth,
+        dateOfBirthText = DateFormatter.formatDob(dateOfBirth),
         iconStatus = iconStatus,
         photoUrl = photoUrl
+    )
+}
+
+fun Pet.toPetCardUiModel(): PetCardUiModel {
+    val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
+    val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
+
+    return PetCardUiModel(
+        id = id,
+        name = name,
+        photoUrl = photoUrl,
+        iconStatus = iconStatus,
+        subtitle = subtitle
     )
 }

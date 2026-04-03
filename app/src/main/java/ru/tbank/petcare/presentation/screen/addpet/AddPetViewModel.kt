@@ -16,6 +16,7 @@ import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.usecase.AddPetUseCase
 import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
+import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
@@ -103,9 +104,15 @@ class AddPetViewModel @Inject constructor(
                 }
             }
             is AddPetCommand.InputDateOfBirth -> {
+                val normalized = command.dateOfBirth?.let { DateFormatter.normalizeToStartOfDayUtc(it) }
+                val text = DateFormatter.formatDob(normalized)
+
                 _state.update { state ->
                     state.copy(
-                        petUIModel = state.petUIModel.copy(dateOfBirth = command.dateOfBirth)
+                        petUIModel = state.petUIModel.copy(
+                            dateOfBirth = normalized,
+                            dateOfBirthText = text
+                        )
                     )
                 }
             }
