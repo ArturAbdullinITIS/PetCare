@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.LoginUseCase
 import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
+import ru.tbank.petcare.utils.AuthFieldsValidator
 import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
 
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val errorParser: ErrorParser
+    private val errorParser: ErrorParser,
+    private val authFieldsValidator: AuthFieldsValidator
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
@@ -76,6 +78,20 @@ class LoginViewModel @Inject constructor(
 
     private fun loginWithEmail() {
         val currentState = _state.value
+
+        val emailError = authFieldsValidator.validateEmail(currentState.email)
+        val passwordError = authFieldsValidator.validatePassword(currentState.password)
+
+        if (emailError != null || passwordError != null) {
+            _state.update {
+                it.copy(
+                    emailError = emailError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                    passwordError = passwordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                )
+            }
+            return
+        }
+
         _state.update {
             it.copy(
                 isLoading = true,
@@ -99,8 +115,6 @@ class LoginViewModel @Inject constructor(
                     it.copy(
                         isSuccess = false,
                         isLoading = false,
-                        emailError = message,
-                        passwordError = message,
                         error = message
                     )
                 }

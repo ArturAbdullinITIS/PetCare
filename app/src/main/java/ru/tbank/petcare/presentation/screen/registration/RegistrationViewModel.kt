@@ -8,9 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.usecase.RegisterUseCase
 import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
+import ru.tbank.petcare.utils.AuthFieldsValidator
 import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
 
@@ -18,7 +18,8 @@ import javax.inject.Inject
 class RegistrationViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
-    private val errorParser: ErrorParser
+    private val errorParser: ErrorParser,
+    private val authFieldsValidator: AuthFieldsValidator
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
@@ -73,21 +74,38 @@ class RegistrationViewModel @Inject constructor(
     private fun registerWithEmail() {
         val currentState = _state.value
 
+        val emailError = authFieldsValidator.validateEmail(currentState.email)
+        val passwordError = authFieldsValidator.validatePassword(currentState.password)
+        val repeatPasswordError = authFieldsValidator.validateRepeatPassword(
+            password = currentState.password,
+            repeatPassword = currentState.repeatPassword
+        )
+
+        if (emailError != null || passwordError != null || repeatPasswordError != null) {
+             _state.update {
+                 it.copy(
+                     emailError = emailError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                     passwordError = passwordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                     repeatPasswordError = repeatPasswordError?.let { e -> errorParser.getErrorMessage(e) } ?: "",
+                 )
+             }
+             return
+        }
+
         _state.update {
             it.copy(
                 isLoading = true,
+                error = "",
                 emailError = "",
                 passwordError = "",
-                repeatPasswordError = "",
-                error = ""
+                repeatPasswordError = ""
             )
         }
 
         viewModelScope.launch {
             val result = registerUseCase(
                 email = currentState.email,
-                password = currentState.password,
-                repeatPassword = currentState.repeatPassword
+                password = currentState.password
             )
 
             if (result.isSuccess) {
@@ -95,21 +113,10 @@ class RegistrationViewModel @Inject constructor(
             } else {
                 val message = errorParser.getErrorMessage(result.error)
 
-                val (emailError, passwordError, repeatPasswordError) =
-                    if (result.error is ErrorType.AuthValidation) {
-                        val msg = message
-                        Triple(msg, msg, msg)
-                    } else {
-                        Triple("", "", "")
-                    }
-
                 _state.update {
                     it.copy(
                         isSuccess = false,
                         isLoading = false,
-                        emailError = emailError,
-                        passwordError = passwordError,
-                        repeatPasswordError = repeatPasswordError,
                         error = message
                     )
                 }
