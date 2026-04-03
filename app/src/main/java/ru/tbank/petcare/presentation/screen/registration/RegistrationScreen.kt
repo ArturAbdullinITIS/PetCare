@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -67,6 +69,7 @@ fun RegistrationContent(
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .padding(horizontal = 16.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
 
@@ -85,7 +88,6 @@ fun RegistrationContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(1f)
                 .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(32.dp))
                 .padding(vertical = 16.dp, horizontal = 16.dp),
         ) {
@@ -115,6 +117,7 @@ fun RegistrationContent(
                 PasswordTextField(
                     value = state.password,
                     passwordError = state.passwordError,
+                    placeholder = stringResource(R.string.password),
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputPassword(it)) },
                     onIconClick = {
                         viewModel.processCommand(
@@ -136,6 +139,7 @@ fun RegistrationContent(
                 PasswordTextField(
                     value = state.repeatPassword,
                     passwordError = state.repeatPasswordError,
+                    placeholder = stringResource(R.string.repeat_password),
                     onValueChange = { viewModel.processCommand(RegistrationCommand.InputRepeatPassword(it)) },
                     onIconClick = {
                         viewModel.processCommand(
@@ -153,7 +157,7 @@ fun RegistrationContent(
                 },
                 content = {
                     Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = stringResource(R.string.arrow_forward_icon_description)
                     )
                 },

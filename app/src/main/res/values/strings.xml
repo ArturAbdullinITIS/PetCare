@@ -76,7 +76,6 @@
     <string name="register">Register</string>
     <string name="join_register_title">Join our family!</string>
     <string name="already_have_account">"Already have an account? "</string>
-    <string name="register_placeholder_password">hello@petcare.com</string>
     <string name="eye_on_icon_description">Eye up</string>
     <string name="eye_off">Eye down</string>
     <string name="arrow_forward_icon_description">Arrow forward</string>
@@ -84,11 +83,11 @@
     <string name="google_button">Continue with Google</string>
     <string name="or_divider">OR</string>
     <string name="pet_care">Pet care</string>
+    <string name="repeat_password">Repeat Password</string>
     <string name="register_placeholder_email">hello@petcare.com</string>
     <string name="error_email_blank">The email cannot be empty.</string>
     <string name="error_email_invalid">Invalid email format.</string>
     <string name="error_password_short">The password length must be at least 6 characters.</string>
-    <string name="repeat_password">Repeat password</string>
     <string name="error_passwords_do_not_match">Password do not match.</string>
     <string name="close">Close</string>
 </resources>
