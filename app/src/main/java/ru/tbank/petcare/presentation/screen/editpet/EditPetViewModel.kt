@@ -29,13 +29,16 @@ import java.util.Date
 
 @HiltViewModel(assistedFactory = EditPetViewModel.Factory::class)
 class EditPetViewModel @AssistedInject constructor(
-    @Assisted("pet_id") private val petId: String,
+    @Assisted(PET_ID) private val petId: String,
     private val getPetUseCase: GetPetUseCase,
     private val editPetUseCase: EditPetUseCase,
     private val uploadPetPhotoUseCase: UploadPetPhotoUseCase,
     private val deletePetUseCase: DeletePetUseCase,
     private val resourceProvider: ResourceProvider
 ) : ViewModel() {
+    companion object {
+        private const val PET_ID = "pet_id"
+    }
 
     private val _state = MutableStateFlow(EditPetState())
     val state = _state.asStateFlow()
@@ -50,7 +53,9 @@ class EditPetViewModel @AssistedInject constructor(
     private fun loadPet() {
         viewModelScope.launch {
             getPetUseCase(petId).collect { pet ->
-                _state.value = EditPetState(petUIModel = pet.toForm())
+                _state.update { old ->
+                    old.copy(petUIModel = pet.toForm())
+                }
             }
         }
     }
@@ -166,7 +171,7 @@ class EditPetViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(@Assisted("pet_id") petId: String): EditPetViewModel
+        fun create(@Assisted(PET_ID) petId: String): EditPetViewModel
     }
 }
 

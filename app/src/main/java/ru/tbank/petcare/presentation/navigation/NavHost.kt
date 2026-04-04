@@ -21,6 +21,7 @@ import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
+import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 
@@ -155,6 +156,11 @@ fun NavHost(
                             backStack.clear()
                             backStack.add(NavigationBarRoute.MyPets)
                         }
+                    )
+                }
+                entry<Route.PublicPetProfile> { route ->
+                    PublicPetProfileScreen(
+                        petId = route.petId
                     )
                 }
             }

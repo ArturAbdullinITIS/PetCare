@@ -108,18 +108,22 @@ fun PetForm.toDomain(): Pet {
 }
 
 fun Pet.toForm(): PetForm {
+    val gameScoreText = "$gameScore pts"
+    val noteFormatted = note.ifBlank { "Nothing to share" }
     return PetForm(
         id = id,
         name = name,
         breed = breed,
         gender = gender,
         isPublic = isPublic,
-        note = note,
+        note = noteFormatted,
         weight = weight.toString(),
         dateOfBirth = dateOfBirth,
         dateOfBirthText = DateFormatter.formatDob(dateOfBirth),
         iconStatus = iconStatus,
-        photoUrl = photoUrl
+        photoUrl = photoUrl,
+        gameScore = gameScore,
+        gameScoreText = gameScoreText
     )
 }
 
@@ -141,11 +145,12 @@ fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
     val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
         if (ch.isLowerCase()) ch.titlecase() else ch.toString()
     }
+    val noteFormatted = note.ifBlank { "No Info" }
     return PublicPetCardUIModel(
         id = id,
         name = name,
         photoUrl = photoUrl,
-        note = note,
+        note = noteFormatted,
         gameScore = gameScoreField,
         gender = genderFormatted,
         breed = breed,

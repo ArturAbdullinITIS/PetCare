@@ -1,4 +1,4 @@
-package ru.tbank.petcare.presentation.screen.petProfile
+package ru.tbank.petcare.presentation.screen.publicPetProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,26 +8,25 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
-import ru.tbank.petcare.utils.ResourceProvider
 
-private const val PET_ID = "pet_id"
-
-@HiltViewModel(assistedFactory = PetProfileViewModel.Factory::class)
-class PetProfileViewModel @AssistedInject constructor(
+@HiltViewModel(assistedFactory = PublicPetProfileViewModel.Factory::class)
+class PublicPetProfileViewModel @AssistedInject constructor(
     private val getPetUseCase: GetPetUseCase,
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val errorParser: ErrorParser,
     @Assisted(PET_ID) private val petId: String,
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(PetProfileState())
+    companion object {
+        private const val PET_ID = "pet_id"
+    }
+    private val _state = MutableStateFlow(PublicPetProfileState())
     val state = _state.asStateFlow()
 
     init {
@@ -50,12 +49,12 @@ class PetProfileViewModel @AssistedInject constructor(
     interface Factory {
         fun create(
             @Assisted(PET_ID) petId: String
-        ): PetProfileViewModel
+        ): PublicPetProfileViewModel
     }
 
-    fun processCommand(command: PetProfileCommand) {
+    fun processCommand(command: PublicPetProfileCommand) {
         when (command) {
-            is PetProfileCommand.ShowPetInfo -> {
+            is PublicPetProfileCommand.ShowPetInfo -> {
                 viewModelScope.launch {
                     _state.update { state ->
                         state.copy(
@@ -87,6 +86,6 @@ class PetProfileViewModel @AssistedInject constructor(
     }
 }
 
-sealed interface PetProfileCommand {
-    data class ShowPetInfo(val breed: String) : PetProfileCommand
+sealed interface PublicPetProfileCommand {
+    data class ShowPetInfo(val breed: String) : PublicPetProfileCommand
 }

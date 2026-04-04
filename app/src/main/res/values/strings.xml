@@ -113,4 +113,9 @@
     <string name="community_feed">Community Feed</string>
     <string name="meet_the_pack">Meet the Pack</string>
     <string name="public_pet_profile">Public Pet Profile</string>
+    <string name="owner_icon">Owner Icon</string>
+    <string name="owned_by">Owned by</string>
+    <string name="game_icon">Game Icon</string>
+    <string name="best_mini_game_score">Best mini game score</string>
+    <string name="medal_icon">Medal Icon</string>
 </resources>
