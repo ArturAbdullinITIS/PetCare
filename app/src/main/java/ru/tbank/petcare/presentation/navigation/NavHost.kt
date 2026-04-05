@@ -17,6 +17,7 @@ import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
@@ -153,14 +154,23 @@ fun NavHost(
                             backStack.add(Route.Login)
                         },
                         onRegisterSuccess = {
-                            backStack.clear()
-                            backStack.add(NavigationBarRoute.MyPets)
+                            backStack.add(Route.Continue)
                         }
                     )
                 }
                 entry<Route.PublicPetProfile> { route ->
                     PublicPetProfileScreen(
                         petId = route.petId
+                    )
+                }
+                entry<Route.Continue> {
+                    ContinueRegistrationScreen(
+                        onContinue = {
+                            backStack.add(NavigationBarRoute.MyPets)
+                        },
+                        onBack = {
+                            backStack.removeLastOrNull()
+                        }
                     )
                 }
             }

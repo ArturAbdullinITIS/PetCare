@@ -24,6 +24,9 @@ sealed interface Route {
 
     @Serializable
     data object Register : Route
+
+    @Serializable
+    data object Continue : Route
 }
 
 @Serializable
@@ -85,5 +88,6 @@ fun getRouteTitle(route: Route): Int {
         Route.Login -> R.string.login
         Route.Register -> R.string.register
         is Route.PublicPetProfile -> R.string.public_pet_profile
+        Route.Continue -> R.string.continue_registration
     }
 }

@@ -15,7 +15,6 @@ import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.GetPetUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
-import ru.tbank.petcare.utils.ResourceProvider
 
 private const val PET_ID = "pet_id"
 

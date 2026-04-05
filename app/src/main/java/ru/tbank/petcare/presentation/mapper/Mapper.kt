@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.mapper
 
+import android.R.attr.name
 import android.R.attr.subtitle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -7,12 +8,14 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
+import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
+import ru.tbank.petcare.presentation.model.UserForm
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
@@ -123,7 +126,8 @@ fun Pet.toForm(): PetForm {
         iconStatus = iconStatus,
         photoUrl = photoUrl,
         gameScore = gameScore,
-        gameScoreText = gameScoreText
+        gameScoreText = gameScoreText,
+        ownerId = ownerId
     )
 }
 
@@ -155,5 +159,15 @@ fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
         gender = genderFormatted,
         breed = breed,
         isMine = isMine
+    )
+}
+
+fun UserForm.toDomain(): User {
+    return User(
+        id = id,
+        firstName = firstName,
+        lastName = lastName,
+        email = email,
+        photoUrl = photoUrl
     )
 }

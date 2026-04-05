@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Edit
@@ -39,8 +38,6 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -124,72 +121,6 @@ fun PublicProfileCardSwitch(
             )
         }
     }
-}
-
-@Composable
-fun CustomTextField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    label: String,
-    maxLines: Int,
-    minLines: Int = 1,
-    singleLine: Boolean = false,
-    readOnly: Boolean = false,
-    trailingIcon: (@Composable () -> Unit)? = null,
-    keyBoardOption: KeyboardOptions = KeyboardOptions.Default
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        LabelText(
-            text = label
-        )
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = value,
-            onValueChange = onValueChange,
-            placeholder = {
-                Text(
-                    text = placeholder,
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    fontWeight = FontWeight.Normal
-                )
-            },
-            shape = RoundedCornerShape(32.dp),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.20f),
-                unfocusedContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
-                disabledContainerColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                errorIndicatorColor = Color.Transparent
-            ),
-            maxLines = maxLines,
-            singleLine = singleLine,
-            readOnly = readOnly,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyBoardOption,
-            minLines = minLines
-        )
-    }
-}
-
-@Composable
-fun LabelText(
-    text: String
-) {
-    Text(
-        text = text.uppercase(),
-        fontWeight = FontWeight.SemiBold,
-        fontSize = 11.sp,
-        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-        letterSpacing = 1.1.sp
-    )
 }
 
 @Composable

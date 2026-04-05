@@ -9,8 +9,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.tbank.petcare.data.repository.AuthRepositoryImpl
 import ru.tbank.petcare.data.repository.PetsRepositoryImpl
+import ru.tbank.petcare.data.repository.UsersRepositoryImpl
 import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
+import ru.tbank.petcare.domain.repository.UsersRepository
 import javax.inject.Singleton
 
 @Module
@@ -27,6 +29,12 @@ interface FirebaseModule {
     fun bindAuthRepository(
         impl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    @Singleton
+    fun bindUserRepository(
+        impl: UsersRepositoryImpl
+    ): UsersRepository
 
     companion object {
 

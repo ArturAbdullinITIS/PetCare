@@ -53,7 +53,6 @@ fun PetProfileCard(
     pet: PetForm,
     onBreedClick: () -> Unit
 ) {
-
     Box(
         modifier = Modifier
             .fillMaxWidth(),

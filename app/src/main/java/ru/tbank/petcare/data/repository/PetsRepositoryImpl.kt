@@ -39,6 +39,7 @@ import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.PetsRepository
 import java.util.Date
 import javax.inject.Inject
+import kotlin.collections.emptyList
 import kotlin.jvm.java
 
 class PetsRepositoryImpl @Inject constructor(
@@ -244,6 +245,8 @@ class PetsRepositoryImpl @Inject constructor(
         }
 
     override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow {
+        val currentUserId = firebaseAuth.currentUser?.uid
+
         val listener = collection
             .whereEqualTo(IS_PUBLIC_KEY, true)
             .addSnapshotListener { snapshot, error ->
@@ -252,7 +255,9 @@ class PetsRepositoryImpl @Inject constructor(
                     return@addSnapshotListener
                 }
 
-                val pets = snapshot?.documents?.map { it.toPetCompat() } ?: emptyList()
+                val pets = snapshot?.documents
+                    ?.map { it.toPetCompat() }
+                    ?.filter { it.ownerId != currentUserId } ?: emptyList()
 
                 trySend(pets)
             }

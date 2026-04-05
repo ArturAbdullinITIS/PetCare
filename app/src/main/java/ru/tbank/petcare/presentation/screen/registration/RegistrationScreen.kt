@@ -60,9 +60,15 @@ fun RegistrationContent(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    LaunchedEffect(state.isSuccess) {
-        if (state.isSuccess) {
-            onRegisterSuccess()
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is RegistrationEvent.Error -> {
+                }
+                RegistrationEvent.Success -> {
+                    onRegisterSuccess()
+                }
+            }
         }
     }
 

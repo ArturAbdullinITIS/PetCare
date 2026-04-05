@@ -6,7 +6,6 @@ data class RegistrationState(
     val repeatPassword: String = "",
     val isPasswordVisibility: Boolean = false,
     val isRepeatPasswordVisibility: Boolean = false,
-    val isSuccess: Boolean = false,
     val isLoading: Boolean = false,
     val error: String = "",
     val emailError: String = "",
