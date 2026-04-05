@@ -153,8 +153,12 @@ fun NavHost(
                         onNavigateToLogin = {
                             backStack.add(Route.Login)
                         },
-                        onRegisterSuccess = {
+                        onEmailRegisterSuccess = {
                             backStack.add(Route.Continue)
+                        },
+                        onGoogleRegisterSuccess = {
+                            backStack.clear()
+                            backStack.add(NavigationBarRoute.MyPets)
                         }
                     )
                 }
@@ -167,9 +171,6 @@ fun NavHost(
                     ContinueRegistrationScreen(
                         onContinue = {
                             backStack.add(NavigationBarRoute.MyPets)
-                        },
-                        onBack = {
-                            backStack.removeLastOrNull()
                         }
                     )
                 }

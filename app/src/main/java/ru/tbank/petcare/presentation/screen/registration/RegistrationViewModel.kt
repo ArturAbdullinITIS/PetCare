@@ -115,7 +115,7 @@ class RegistrationViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 _state.update { it.copy(error = "", isLoading = false) }
-                _events.emit(RegistrationEvent.Success)
+                _events.emit(RegistrationEvent.EmailRegistered)
             } else {
                 val message = errorParser.getErrorMessage(result.error)
                 _state.update {
@@ -136,7 +136,7 @@ class RegistrationViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 _state.update { it.copy(error = "", isLoading = false) }
-                _events.emit(RegistrationEvent.Success)
+                _events.emit(RegistrationEvent.GoogleRegistered)
             } else {
                 _state.update {
                     it.copy(

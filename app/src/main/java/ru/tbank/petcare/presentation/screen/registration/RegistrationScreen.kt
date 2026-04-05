@@ -42,18 +42,21 @@ import ru.tbank.petcare.presentation.common.PetCareHeader
 @Composable
 fun RegistrationScreen(
     onNavigateToLogin: () -> Unit,
-    onRegisterSuccess: () -> Unit
+    onEmailRegisterSuccess: () -> Unit,
+    onGoogleRegisterSuccess: () -> Unit
 ) {
     RegistrationContent(
         onNavigateToLogin = onNavigateToLogin,
-        onRegisterSuccess = onRegisterSuccess
+        onEmailRegisterSuccess = onEmailRegisterSuccess,
+        onGoogleRegisterSuccess = onGoogleRegisterSuccess
     )
 }
 
 @Composable
 fun RegistrationContent(
     onNavigateToLogin: () -> Unit,
-    onRegisterSuccess: () -> Unit,
+    onEmailRegisterSuccess: () -> Unit,
+    onGoogleRegisterSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
@@ -65,8 +68,11 @@ fun RegistrationContent(
             when (event) {
                 is RegistrationEvent.Error -> {
                 }
-                RegistrationEvent.Success -> {
-                    onRegisterSuccess()
+                RegistrationEvent.EmailRegistered -> {
+                    onEmailRegisterSuccess()
+                }
+                RegistrationEvent.GoogleRegistered -> {
+                    onGoogleRegisterSuccess()
                 }
             }
         }
