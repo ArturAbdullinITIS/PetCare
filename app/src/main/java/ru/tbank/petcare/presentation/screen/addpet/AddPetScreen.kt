@@ -1,8 +1,5 @@
 package ru.tbank.petcare.presentation.screen.addpet
 
-import android.R.attr.label
-import android.R.attr.maxLines
-import android.R.attr.singleLine
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -44,9 +41,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.AddPetProfilePicture
 import ru.tbank.petcare.presentation.common.CustomButton
-import ru.tbank.petcare.presentation.common.CustomSegmentedControlButton
 import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
+import ru.tbank.petcare.presentation.common.GenderSegmentedControlButton
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
 import ru.tbank.petcare.utils.filterWeightInput
@@ -202,7 +199,7 @@ private fun AddPetContent(
                     }
                 )
             }
-            CustomSegmentedControlButton(
+            GenderSegmentedControlButton(
                 currentGender = state.petUIModel.gender,
                 onSelected = {
                     viewModel.processCommand(AddPetCommand.ChangeGender(it))

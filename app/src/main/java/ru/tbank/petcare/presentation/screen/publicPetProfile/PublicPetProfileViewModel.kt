@@ -11,9 +11,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
-import ru.tbank.petcare.domain.usecase.GetPetUseCase
-import ru.tbank.petcare.domain.usecase.GetUserNameUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetPetUseCase
+import ru.tbank.petcare.domain.usecase.users.GetUserNameUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider

@@ -129,4 +129,26 @@
     <string name="arrow_forward">Arrow forward</string>
     <string name="continue_registration">Continue registration</string>
     <string name="unknown_owner">Unknown owner</string>
+    <string name="notifications_icon">Notifications Icon</string>
+    <string name="appearance_icon">Appearance Icon</string>
+    <string name="account_management_icon">Account Management Icon</string>
+    <string name="all_notifications">All Notifications</string>
+    <string name="activity_type_icon">Activity Type Icon</string>
+    <string name="light">Light</string>
+    <string name="dark">Dark</string>
+    <string name="russian">Russian</string>
+    <string name="english">English</string>
+    <string name="delete_account_icon">Delete Account Icon</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="arrow_forward_keyboard_icon">Arrow Forward Keyboard Icon</string>
+    <string name="notification_settings">Notification Settings</string>
+    <string name="grooming">Grooming</string>
+    <string name="veterinarian">Veterinarian</string>
+    <string name="walk">Walk</string>
+    <string name="appearance">Appearance</string>
+    <string name="theme">Theme</string>
+    <string name="switch_between_light_and_dark">Switch between light and dark</string>
+    <string name="language">Language</string>
+    <string name="preferred_app_language">Preferred app language</string>
+    <string name="account_management">Account Management</string>
 </resources>

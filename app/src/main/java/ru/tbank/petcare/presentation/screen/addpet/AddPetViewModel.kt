@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
-import ru.tbank.petcare.domain.usecase.AddPetUseCase
-import ru.tbank.petcare.domain.usecase.UploadPetPhotoUseCase
+import ru.tbank.petcare.domain.usecase.pets.AddPetUseCase
+import ru.tbank.petcare.domain.usecase.pets.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ResourceProvider

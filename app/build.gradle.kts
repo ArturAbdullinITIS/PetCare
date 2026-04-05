@@ -110,6 +110,9 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)
