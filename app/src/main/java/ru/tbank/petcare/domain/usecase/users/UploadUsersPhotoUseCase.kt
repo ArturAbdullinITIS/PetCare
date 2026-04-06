@@ -1,4 +1,4 @@
-package ru.tbank.petcare.domain.usecase
+package ru.tbank.petcare.domain.usecase.users
 
 import android.net.Uri
 import ru.tbank.petcare.domain.model.ValidationResult

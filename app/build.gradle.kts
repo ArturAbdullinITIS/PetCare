@@ -110,6 +110,13 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
+    // SplashScreen
+    implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.androidx.appcompat)
     implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)

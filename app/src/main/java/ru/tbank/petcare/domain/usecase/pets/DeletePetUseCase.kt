@@ -1,4 +1,4 @@
-package ru.tbank.petcare.domain.usecase
+package ru.tbank.petcare.domain.usecase.pets
 
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.PetsRepository

@@ -253,7 +253,7 @@ fun PetCareHeader() {
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_pet_care_main),
-            contentDescription = stringResource(R.string.pet_care),
+            contentDescription = stringResource(R.string.app_name),
             modifier = Modifier.size(32.dp),
             tint = MaterialTheme.colorScheme.onPrimaryContainer,
         )
@@ -261,7 +261,7 @@ fun PetCareHeader() {
         Spacer(modifier = Modifier.width(8.dp))
 
         Text(
-            text = stringResource(R.string.pet_care),
+            text = stringResource(R.string.app_name),
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onPrimaryContainer,

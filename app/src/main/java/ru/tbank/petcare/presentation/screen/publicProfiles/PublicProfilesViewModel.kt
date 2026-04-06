@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.usecase.GetAllPublicPetsUseCase
-import ru.tbank.petcare.domain.usecase.GetCurrentUserIdUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetAllPublicPetsUseCase
+import ru.tbank.petcare.domain.usecase.users.GetCurrentUserIdUseCase
 import ru.tbank.petcare.presentation.mapper.toPublicPetCardUIModel
 import javax.inject.Inject
 

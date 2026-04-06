@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.screen.petProfile
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -94,9 +95,10 @@ private fun PetProfileContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             PetProfileButton(
+                modifier = Modifier.weight(1f),
                 text = stringResource(R.string.edit_profile),
                 icon = Icons.Default.Edit,
                 bg = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
@@ -106,7 +108,8 @@ private fun PetProfileContent(
                 }
             )
             PetProfileButton(
-                text = "Analytics",
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.analytics),
                 icon = Icons.Default.Analytics,
                 bg = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.5f),
                 fg = MaterialTheme.colorScheme.onSecondaryContainer,

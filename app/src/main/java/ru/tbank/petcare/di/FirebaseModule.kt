@@ -2,39 +2,15 @@ package ru.tbank.petcare.di
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.tbank.petcare.data.repository.AuthRepositoryImpl
-import ru.tbank.petcare.data.repository.PetsRepositoryImpl
-import ru.tbank.petcare.data.repository.UsersRepositoryImpl
-import ru.tbank.petcare.domain.repository.AuthRepository
-import ru.tbank.petcare.domain.repository.PetsRepository
-import ru.tbank.petcare.domain.repository.UsersRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 interface FirebaseModule {
-    @Binds
-    @Singleton
-    fun bindPetsRepository(
-        impl: PetsRepositoryImpl
-    ): PetsRepository
-
-    @Binds
-    @Singleton
-    fun bindAuthRepository(
-        impl: AuthRepositoryImpl
-    ): AuthRepository
-
-    @Binds
-    @Singleton
-    fun bindUserRepository(
-        impl: UsersRepositoryImpl
-    ): UsersRepository
 
     companion object {
 

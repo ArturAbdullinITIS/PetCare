@@ -112,14 +112,13 @@ fun PetForm.toDomain(): Pet {
 
 fun Pet.toForm(): PetForm {
     val gameScoreText = "$gameScore pts"
-    val noteFormatted = note.ifBlank { "Nothing to share" }
     return PetForm(
         id = id,
         name = name,
         breed = breed,
         gender = gender,
         isPublic = isPublic,
-        note = noteFormatted,
+        note = note,
         weight = weight.toString(),
         dateOfBirth = dateOfBirth,
         dateOfBirthText = DateFormatter.formatDob(dateOfBirth),

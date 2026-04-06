@@ -157,8 +157,10 @@ fun PetProfileCard(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun PetProfileButton(
+    modifier: Modifier = Modifier,
     text: String,
     icon: ImageVector,
     bg: Color,
@@ -172,7 +174,7 @@ fun PetProfileButton(
             contentColor = fg
         ),
         onClick = onClick,
-        modifier = Modifier.height(52.dp)
+        modifier = modifier.height(52.dp)
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 12.dp),

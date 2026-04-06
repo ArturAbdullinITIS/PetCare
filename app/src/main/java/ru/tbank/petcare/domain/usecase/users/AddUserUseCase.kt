@@ -1,4 +1,4 @@
-package ru.tbank.petcare.domain.usecase
+package ru.tbank.petcare.domain.usecase.users
 
 import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.domain.model.ValidationResult

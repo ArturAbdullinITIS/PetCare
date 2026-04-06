@@ -7,10 +7,18 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import jakarta.inject.Singleton
+import ru.tbank.petcare.data.repository.AuthRepositoryImpl
+import ru.tbank.petcare.data.repository.PetsRepositoryImpl
+import ru.tbank.petcare.data.repository.SettingsRepositoryImpl
+import ru.tbank.petcare.data.repository.UsersRepositoryImpl
+import ru.tbank.petcare.domain.repository.AuthRepository
+import ru.tbank.petcare.domain.repository.PetsRepository
+import ru.tbank.petcare.domain.repository.SettingsRepository
+import ru.tbank.petcare.domain.repository.UsersRepository
 import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
 import ru.tbank.petcare.utils.ResourceProviderImpl
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -21,6 +29,30 @@ interface CoreModule {
     fun bindResourceProvider(
         impl: ResourceProviderImpl
     ): ResourceProvider
+
+    @Binds
+    @Singleton
+    fun bindPetsRepository(
+        impl: PetsRepositoryImpl
+    ): PetsRepository
+
+    @Binds
+    @Singleton
+    fun bindAuthRepository(
+        impl: AuthRepositoryImpl
+    ): AuthRepository
+
+    @Binds
+    @Singleton
+    fun bindUserRepository(
+        impl: UsersRepositoryImpl
+    ): UsersRepository
+
+    @Binds
+    @Singleton
+    fun bindSettingsRepository(
+        impl: SettingsRepositoryImpl
+    ): SettingsRepository
 
     companion object {
 

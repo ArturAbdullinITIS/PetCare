@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.usecase.AddUserUseCase
-import ru.tbank.petcare.domain.usecase.UploadUsersPhotoUseCase
+import ru.tbank.petcare.domain.usecase.users.AddUserUseCase
+import ru.tbank.petcare.domain.usecase.users.UploadUsersPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject

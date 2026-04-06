@@ -25,6 +25,7 @@ import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
+import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -173,6 +174,9 @@ fun NavHost(
                             backStack.add(NavigationBarRoute.MyPets)
                         }
                     )
+                }
+                entry<Route.Settings> {
+                    SettingsScreen()
                 }
             }
         )

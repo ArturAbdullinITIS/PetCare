@@ -120,7 +120,7 @@ fun NotesCard(
                 letterSpacing = 1.4.sp
             )
             Text(
-                text = note,
+                text = note.ifBlank { stringResource(R.string.nothing_to_share) },
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Normal,
                 maxLines = 4,

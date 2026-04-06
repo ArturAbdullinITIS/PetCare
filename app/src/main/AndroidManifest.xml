@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
+        android:localeConfig="@xml/locales_config"
         android:name=".PetCareApp"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
@@ -19,7 +20,7 @@
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PetCare">
+            android:theme="@style/Theme.PetCare.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

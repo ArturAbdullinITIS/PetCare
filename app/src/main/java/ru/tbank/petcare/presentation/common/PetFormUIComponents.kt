@@ -246,7 +246,7 @@ fun SelectableIconStatusRow(
 }
 
 @Composable
-fun CustomSegmentedControlButton(
+fun GenderSegmentedControlButton(
     currentGender: Gender,
     onSelected: (Gender) -> Unit
 ) {

@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.usecase.GetAllPetsUseCase
-import ru.tbank.petcare.domain.usecase.GetAllTipsUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetAllTipsUseCase
 import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject

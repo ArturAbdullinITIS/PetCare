@@ -8,11 +8,10 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.usecase.GetPetInfoUseCase
-import ru.tbank.petcare.domain.usecase.GetPetUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetPetUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
 

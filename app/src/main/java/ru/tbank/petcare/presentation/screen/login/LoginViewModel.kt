@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ru.tbank.petcare.domain.usecase.LoginUseCase
-import ru.tbank.petcare.domain.usecase.SignInWithGoogleUseCase
+import ru.tbank.petcare.domain.usecase.users.LoginUseCase
+import ru.tbank.petcare.domain.usecase.users.SignInWithGoogleUseCase
 import ru.tbank.petcare.utils.AuthFieldsValidator
 import ru.tbank.petcare.utils.ErrorParser
 import javax.inject.Inject
