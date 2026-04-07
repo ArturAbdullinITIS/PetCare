@@ -6,6 +6,7 @@ import ru.tbank.petcare.presentation.model.VetActivityForm
 import ru.tbank.petcare.presentation.model.WalkActivityForm
 import java.util.Date
 
+@Suppress("MaximumLineLength", "MaxLineLength")
 data class CreateActivityState(
     val selectedPetId: String = "",
     val pets: List<PetCardUIModel> = emptyList(),

@@ -51,6 +51,8 @@ import ru.tbank.petcare.presentation.mapper.toIndex
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
+private const val HALF_ALPHA = 0.5f
+
 @Composable
 fun ActivitySegmentedControlButton(
     currentActivity: ActivityFormState,
@@ -161,7 +163,7 @@ fun SetReminderCardSwitch(
                     text = stringResource(R.string.get_notified_switch),
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(HALF_ALPHA)
 
                 )
             }

@@ -95,6 +95,7 @@ class CreateActivityViewModel @AssistedInject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun handleCreateActivity() {
         val activity = state.value.toDomain()
 

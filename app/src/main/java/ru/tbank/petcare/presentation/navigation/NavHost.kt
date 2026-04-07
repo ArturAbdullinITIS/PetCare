@@ -209,7 +209,7 @@ fun NavHost(
                         }
                     )
                 }
-                entry<Route.CreateActivity>() { route ->
+                entry<Route.CreateActivity> { route ->
                     CreateActivityScreen(
                         petId = route.petId,
                         type = route.type,

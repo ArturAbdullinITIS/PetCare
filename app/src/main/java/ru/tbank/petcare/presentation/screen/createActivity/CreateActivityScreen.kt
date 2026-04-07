@@ -60,6 +60,9 @@ fun CreateActivityScreen(
     )
 }
 
+private const val HALF_WEIGHT = 0.5f
+
+@Suppress("LongParameterList", "LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateActivityContent(
@@ -169,7 +172,7 @@ fun CreateActivityContent(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = (state.activityType as ActivityFormState.Walk).form.goalKm,
                             onValueChange = {
                                 viewModel.processCommand(
@@ -184,7 +187,7 @@ fun CreateActivityContent(
                             placeholder = stringResource(R.string.goal_km_placeholder)
                         )
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = (state.activityType as ActivityFormState.Walk).form.actualKm,
                             onValueChange = {
                                 viewModel.processCommand(
@@ -248,7 +251,7 @@ fun CreateActivityContent(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = form.groomingCost,
                             onValueChange = {
                                 viewModel.processCommand(CreateActivityCommand.InputGroomingCost(filterFloatInput(it)))
@@ -259,7 +262,7 @@ fun CreateActivityContent(
                             placeholder = "0.0"
                         )
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = form.durationMinutes,
                             onValueChange = {
                                 viewModel.processCommand(

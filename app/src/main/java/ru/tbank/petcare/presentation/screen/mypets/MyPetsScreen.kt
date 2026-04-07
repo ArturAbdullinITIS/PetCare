@@ -37,6 +37,7 @@ fun MyPetsScreen(
 
 private const val FRACTION = 0.6f
 
+@Suppress("LongParameterList")
 @Composable
 private fun MyPetsContent(
     onNavigateToProfile: (String) -> Unit,
