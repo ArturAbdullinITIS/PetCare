@@ -9,12 +9,12 @@ import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
@@ -38,7 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             ValidationResult(isSuccess = true, data = Unit)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseAuthException) {
             when (e) {
                 is FirebaseAuthWeakPasswordException ->
                     ValidationResult(isSuccess = false, error = ErrorType.AuthValidation(e.message.orEmpty()))
@@ -90,7 +90,7 @@ class AuthRepositoryImpl @Inject constructor(
             ValidationResult(isSuccess = false, error = ErrorType.AuthCancelled(e.message.orEmpty()))
         } catch (e: GetCredentialException) {
             ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(e.message.orEmpty()))
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseAuthException) {
             when (e) {
                 is FirebaseAuthInvalidCredentialsException ->
                     ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
@@ -111,7 +111,7 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             ValidationResult(isSuccess = true, data = Unit)
-        } catch (e: FirebaseFirestoreException) {
+        } catch (e: FirebaseAuthException) {
             when (e) {
                 is FirebaseAuthInvalidCredentialsException ->
                     ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
