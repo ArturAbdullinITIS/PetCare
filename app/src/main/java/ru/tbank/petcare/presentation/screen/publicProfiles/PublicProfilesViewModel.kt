@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetAllPublicPetsUseCase
 import ru.tbank.petcare.domain.usecase.users.GetCurrentUserIdUseCase
 import ru.tbank.petcare.presentation.mapper.toPublicPetCardUIModel
+import ru.tbank.petcare.presentation.model.PublicProfilesSortOption
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,6 +24,18 @@ class PublicProfilesViewModel @Inject constructor(
 
     init {
         loadPublicPets()
+    }
+
+    fun processCommand(command: PublicProfilesCommand) {
+        when (command) {
+            is PublicProfilesCommand.ChooseSortOption -> {
+                _state.update { state ->
+                    state.copy(
+                        sortOption = command.option
+                    )
+                }
+            }
+        }
     }
 
     private fun loadPublicPets() {
@@ -56,4 +69,8 @@ class PublicProfilesViewModel @Inject constructor(
                 }
         }
     }
+}
+
+sealed interface PublicProfilesCommand {
+    data class ChooseSortOption(val option: PublicProfilesSortOption) : PublicProfilesCommand
 }
