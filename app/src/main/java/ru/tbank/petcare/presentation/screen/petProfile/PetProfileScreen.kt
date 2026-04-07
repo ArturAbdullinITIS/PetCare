@@ -30,13 +30,18 @@ import ru.tbank.petcare.presentation.common.CustomButton
 import ru.tbank.petcare.presentation.common.NotesCard
 
 @Composable
-fun PetProfileScreen(petId: String, onNavigateToEdit: (String) -> Unit) {
-    PetProfileContent(petId = petId, onNavigateToEdit = onNavigateToEdit)
+fun PetProfileScreen(
+    onCreateActivityClick: (String) -> Unit,
+    petId: String,
+    onNavigateToEdit: (String) -> Unit
+) {
+    PetProfileContent(onCreateActivityClick = onCreateActivityClick, petId = petId, onNavigateToEdit = onNavigateToEdit)
 }
 
 @Composable
 private fun PetProfileContent(
     onNavigateToEdit: (String) -> Unit,
+    onCreateActivityClick: (String) -> Unit,
     petId: String,
     modifier: Modifier = Modifier,
     viewModel: PetProfileViewModel = hiltViewModel(
@@ -86,7 +91,7 @@ private fun PetProfileContent(
 
         CustomButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {},
+            onClick = { onCreateActivityClick(petId) },
             text = stringResource(R.string.create_activity_button),
             enabled = true
         )

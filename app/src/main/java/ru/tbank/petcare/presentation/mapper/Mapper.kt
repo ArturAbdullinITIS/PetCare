@@ -5,6 +5,9 @@ import android.R.attr.subtitle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.model.Activity
+import ru.tbank.petcare.domain.model.ActivityDetails
+import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
@@ -16,6 +19,8 @@ import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
 import ru.tbank.petcare.presentation.model.UserForm
+import ru.tbank.petcare.presentation.screen.createActivity.ActivityFormState
+import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityState
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
@@ -143,6 +148,41 @@ fun Pet.toPetCardUIModel(): PetCardUIModel {
     )
 }
 
+fun ActivityFormState.toIndex(): Int {
+    return when (this) {
+        is ActivityFormState.Walk -> 0
+        is ActivityFormState.Grooming -> 1
+        is ActivityFormState.Vet -> 2
+    }
+}
+
+fun CreateActivityState.toDomain(): Activity {
+    return Activity(
+        id = "",
+        activityType = when (this.activityType) {
+            is ActivityFormState.Walk -> ActivityType.WALK
+            is ActivityFormState.Grooming -> ActivityType.GROOMING
+            is ActivityFormState.Vet -> ActivityType.VET
+        },
+        activityDate = this.activityDate,
+        notes = this.activityNotes,
+        details = when (this.activityType) {
+            is ActivityFormState.Grooming -> ActivityDetails.Grooming(
+                procedureType = this.activityType.form.procedureType,
+                durationMinutes = this.activityType.form.durationMinutes,
+                groomingCost = this.activityType.form.groomingCost
+            )
+            is ActivityFormState.Vet -> ActivityDetails.Vet(
+                vetCost = this.activityType.form.vetCost,
+                procedureType = this.activityType.form.procedureType
+            )
+            is ActivityFormState.Walk -> ActivityDetails.Walk(
+                goalKm = this.activityType.form.goalKm,
+                actualKm = this.activityType.form.actualKm
+            )
+        }
+    )
+}
 fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
     val gameScoreField = "$gameScore pts"
     val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->

@@ -22,9 +22,17 @@ import ru.tbank.petcare.R
 
 @Composable
 fun MyPetsScreen(
+    onWalkClick: () -> Unit,
+    onGroomingClick: () -> Unit,
+    onVetClick: () -> Unit,
     onNavigateToProfile: (String) -> Unit
 ) {
-    MyPetsContent(onNavigateToProfile = onNavigateToProfile)
+    MyPetsContent(
+        onWalkClick = onWalkClick,
+        onGroomingClick = onGroomingClick,
+        onVetClick = onVetClick,
+        onNavigateToProfile = onNavigateToProfile
+    )
 }
 
 private const val FRACTION = 0.6f
@@ -32,6 +40,9 @@ private const val FRACTION = 0.6f
 @Composable
 private fun MyPetsContent(
     onNavigateToProfile: (String) -> Unit,
+    onWalkClick: () -> Unit,
+    onGroomingClick: () -> Unit,
+    onVetClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: MyPetsViewModel = hiltViewModel()
 ) {
@@ -50,9 +61,9 @@ private fun MyPetsContent(
 
         item {
             QuickActionRow(
-                onWalkClick = {},
-                onGroomingClick = {},
-                onVetClick = {}
+                onWalkClick = onWalkClick,
+                onGroomingClick = onGroomingClick,
+                onVetClick = onVetClick
             )
         }
 

@@ -7,17 +7,24 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.ui.NavDisplay
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
+import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
@@ -35,9 +42,17 @@ fun NavHost(
     val backStack = rememberSaveable {
         mutableStateListOf<Route>(Route.Register)
     }
-    val currentRoute = backStack.lastOrNull() ?: NavigationBarRoute.MyPets
+    val currentRoute = backStack.lastOrNull() ?: Route.Register
 
     val isBottomBar = currentRoute is NavigationBarRoute
+
+    val topBarActions = remember {
+        mutableStateOf<(@Composable () -> Unit)?>(null)
+    }
+
+    LaunchedEffect(currentRoute) {
+        topBarActions.value = null
+    }
 
     Scaffold(
         topBar = {
@@ -63,7 +78,10 @@ fun NavHost(
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background
-                )
+                ),
+                actions = {
+                    topBarActions.value?.invoke()
+                }
             )
         },
         floatingActionButton = {
@@ -101,6 +119,30 @@ fun NavHost(
                     MyPetsScreen(
                         onNavigateToProfile = { petId ->
                             backStack.add(Route.PetProfile(petId))
+                        },
+                        onWalkClick = {
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.WALK.value,
+                                    petId = ""
+                                )
+                            )
+                        },
+                        onGroomingClick = {
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.GROOMING.value,
+                                    petId = ""
+                                )
+                            )
+                        },
+                        onVetClick = {
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.VET.value,
+                                    petId = ""
+                                )
+                            )
                         }
                     )
                 }
@@ -108,7 +150,8 @@ fun NavHost(
                     PublicProfilesScreen(
                         onPetClick = { petId ->
                             backStack.add(Route.PublicPetProfile(petId))
-                        }
+                        },
+                        setTopBarActions = { topBarActions.value = it }
                     )
                 }
                 entry<Route.AddPet> {
@@ -123,6 +166,9 @@ fun NavHost(
                         petId = route.petId,
                         onNavigateToEdit = {
                             backStack.add(Route.EditPet(route.petId))
+                        },
+                        onCreateActivityClick = { petId ->
+                            backStack.add(Route.CreateActivity(petId = petId, type = ActivityType.WALK.value))
                         }
                     )
                 }
@@ -163,6 +209,19 @@ fun NavHost(
                         }
                     )
                 }
+                entry<Route.CreateActivity>() { route ->
+                    CreateActivityScreen(
+                        petId = route.petId,
+                        type = route.type,
+                        onAddClick = {
+                            backStack.add(Route.AddPet)
+                        },
+                        onSaveActivityClick = {
+                            backStack.removeLastOrNull()
+                        }
+                    )
+                }
+
                 entry<Route.PublicPetProfile> { route ->
                     PublicPetProfileScreen(
                         petId = route.petId
