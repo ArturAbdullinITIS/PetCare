@@ -279,16 +279,12 @@ class PetsRepositoryImpl @Inject constructor(
                 }
 
                 val tips = snapshot.documents.mapNotNull { doc ->
-                    snapshot?.documents?.forEach { doc ->
+                    snapshot.documents.forEach { doc ->
                         val raw = doc.get("date_of_birth")
                         Log.d("DOB_DEBUG", "doc=${doc.id} dobType=${raw?.javaClass?.name} dobValue=$raw")
                     }
                     val dto = doc.toObject(TipDto::class.java)
-                    if (dto == null) {
-                        null
-                    } else {
-                        dto.toDomain()
-                    }
+                    dto?.toDomain()
                 }
 
                 trySend(tips)
