@@ -138,35 +138,6 @@ fun PasswordTextField(
     )
 }
 
-// @Composable
-// fun CustomButton(
-//    text: String,
-//    onClick: () -> Unit,
-// ) {
-//    Button(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(56.dp),
-//        onClick = onClick,
-//        shape = RoundedCornerShape(32.dp),
-//        colors = ButtonDefaults.buttonColors(
-//            contentColor = MaterialTheme.colorScheme.surface,
-//            containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-//        ),
-//    ) {
-//        Text(
-//            text = text,
-//            fontSize = 18.sp,
-//            fontWeight = FontWeight.Bold,
-//        )
-//        Spacer(modifier = Modifier.width(8.dp))
-//        Icon(
-//            imageVector = Icons.Filled.ArrowForward,
-//            contentDescription = stringResource(R.string.arrow_forward_icon_description),
-//        )
-//    }
-// }
-
 @Composable
 fun GoogleButton(
     onClick: () -> Unit,
@@ -178,7 +149,7 @@ fun GoogleButton(
         onClick = onClick,
         shape = RoundedCornerShape(32.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.surface,
+            containerColor = Color.White,
         ),
     ) {
         Image(

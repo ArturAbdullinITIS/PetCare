@@ -19,7 +19,8 @@ val OnTertiaryContainerLight = Color(0xFF323A70)
 val OnBackgroundLight = Color(0xFF1B1B1B)
 val OnSurfaceLight = Color(0xFF1B1B1B)
 
-val OnPrimaryLight = Color(0xFF0B3327)
+@Suppress("MagicNumber")
+val OnPrimaryLight = Color(0xFF134836)
 val OnSecondaryLight = Color(0xFF4A1F2F)
 val OnTertiaryLight = Color(0xFF1E2466)
 
@@ -34,6 +35,13 @@ val TertiaryDark = Color(0xFFBFC6FF)
 val BackgroundDark = Color(0xFF0E0E0E)
 val SurfaceDark = Color(0xFF1A1919)
 val SurfaceVariantDark = Color(0xFF262626)
+
+val PrimaryContainerDark = Color(0xFF005A43)
+val OnPrimaryContainerDark = Color(0xFF93EFCC)
+val SecondaryContainerDark = Color(0xFF663C50)
+val OnSecondaryContainerDark = Color(0xFFFEC4DD)
+val TertiaryContainerDark = Color(0xFF323A70)
+val OnTertiaryContainerDark = Color(0xFFB8C0FF)
 
 val OnBackgroundDark = Color(0xFFECECEC)
 val OnSurfaceDark = Color(0xFFECECEC)

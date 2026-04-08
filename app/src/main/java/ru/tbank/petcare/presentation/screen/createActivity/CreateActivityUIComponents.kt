@@ -140,7 +140,7 @@ fun SetReminderCardSwitch(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(color = MaterialTheme.colorScheme.tertiary),
+                    .background(color = MaterialTheme.colorScheme.tertiaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
