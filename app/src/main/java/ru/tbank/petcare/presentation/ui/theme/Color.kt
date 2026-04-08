@@ -19,6 +19,7 @@ val OnTertiaryContainerLight = Color(0xFF323A70)
 val OnBackgroundLight = Color(0xFF1B1B1B)
 val OnSurfaceLight = Color(0xFF1B1B1B)
 
+@Suppress("MagicNumber")
 val OnPrimaryLight = Color(0xFF134836)
 val OnSecondaryLight = Color(0xFF4A1F2F)
 val OnTertiaryLight = Color(0xFF1E2466)
