@@ -53,7 +53,8 @@ import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
 @Composable
 fun MyPetsPetCard(
     pet: PetCardUIModel,
-    onPetClick: () -> Unit
+    onPetClick: () -> Unit,
+    clickable: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -62,7 +63,9 @@ fun MyPetsPetCard(
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
-        onClick = onPetClick
+        onClick = {
+            if (clickable) onPetClick()
+        }
     ) {
         Row(
             modifier = Modifier

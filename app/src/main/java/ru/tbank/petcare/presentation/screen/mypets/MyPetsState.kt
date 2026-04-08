@@ -9,7 +9,8 @@ data class MyPetsState(
     val isPetsLoading: Boolean = false,
     val isTipsLoading: Boolean = false,
     val errorMessage: String? = null,
-    val currentTipIndex: Int = 0
+    val currentTipIndex: Int = 0,
+    val isRefreshing: Boolean = false
 ) {
     val currentTip: Tip?
         get() = tips.getOrNull(currentTipIndex)

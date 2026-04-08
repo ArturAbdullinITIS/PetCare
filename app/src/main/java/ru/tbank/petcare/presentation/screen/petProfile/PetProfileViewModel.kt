@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.usecase.pets.GetLocalPetUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
-import ru.tbank.petcare.domain.usecase.pets.GetPetUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
 
@@ -19,7 +19,7 @@ private const val PET_ID = "pet_id"
 
 @HiltViewModel(assistedFactory = PetProfileViewModel.Factory::class)
 class PetProfileViewModel @AssistedInject constructor(
-    private val getPetUseCase: GetPetUseCase,
+    private val getPetUseCase: GetLocalPetUseCase,
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val errorParser: ErrorParser,
     @Assisted(PET_ID) private val petId: String,

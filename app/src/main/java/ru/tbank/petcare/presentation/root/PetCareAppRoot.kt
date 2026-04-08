@@ -2,6 +2,7 @@ package ru.tbank.petcare.presentation.root
 import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.os.LocaleListCompat
@@ -16,10 +17,13 @@ private const val TAG_EN = "en"
 private const val SDK_VERSION = 33
 
 @Composable
-fun PetCareAppRoot() {
+fun PetCareAppRoot(
+    splashViewModel: SplashViewModel
+) {
     val vm: AppSettingsViewModel = hiltViewModel()
     val settings by vm.settings.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val startDestination by splashViewModel.startDestination.collectAsState()
 
     val tag = when (settings.language) {
         Language.RUSSIAN -> TAG_RU
@@ -40,8 +44,11 @@ fun PetCareAppRoot() {
             )
         }
     }
-
-    PetCareTheme(darkTheme = settings.darkTheme) {
-        NavHost()
+    if (startDestination != null) {
+        PetCareTheme(darkTheme = settings.darkTheme) {
+            NavHost(
+                startDestination = startDestination!!
+            )
+        }
     }
 }

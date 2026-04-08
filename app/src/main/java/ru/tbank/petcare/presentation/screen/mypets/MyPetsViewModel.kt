@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetAllTipsUseCase
+import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
+import ru.tbank.petcare.domain.usecase.pets.SyncPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject
@@ -19,15 +21,21 @@ import javax.inject.Inject
 class MyPetsViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val getAllPetsUseCase: GetAllPetsUseCase,
-    private val getAllTipsUseCase: GetAllTipsUseCase
+    private val getAllTipsUseCase: GetAllTipsUseCase,
+    private val syncPetsUseCase: SyncPetsUseCase,
+    private val isOnlineUseCase: IsOnlineUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(MyPetsState())
     val state = _state.asStateFlow()
+    val isOnline = isOnlineUseCase()
 
     init {
         loadPets()
         loadTips()
+        viewModelScope.launch {
+            syncPetsUseCase()
+        }
     }
 
     private fun loadPets() {
@@ -39,7 +47,8 @@ class MyPetsViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             isPetsLoading = false,
-                            errorMessage = exception.message ?: resourceProvider.getString(R.string.unknown_error_mypets)
+                            errorMessage = exception.message
+                                ?: resourceProvider.getString(R.string.unknown_error_mypets)
                         )
                     }
                 }
@@ -85,7 +94,13 @@ class MyPetsViewModel @Inject constructor(
     }
 
     fun refresh() {
-        loadPets()
+        viewModelScope.launch {
+            if (!isOnlineUseCase().value) return@launch
+
+            _state.update { it.copy(isRefreshing = true) }
+            syncPetsUseCase()
+            _state.update { it.copy(isRefreshing = false) }
+        }
     }
 
     fun nextTip() {

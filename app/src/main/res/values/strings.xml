@@ -173,4 +173,9 @@
     <string name="game_score">Game Score</string>
     <string name="sort_option_icon">Sort option icon</string>
     <string name="analytics">Analytics</string>
+    <string name="offline">Offline</string>
+    <string name="not_authenticated">Not authenticated</string>
+    <string name="sync_error">Sync error</string>
+    <string name="pet_id_cannot_be_blank">Pet ID cannot be blank</string>
+    <string name="no_breed_information_found_for">No breed information found for \"%1$s\"</string>
 </resources>

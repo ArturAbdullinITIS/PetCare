@@ -22,6 +22,7 @@ import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
+import ru.tbank.petcare.presentation.root.StartDestination
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
@@ -37,10 +38,16 @@ import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHost(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startDestination: StartDestination
 ) {
+    val startRoute = when (startDestination) {
+        StartDestination.Auth -> Route.Login
+        StartDestination.Main -> NavigationBarRoute.MyPets
+    }
+
     val backStack = rememberSaveable {
-        mutableStateListOf<Route>(Route.Register)
+        mutableStateListOf<Route>(startRoute)
     }
     val currentRoute = backStack.lastOrNull() ?: Route.Register
 
