@@ -74,7 +74,8 @@ private fun MyPetsContent(
                 QuickActionRow(
                     onWalkClick = onWalkClick,
                     onGroomingClick = onGroomingClick,
-                    onVetClick = onVetClick
+                    onVetClick = onVetClick,
+                    enabled = isOnline
                 )
             }
 

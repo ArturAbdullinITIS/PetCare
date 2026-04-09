@@ -178,4 +178,7 @@
     <string name="sync_error">Sync error</string>
     <string name="pet_id_cannot_be_blank">Pet ID cannot be blank</string>
     <string name="no_breed_information_found_for">No breed information found for \"%1$s\"</string>
+    <string name="no_internet_please_check_your_connection_and_try_again">Please check your connection and try again.</string>
+    <string name="no_internet_icon">No Internet Icon</string>
+    <string name="no_internet_connection">No Internet Connection</string>
 </resources>

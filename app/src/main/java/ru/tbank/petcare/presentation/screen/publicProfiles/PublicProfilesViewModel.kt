@@ -4,11 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetAllPublicPetsUseCase
+import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
 import ru.tbank.petcare.domain.usecase.users.GetCurrentUserIdUseCase
 import ru.tbank.petcare.presentation.mapper.toPublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.PublicProfilesSortOption
@@ -17,10 +19,13 @@ import javax.inject.Inject
 @HiltViewModel
 class PublicProfilesViewModel @Inject constructor(
     private val getAllPublicPetsUseCase: GetAllPublicPetsUseCase,
-    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
+    private val isOnlineUseCase: IsOnlineUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(PublicProfilesState())
     val state = _state.asStateFlow()
+
+    val isOnline: StateFlow<Boolean> = isOnlineUseCase()
 
     init {
         loadPublicPets()
