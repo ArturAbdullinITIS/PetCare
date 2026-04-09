@@ -50,12 +50,14 @@ import java.util.Date
 fun CreateActivityScreen(
     petId: String?,
     type: String?,
+    instanceId: String?,
     onAddClick: () -> Unit,
     onSaveActivityClick: () -> Unit
 ) {
     CreateActivityContent(
         petId = petId,
         type = type,
+        instanceid = instanceId,
         onAddClick = onAddClick,
         onSaveActivityClick = onSaveActivityClick
     )
@@ -67,10 +69,11 @@ fun CreateActivityContent(
     modifier: Modifier = Modifier,
     petId: String?,
     type: String?,
+    instanceid: String?,
     viewModel: CreateActivityViewModel = hiltViewModel(
-        key = petId + type,
+        key = instanceid,
         creationCallback = {factory: CreateActivityViewModel.Factory ->
-            factory.create(petId,type)
+            factory.create(petId,type, instanceid)
         }
     ),
     onAddClick: () -> Unit,

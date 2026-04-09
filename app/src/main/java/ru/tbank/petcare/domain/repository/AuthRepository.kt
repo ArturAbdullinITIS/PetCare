@@ -17,5 +17,8 @@ interface AuthRepository {
         password: String
     ): ValidationResult<Unit>
 
+    suspend fun signOut(): ValidationResult<Unit>
+
     suspend fun getCurrentUserId(): ValidationResult<String>
 }
+

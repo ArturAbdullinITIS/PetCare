@@ -49,7 +49,7 @@ import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.common.GenderSegmentedControlButton
 import ru.tbank.petcare.presentation.common.PublicProfileCardSwitch
 import ru.tbank.petcare.presentation.common.SelectableIconStatusRow
-import ru.tbank.petcare.utils.filterWeightInput
+import ru.tbank.petcare.utils.filterFloatInput
 import java.util.Date
 
 @Composable
@@ -190,7 +190,7 @@ private fun EditPetContent(
                     modifier = Modifier.weight(0.3f),
                     value = state.petUIModel.weight,
                     onValueChange = { text ->
-                        viewModel.processCommand(EditPetCommand.InputWeight(filterWeightInput(text)))
+                        viewModel.processCommand(EditPetCommand.InputWeight(filterFloatInput(text)))
                     },
                     placeholder = stringResource(R.string.weight_pet_placeholder),
                     label = stringResource(R.string.weight_kg),

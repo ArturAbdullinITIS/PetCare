@@ -7,10 +7,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ru.tbank.petcare.data.repository.ActivityRepositoryImpl
 import ru.tbank.petcare.data.repository.AuthRepositoryImpl
 import ru.tbank.petcare.data.repository.PetsRepositoryImpl
 import ru.tbank.petcare.data.repository.SettingsRepositoryImpl
 import ru.tbank.petcare.data.repository.UsersRepositoryImpl
+import ru.tbank.petcare.domain.repository.ActivityRepository
 import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
 import ru.tbank.petcare.domain.repository.SettingsRepository
@@ -23,6 +25,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface CoreModule {
+
+    @Binds
+    @Singleton
+    fun bindActivityRepository(
+        impl: ActivityRepositoryImpl
+    ): ActivityRepository
 
     @Binds
     @Singleton

@@ -15,12 +15,11 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.usecase.CreateActivityUseCase
-import ru.tbank.petcare.domain.usecase.GetAllPetsUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
-import ru.tbank.petcare.presentation.mapper.toPetCardUiModel
+import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
 import ru.tbank.petcare.presentation.model.GroomingProcedureType
 import ru.tbank.petcare.presentation.model.VetProcedureType
-import ru.tbank.petcare.presentation.screen.addpet.AddPetState
 import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ResourceProvider
 import java.util.Date
@@ -32,14 +31,16 @@ class CreateActivityViewModel @AssistedInject constructor(
     private val createActivityUseCase: CreateActivityUseCase,
     private val resourceProvider: ResourceProvider,
     @Assisted("petId") private val initialPetId: String?,
-    @Assisted("type") private val initialType: String?
+    @Assisted("type") private val initialType: String?,
+    @Assisted("instanceId") private val initialInstaceId: String?
 ):  ViewModel() {
 
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("petId") petId: String?,
-            @Assisted("type") type: String?
+            @Assisted("type") type: String?,
+            @Assisted("instanceId") instanceId: String?
         ): CreateActivityViewModel
     }
 
@@ -70,7 +71,7 @@ class CreateActivityViewModel @AssistedInject constructor(
     private fun loadPet() {
         viewModelScope.launch {
             getAllPetsUseCase().collect { pets ->
-                val uiPet = pets.map {it.toPetCardUiModel()}
+                val uiPet = pets.map {it.toPetCardUIModel()}
                 _state.update { state ->
                     state.copy(
                         pets = uiPet

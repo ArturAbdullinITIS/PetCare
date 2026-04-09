@@ -2,6 +2,7 @@ package ru.tbank.petcare.data.mapper
 
 import android.R.attr.name
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseUser
 import ru.tbank.petcare.data.remote.firebase.ActivityDto
 import ru.tbank.petcare.data.remote.firebase.GroomingActivityDto
 import ru.tbank.petcare.data.remote.firebase.PetDto
@@ -107,6 +108,9 @@ fun ActivityDetails.Vet.toMap(): Map<String, Any> {
     return mapOf(
         "procedure_type" to procedureType.name,
         "cost" to vetCost.toDouble()
+    )
+}
+
 fun UserDto.toDomain(): User {
     return User(
         id = id,

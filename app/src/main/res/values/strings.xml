@@ -173,4 +173,10 @@
     <string name="choose_sorting_method">Choose sorting method</string>
     <string name="game_score">Game Score</string>
     <string name="sort_option_icon">Sort option icon</string>
+    <string name="logout">Logout</string>
+    <string name="settings_discription"><![CDATA[Notifications, Appearance & Account Management]]></string>
+    <string name="profile_avatar">Profile avatar</string>
+    <string name="number_of_pets">NUMBER OF PETS</string>
+    <string name="best_score">BEST SCORE</string>
+    <string name="you_can_edit_your_profile">You can edit your profile.</string>
 </resources>

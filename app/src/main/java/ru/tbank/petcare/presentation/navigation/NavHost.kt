@@ -34,7 +34,9 @@ import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScr
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
+import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
+import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -123,22 +125,28 @@ fun NavHost(
                             backStack.add(Route.PetProfile(petId))
                         },
                         onWalkClick = {
-                            backStack.add(Route.CreateActivity(
-                                type = ActivityType.WALK.value,
-                                petId = ""
-                            ))
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.WALK.value,
+                                    petId = ""
+                                )
+                            )
                         },
                         onGroomingClick = {
-                            backStack.add(Route.CreateActivity(
-                                type =ActivityType.GROOMING.value,
-                                petId = ""
-                            ))
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.GROOMING.value,
+                                    petId = ""
+                                )
+                            )
                         },
                         onVetClick = {
-                            backStack.add(Route.CreateActivity(
-                                type = ActivityType.VET.value,
-                                petId = ""
-                            ))
+                            backStack.add(
+                                Route.CreateActivity(
+                                    type = ActivityType.VET.value,
+                                    petId = ""
+                                )
+                            )
                         }
                     )
                 }
@@ -148,6 +156,21 @@ fun NavHost(
                             backStack.add(Route.PublicPetProfile(petId))
                         },
                         setTopBarActions = { topBarActions.value = it }
+                    )
+                }
+                entry<NavigationBarRoute.Profile> {
+                    UserProfileScreen(
+                        onLogoutSuccess = {
+                            backStack.clear()
+                            backStack.add(Route.Login)
+                        },
+                        onSettingsClick = {
+                            backStack.add(Route.Settings)
+                        },
+                        setTopBarActions = { topBarActions.value = it },
+                        onEditIconClick = {
+                            backStack.add(Route.EditProfile)
+                        },
                     )
                 }
                 entry<Route.AddPet> {
@@ -163,8 +186,13 @@ fun NavHost(
                         onNavigateToEdit = {
                             backStack.add(Route.EditPet(route.petId))
                         },
-                        onCreateActivityClick = {petId ->
-                            backStack.add(Route.CreateActivity(petId = petId, type = ActivityType.WALK.value))
+                        onCreateActivityClick = { petId ->
+                            backStack.add(
+                                Route.CreateActivity(
+                                    petId = petId,
+                                    type = ActivityType.WALK.value
+                                )
+                            )
                         }
                     )
                 }
@@ -202,23 +230,23 @@ fun NavHost(
                         onGoogleRegisterSuccess = {
                             backStack.clear()
                             backStack.add(NavigationBarRoute.MyPets)
-                         }
+                        }
                     )
                 }
                 entry<Route.CreateActivity>(
                 ) { route ->
-                        CreateActivityScreen(
-                            petId = route.petId,
-                            type = route.type,
-                            onAddClick = {
-                                backStack.add(Route.AddPet)
-                            },
-                            onSaveActivityClick = {
-                                backStack.removeLastOrNull()
-                            }
-                        )
+                    CreateActivityScreen(
+                        petId = route.petId,
+                        type = route.type,
+                        instanceId = route.instanceId,
+                        onAddClick = {
+                            backStack.add(Route.AddPet)
+                        },
+                        onSaveActivityClick = {
+                            backStack.removeLastOrNull()
+                        }
+                    )
                 }
-        }
                 entry<Route.PublicPetProfile> { route ->
                     PublicPetProfileScreen(
                         petId = route.petId
@@ -233,6 +261,13 @@ fun NavHost(
                 }
                 entry<Route.Settings> {
                     SettingsScreen()
+                }
+                entry<Route.EditProfile> {
+                    EditProfileScreen(
+                        onContinue = {
+                            backStack.removeLastOrNull()
+                        }
+                    )
                 }
             }
         )
