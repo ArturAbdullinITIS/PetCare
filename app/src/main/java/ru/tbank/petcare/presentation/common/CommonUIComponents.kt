@@ -2,6 +2,7 @@ package ru.tbank.petcare.presentation.common
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,9 +21,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.SignalWifiConnectedNoInternet4
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -46,6 +50,8 @@ import androidx.compose.ui.unit.sp
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.mapper.getIconStatusUI
+import ru.tbank.petcare.presentation.ui.theme.NoInternetBackground
+import ru.tbank.petcare.presentation.ui.theme.NoInternetContent
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
 @Composable
@@ -106,12 +112,15 @@ fun ScreenTitleRow(
 
 @Composable
 fun CustomFAB(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean
 ) {
     FloatingActionButton(
-        onClick = onClick,
+        onClick = {
+            if (enabled) onClick()
+        },
         shape = CircleShape,
-        containerColor = MaterialTheme.colorScheme.onPrimaryContainer.copy(),
+        containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
         contentColor = MaterialTheme.colorScheme.surface,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 4.dp,
@@ -307,4 +316,36 @@ fun LabelText(
         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
         letterSpacing = 1.1.sp
     )
+}
+
+@Composable
+fun NoInternetBanner(modifier: Modifier = Modifier) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(32.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = NoInternetBackground,
+            contentColor = NoInternetContent
+        ),
+        border = BorderStroke(
+            width = 1.dp,
+            color = NoInternetContent.copy(alpha = 0.2f)
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.SignalWifiConnectedNoInternet4,
+                contentDescription = stringResource(R.string.no_internet_icon),
+            )
+            Text(
+                text = stringResource(R.string.no_internet_connection).uppercase(),
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+    }
 }

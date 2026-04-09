@@ -182,7 +182,8 @@ fun TipCard(
 fun QuickActionCard(
     modifier: Modifier = Modifier,
     model: QuickActionUIModel,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    enabled: Boolean
 ) {
     Card(
         shape = RoundedCornerShape(36.dp),
@@ -190,7 +191,9 @@ fun QuickActionCard(
         colors = CardDefaults.cardColors(
             containerColor = model.containerColor,
         ),
-        onClick = onClick
+        onClick = {
+            if (enabled) onClick()
+        }
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -216,7 +219,8 @@ fun QuickActionCard(
 fun QuickActionRow(
     onWalkClick: () -> Unit,
     onGroomingClick: () -> Unit,
-    onVetClick: () -> Unit
+    onVetClick: () -> Unit,
+    enabled: Boolean
 ) {
     Row(
         modifier = Modifier
@@ -226,17 +230,20 @@ fun QuickActionRow(
         QuickActionCard(
             modifier = Modifier.weight(1f),
             model = getQuickActionUI(QuickActionType.WALK),
-            onClick = onWalkClick
+            onClick = onWalkClick,
+            enabled = enabled
         )
         QuickActionCard(
             modifier = Modifier.weight(1f),
             model = getQuickActionUI(QuickActionType.GROOMING),
-            onClick = onGroomingClick
+            onClick = onGroomingClick,
+            enabled = enabled
         )
         QuickActionCard(
             modifier = Modifier.weight(1f),
             model = getQuickActionUI(QuickActionType.VET),
-            onClick = onVetClick
+            onClick = onVetClick,
+            enabled = enabled
         )
     }
 }

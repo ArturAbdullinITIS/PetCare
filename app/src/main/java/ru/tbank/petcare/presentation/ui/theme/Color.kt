@@ -52,3 +52,6 @@ val OnTertiaryDark = Color(0xFF0E1336)
 
 val OutlineDark = Color(0xFF484847).copy(alpha = 0.20f)
 val OutlineVariantDark = Color(0xFF484847).copy(alpha = 0.12f)
+
+val NoInternetBackground = Color(0xFFFEF3C7)
+val NoInternetContent = Color(0xFF92400E)
