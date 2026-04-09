@@ -3,8 +3,6 @@ package ru.tbank.petcare.data.remote.firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.PropertyName
-import ru.tbank.petcare.domain.model.ActivityDetails
-import java.util.Date
 
 data class ActivityDto(
     @DocumentId
@@ -31,4 +29,3 @@ data class ActivityDto(
     var details: Map<String, Any>? = null
 
 )
-

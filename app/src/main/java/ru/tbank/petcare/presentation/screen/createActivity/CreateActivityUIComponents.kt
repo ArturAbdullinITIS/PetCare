@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +17,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Female
-import androidx.compose.material.icons.filled.Male
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -50,14 +46,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.Gender
-import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.presentation.common.LabelText
 import ru.tbank.petcare.presentation.mapper.toIndex
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
-import java.util.Locale
 
+private const val HALF_ALPHA = 0.5f
 
 @Composable
 fun ActivitySegmentedControlButton(
@@ -107,7 +101,7 @@ fun ActivitySegmentedControlButton(
                             horizontalArrangement = Arrangement.Center,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            val text = when(activity) {
+                            val text = when (activity) {
                                 is ActivityFormState.Walk -> stringResource(R.string.walk_quick_action_title)
                                 is ActivityFormState.Grooming -> stringResource(R.string.grooming_quick_action_title)
                                 is ActivityFormState.Vet -> stringResource(R.string.vet_quick_action_title)
@@ -146,7 +140,7 @@ fun SetReminderCardSwitch(
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
-                    .background(color = MaterialTheme.colorScheme.tertiary),
+                    .background(color = MaterialTheme.colorScheme.tertiaryContainer),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -167,9 +161,9 @@ fun SetReminderCardSwitch(
                 )
                 Text(
                     text = stringResource(R.string.get_notified_switch),
-                    fontSize= 11.sp,
+                    fontSize = 11.sp,
                     fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurface.copy(0.5f)
+                    color = MaterialTheme.colorScheme.onSurface.copy(HALF_ALPHA)
 
                 )
             }
@@ -203,8 +197,7 @@ fun PetSelectCard(
             contentPadding = PaddingValues(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(pets, key = { it.id })
-            { pet ->
+            items(pets, key = { it.id }) { pet ->
                 val isSelected = pet.id == selectPetId
                 PetAvatar(
                     pet,
@@ -221,15 +214,12 @@ fun PetSelectCard(
     }
 }
 
-
-
 @Composable
 fun PetAvatar(
     pet: PetCardUIModel,
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .clickable(onClick = onClick)
@@ -242,12 +232,18 @@ fun PetAvatar(
             modifier = Modifier.padding(3.dp)
                 .size(64.dp)
                 .border(
-                    width = 2.dp ,
-                    color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f),
+                    width = 2.dp,
+                    color = if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(
+                            alpha = 0.1f
+                        )
+                    },
                     shape = CircleShape
                 ),
 
-            ) {
+        ) {
             AsyncImage(
                 model = pet.photoUrl,
                 contentDescription = stringResource(R.string.pets_photo),
@@ -263,7 +259,13 @@ fun PetAvatar(
             text = pet.name,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            color = if (isSelected) {
+                MaterialTheme.colorScheme.onPrimaryContainer
+            } else {
+                MaterialTheme.colorScheme.onSurface.copy(
+                    alpha = 0.5f
+                )
+            }
         )
     }
 }
@@ -299,8 +301,6 @@ private fun AddPetButton(onClick: () -> Unit,) {
         )
     }
 }
-
-
 
 @Preview
 @Composable

@@ -18,9 +18,9 @@ import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
 import ru.tbank.petcare.presentation.model.PublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
+import ru.tbank.petcare.presentation.model.UserForm
 import ru.tbank.petcare.presentation.screen.createActivity.ActivityFormState
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityState
-import ru.tbank.petcare.presentation.model.UserForm
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.HeartIconStatus
 import ru.tbank.petcare.presentation.ui.theme.SparklesIconStatus
@@ -148,7 +148,6 @@ fun Pet.toPetCardUIModel(): PetCardUIModel {
     )
 }
 
-
 fun ActivityFormState.toIndex(): Int {
     return when (this) {
         is ActivityFormState.Walk -> 0
@@ -168,9 +167,19 @@ fun CreateActivityState.toDomain(): Activity {
         activityDate = this.activityDate,
         notes = this.activityNotes,
         details = when (this.activityType) {
-            is ActivityFormState.Grooming -> ActivityDetails.Grooming(procedureType = this.activityType.form.procedureType, durationMinutes = this.activityType.form.durationMinutes, groomingCost = this.activityType.form.groomingCost )
-            is ActivityFormState.Vet -> ActivityDetails.Vet(vetCost = this.activityType.form.vetCost, procedureType = this.activityType.form.procedureType)
-            is ActivityFormState.Walk -> ActivityDetails.Walk(goalKm = this.activityType.form.goalKm, actualKm = this.activityType.form.actualKm )
+            is ActivityFormState.Grooming -> ActivityDetails.Grooming(
+                procedureType = this.activityType.form.procedureType,
+                durationMinutes = this.activityType.form.durationMinutes,
+                groomingCost = this.activityType.form.groomingCost
+            )
+            is ActivityFormState.Vet -> ActivityDetails.Vet(
+                vetCost = this.activityType.form.vetCost,
+                procedureType = this.activityType.form.procedureType
+            )
+            is ActivityFormState.Walk -> ActivityDetails.Walk(
+                goalKm = this.activityType.form.goalKm,
+                actualKm = this.activityType.form.actualKm
+            )
         }
     )
 }

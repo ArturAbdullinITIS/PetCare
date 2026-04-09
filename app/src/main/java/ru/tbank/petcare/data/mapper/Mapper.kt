@@ -1,10 +1,9 @@
 package ru.tbank.petcare.data.mapper
 
-import android.R.attr.name
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
+import ru.tbank.petcare.data.local.PetDbModel
 import ru.tbank.petcare.data.remote.firebase.ActivityDto
-import ru.tbank.petcare.data.remote.firebase.GroomingActivityDto
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.data.remote.firebase.UserDto
@@ -17,6 +16,7 @@ import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.User
+import java.util.Date
 
 fun PetDto.toDomain(): Pet {
     return Pet(
@@ -129,3 +129,35 @@ fun User.toDto(): UserDto {
         photoUrl = photoUrl
     )
 }
+
+fun Pet.toDbModel(): PetDbModel {
+    return PetDbModel(
+        id = id,
+        name = name,
+        gender = gender.name,
+        breed = breed,
+        dateOfBirthMillis = dateOfBirth?.time,
+        gameScore = gameScore,
+        iconStatus = iconStatus.name,
+        isPublic = isPublic,
+        note = note,
+        ownerId = ownerId,
+        photoUrl = photoUrl,
+        weight = weight
+    )
+}
+
+fun PetDbModel.toDomain(): Pet = Pet(
+    id = id,
+    name = name,
+    breed = breed,
+    gender = Gender.getGenderFromValue(gender),
+    isPublic = isPublic,
+    note = note,
+    gameScore = gameScore,
+    ownerId = ownerId,
+    weight = weight,
+    dateOfBirth = dateOfBirthMillis?.let { Date(it) },
+    iconStatus = IconStatus.getIconStatusFromValue(iconStatus),
+    photoUrl = photoUrl
+)

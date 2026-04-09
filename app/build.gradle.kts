@@ -116,6 +116,11 @@ dependencies {
     // SplashScreen
     implementation(libs.androidx.core.splashscreen)
 
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+
     implementation(libs.androidx.appcompat)
     implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)

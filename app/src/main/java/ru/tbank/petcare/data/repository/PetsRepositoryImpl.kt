@@ -14,13 +14,18 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import ru.tbank.petcare.BuildConfig
+import ru.tbank.petcare.R
+import ru.tbank.petcare.data.local.PetsDao
+import ru.tbank.petcare.data.mapper.toDbModel
 import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
 import ru.tbank.petcare.data.mapper.toEntities
@@ -36,69 +41,102 @@ import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
+import ru.tbank.petcare.domain.repository.ConnectivityRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
+import ru.tbank.petcare.utils.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
 import kotlin.collections.emptyList
 import kotlin.jvm.java
 
+@Suppress("LongParameterList")
 class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
     @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
     private val animalsApiService: AnimalsApiService,
     private val cloudinaryApiService: CloudinaryApiService,
-    private val imageBytesProvider: ImageBytesProvider
+    private val imageBytesProvider: ImageBytesProvider,
+    private val connectivityRepository: ConnectivityRepository,
+    private val petsDao: PetsDao,
+    private val resourceProvider: ResourceProvider
 ) : PetsRepository {
-    companion object {
-        private const val OWNER_ID_KEY = "owner_id"
-        private const val COLLECTION_PATH = "pets"
-        private const val IS_PUBLIC_KEY = "is_public"
-        private const val TIPS_KEY = "tips"
-
-        private const val PET_ID_ERROR = "Pet ID cannot be blank"
-        private const val NOT_AUTHENTICATED_ERROR = "Not Authenticated"
-        private const val NO_BREED_INFO = "No breed info"
-        private const val NAME = "file"
-        private const val FILE_NAME = "pet_photo"
-        private const val CONTENT_TYPE = "text/plain"
-        private const val CLOUDINARY_ERROR = "Cloudinary error"
+    private companion object {
+        const val OWNER_ID_KEY = "owner_id"
+        const val COLLECTION_PATH = "pets"
+        const val IS_PUBLIC_KEY = "is_public"
+        const val TIPS_KEY = "tips"
+        const val NAME = "file"
+        const val FILE_NAME = "pet_photo"
+        const val CONTENT_TYPE = "text/plain"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
-    override fun getCurrentUsersPets(): Flow<List<Pet>> = callbackFlow {
+    override fun getCurrentUsersPets(): Flow<List<Pet>> {
+        val currentUserId = firebaseAuth.currentUser?.uid ?: return flowOf(emptyList())
+
+        return petsDao.observePetsByOwner(currentUserId)
+            .map { dbPets -> dbPets.map { it.toDomain() } }
+            .flowOn(dispatcherIO)
+    }
+
+    override suspend fun syncCurrentUsersPets(): ValidationResult<Unit> = withContext(dispatcherIO) {
+        if (!connectivityRepository.isOnline.value) {
+            return@withContext ValidationResult(
+                error = ErrorType.NetworkError(
+                    resourceProvider.getString(
+                        R.string.offline
+                    )
+                )
+            )
+        }
+
         val currentUserId = firebaseAuth.currentUser?.uid
-        if (currentUserId == null) {
-            trySend(emptyList())
-            close(IllegalStateException(NOT_AUTHENTICATED_ERROR))
-            return@callbackFlow
+            ?: return@withContext ValidationResult(
+                error = ErrorType.FirebaseAuthenticationError(resourceProvider.getString(R.string.not_authenticated))
+            )
+
+        return@withContext try {
+            val snapshot = collection
+                .whereEqualTo(OWNER_ID_KEY, currentUserId)
+                .get()
+                .await()
+
+            val pets = snapshot.documents.map { it.toPetCompat() }
+
+            petsDao.deleteByOwner(currentUserId)
+            petsDao.upsertAll(pets.map { it.toDbModel() })
+
+            ValidationResult(isSuccess = true, data = Unit)
+        } catch (e: Exception) {
+            ValidationResult(
+                error = ErrorType.NetworkError(
+                    e.message ?: resourceProvider.getString(
+                        R.string.sync_error
+                    )
+                )
+            )
         }
-
-        val listener = collection
-            .whereEqualTo(OWNER_ID_KEY, currentUserId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-
-                val pets = snapshot?.documents?.map { it.toPetCompat() } ?: emptyList()
-
-                trySend(pets)
-            }
-
-        awaitClose { listener.remove() }
-    }.flowOn(dispatcherIO)
-        .catch { e ->
-            emit(emptyList())
-        }
+    }
 
     override suspend fun addPet(pet: Pet): ValidationResult<Pet> = withContext(dispatcherIO) {
         try {
+            if (!connectivityRepository.isOnline.value) {
+                return@withContext ValidationResult(
+                    error = ErrorType.NetworkError(
+                        resourceProvider.getString(
+                            R.string.offline
+                        )
+                    )
+                )
+            }
+
             val currentUserId = firebaseAuth.currentUser?.uid
                 ?: return@withContext ValidationResult(
                     error = ErrorType.FirebaseAuthenticationError(
-                        NOT_AUTHENTICATED_ERROR
+                        resourceProvider.getString(
+                            R.string.not_authenticated
+                        )
                     )
                 )
 
@@ -108,10 +146,10 @@ class PetsRepositoryImpl @Inject constructor(
             val docRef = collection.add(dto).await()
             val savedPet = dto.copy(id = docRef.id)
 
-            ValidationResult(
-                data = savedPet.toDomain(),
-                isSuccess = true
-            )
+            val domainSaved = savedPet.toDomain()
+            petsDao.upsert(domainSaved.toDbModel())
+
+            ValidationResult(data = domainSaved, isSuccess = true)
         } catch (e: FirebaseFirestoreException) {
             when (e.code) {
                 FirebaseFirestoreException.Code.PERMISSION_DENIED ->
@@ -137,15 +175,25 @@ class PetsRepositoryImpl @Inject constructor(
 
     override suspend fun editPet(pet: Pet): ValidationResult<Unit> = withContext(dispatcherIO) {
         try {
+            if (!connectivityRepository.isOnline.value) {
+                return@withContext ValidationResult(
+                    error = ErrorType.NetworkError(resourceProvider.getString(R.string.offline))
+                )
+            }
+
             if (pet.id.isBlank()) {
                 return@withContext ValidationResult(
-                    error = ErrorType.CommonError(PET_ID_ERROR)
+                    error = ErrorType.CommonError(resourceProvider.getString(R.string.pet_id_cannot_be_blank))
                 )
             }
 
             val currentUserId = firebaseAuth.currentUser?.uid
                 ?: return@withContext ValidationResult(
-                    error = ErrorType.FirebaseAuthenticationError(NOT_AUTHENTICATED_ERROR)
+                    error = ErrorType.FirebaseAuthenticationError(
+                        resourceProvider.getString(
+                            R.string.not_authenticated
+                        )
+                    )
                 )
 
             val updates = mapOf(
@@ -163,6 +211,8 @@ class PetsRepositoryImpl @Inject constructor(
             )
 
             collection.document(pet.id).set(updates, SetOptions.merge()).await()
+            petsDao.upsert(pet.copy(ownerId = currentUserId).toDbModel())
+
             ValidationResult(
                 isSuccess = true
             )
@@ -175,19 +225,29 @@ class PetsRepositoryImpl @Inject constructor(
 
     override suspend fun deletePet(petId: String): ValidationResult<Unit> = withContext(dispatcherIO) {
         try {
+            if (!connectivityRepository.isOnline.value) {
+                return@withContext ValidationResult(
+                    error = ErrorType.NetworkError(resourceProvider.getString(R.string.offline))
+                )
+            }
+
             if (petId.isBlank()) {
                 return@withContext ValidationResult(
-                    error = ErrorType.CommonError(NOT_AUTHENTICATED_ERROR)
+                    error = ErrorType.CommonError(resourceProvider.getString(R.string.pet_id_cannot_be_blank))
                 )
             }
             val currentUserId = firebaseAuth.currentUser?.uid
             if (currentUserId == null) {
                 return@withContext ValidationResult(
-                    error = ErrorType.FirebaseAuthenticationError(NOT_AUTHENTICATED_ERROR)
+                    error = ErrorType.FirebaseAuthenticationError(
+                        resourceProvider.getString(R.string.not_authenticated)
+                    )
                 )
             }
 
             collection.document(petId).delete().await()
+            petsDao.deleteById(petId)
+
             ValidationResult(
                 isSuccess = true
             )
@@ -218,9 +278,9 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getPetById(petId: String): Flow<Pet> = callbackFlow {
+    override fun getRemotePetById(petId: String): Flow<Pet> = callbackFlow {
         if (petId.isBlank()) {
-            close(IllegalArgumentException(PET_ID_ERROR))
+            close(IllegalArgumentException(resourceProvider.getString(R.string.pet_id_cannot_be_blank)))
             return@callbackFlow
         }
         val listener = collection.document(petId)
@@ -230,19 +290,18 @@ class PetsRepositoryImpl @Inject constructor(
                     return@addSnapshotListener
                 }
                 val pet = snapshot?.toPetCompat()
-                if (pet != null) {
-                    trySend(pet)
-                } else {
-                    close()
-                }
+                if (pet != null) trySend(pet) else close()
             }
-        awaitClose {
-            listener.remove()
-        }
+        awaitClose { listener.remove() }
     }.flowOn(dispatcherIO)
-        .catch { e ->
-            emit(Pet())
-        }
+        .catch { emit(Pet()) }
+
+    override fun getLocalPetById(petId: String): Flow<Pet> {
+        if (petId.isBlank()) return flowOf(Pet())
+        return petsDao.observePetById(petId)
+            .map { it?.toDomain() ?: Pet() }
+            .flowOn(dispatcherIO)
+    }
 
     override fun getAllPublicPets(): Flow<List<Pet>> = callbackFlow {
         val currentUserId = firebaseAuth.currentUser?.uid
@@ -279,16 +338,8 @@ class PetsRepositoryImpl @Inject constructor(
                 }
 
                 val tips = snapshot.documents.mapNotNull { doc ->
-                    snapshot?.documents?.forEach { doc ->
-                        val raw = doc.get("date_of_birth")
-                        Log.d("DOB_DEBUG", "doc=${doc.id} dobType=${raw?.javaClass?.name} dobValue=$raw")
-                    }
                     val dto = doc.toObject(TipDto::class.java)
-                    if (dto == null) {
-                        null
-                    } else {
-                        dto.toDomain()
-                    }
+                    dto?.toDomain()
                 }
 
                 trySend(tips)
@@ -310,7 +361,12 @@ class PetsRepositoryImpl @Inject constructor(
                 )
             } else {
                 ValidationResult(
-                    error = ErrorType.CommonError(NO_BREED_INFO)
+                    error = ErrorType.CommonError(
+                        resourceProvider.getString(
+                            R.string.no_breed_information_found_for,
+                            breed
+                        )
+                    )
                 )
             }
         } catch (e: Exception) {
@@ -348,7 +404,7 @@ class PetsRepositoryImpl @Inject constructor(
         } catch (e: HttpException) {
             ValidationResult(
                 error = ErrorType.NetworkError(
-                    "$CLOUDINARY_ERROR ${e.response.code}: ${e.message}"
+                    "${e.response.code}: ${e.message}"
                 )
             )
         } catch (e: Exception) {

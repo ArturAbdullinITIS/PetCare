@@ -3,12 +3,10 @@ package ru.tbank.petcare.presentation.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -24,8 +22,10 @@ import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.presentation.common.CustomFAB
 import ru.tbank.petcare.presentation.common.MainScreenTitleRow
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
+import ru.tbank.petcare.presentation.root.StartDestination
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
+import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
@@ -41,10 +41,16 @@ import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHost(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    startDestination: StartDestination
 ) {
+    val startRoute = when (startDestination) {
+        StartDestination.Auth -> Route.Login
+        StartDestination.Main -> NavigationBarRoute.MyPets
+    }
+
     val backStack = rememberSaveable {
-        mutableStateListOf<Route>(Route.Register)
+        mutableStateListOf<Route>(startRoute)
     }
     val currentRoute = backStack.lastOrNull() ?: Route.Register
 
@@ -187,12 +193,7 @@ fun NavHost(
                             backStack.add(Route.EditPet(route.petId))
                         },
                         onCreateActivityClick = { petId ->
-                            backStack.add(
-                                Route.CreateActivity(
-                                    petId = petId,
-                                    type = ActivityType.WALK.value
-                                )
-                            )
+                            backStack.add(Route.CreateActivity(petId = petId, type = ActivityType.WALK.value))
                         }
                     )
                 }

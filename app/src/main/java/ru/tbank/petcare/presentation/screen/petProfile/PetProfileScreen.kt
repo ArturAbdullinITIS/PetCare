@@ -31,7 +31,10 @@ import ru.tbank.petcare.presentation.common.NotesCard
 
 @Composable
 fun PetProfileScreen(
-    onCreateActivityClick: (String) -> Unit, petId: String, onNavigateToEdit: (String) -> Unit) {
+    onCreateActivityClick: (String) -> Unit,
+    petId: String,
+    onNavigateToEdit: (String) -> Unit
+) {
     PetProfileContent(onCreateActivityClick = onCreateActivityClick, petId = petId, onNavigateToEdit = onNavigateToEdit)
 }
 
@@ -88,7 +91,7 @@ private fun PetProfileContent(
 
         CustomButton(
             modifier = Modifier.fillMaxWidth(),
-            onClick = {onCreateActivityClick(petId)},
+            onClick = { onCreateActivityClick(petId) },
             text = stringResource(R.string.create_activity_button),
             enabled = true
         )

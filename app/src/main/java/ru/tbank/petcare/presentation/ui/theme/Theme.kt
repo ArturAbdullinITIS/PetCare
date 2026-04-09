@@ -38,18 +38,18 @@ private val LightColorScheme = lightColorScheme(
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryDark,
     onPrimary = OnPrimaryDark,
-    primaryContainer = PrimaryDark.copy(alpha = 0.22f),
-    onPrimaryContainer = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = OnPrimaryContainerDark,
 
     secondary = SecondaryDark,
     onSecondary = OnSecondaryDark,
-    secondaryContainer = SecondaryDark.copy(alpha = 0.22f),
-    onSecondaryContainer = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = OnSecondaryContainerDark,
 
     tertiary = TertiaryDark,
     onTertiary = OnTertiaryDark,
-    tertiaryContainer = TertiaryDark.copy(alpha = 0.22f),
-    onTertiaryContainer = OnTertiaryDark,
+    tertiaryContainer = TertiaryContainerDark,
+    onTertiaryContainer = OnTertiaryContainerDark,
 
     background = BackgroundDark,
     onBackground = OnBackgroundDark,
