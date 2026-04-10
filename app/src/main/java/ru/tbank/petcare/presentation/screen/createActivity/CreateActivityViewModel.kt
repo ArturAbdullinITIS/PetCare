@@ -29,7 +29,7 @@ class CreateActivityViewModel @AssistedInject constructor(
     private val createActivityUseCase: CreateActivityUseCase,
     private val resourceProvider: ResourceProvider,
     @Assisted("petId") private val initialPetId: String?,
-    @Assisted("type") private val initialType: String?
+    @Assisted("type") private val initialType: String?,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -37,7 +37,6 @@ class CreateActivityViewModel @AssistedInject constructor(
         fun create(
             @Assisted("petId") petId: String?,
             @Assisted("type") type: String?,
-            @Assisted("instanceId") instanceId: String?
         ): CreateActivityViewModel
     }
 

@@ -11,4 +11,6 @@ interface UsersRepository {
     suspend fun getUserNameById(userId: String): ValidationResult<String>
     suspend fun getCurrentUser(): Flow<User>
     suspend fun editUser(user: User): ValidationResult<Unit>
+    suspend fun deleteCurrentUser(): ValidationResult<Unit>
+    suspend fun deleteCurrentUserAuth(): ValidationResult<Unit>
 }

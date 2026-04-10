@@ -113,7 +113,12 @@ class EditPetViewModel @AssistedInject constructor(
 
     private fun handleDeletePet() {
         viewModelScope.launch {
-            deletePetUseCase(petId)
+            val result = deletePetUseCase(petId)
+            if (result.isSuccess) {
+                _events.emit(EditPetEvent.Deleted)
+            } else {
+                _events.emit(EditPetEvent.Error(""))
+            }
         }
     }
 

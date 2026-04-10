@@ -97,6 +97,9 @@ private fun EditPetContent(
                 EditPetEvent.Saved -> onEditClick()
                 is EditPetEvent.Error -> {
                 }
+                EditPetEvent.Deleted -> {
+                    onDeleteClick()
+                }
             }
         }
     }
@@ -107,7 +110,6 @@ private fun EditPetContent(
             onConfirm = {
                 showDeleteDialog = false
                 viewModel.processCommand(EditPetCommand.DeletePetProfile)
-                onDeleteClick()
             },
             onDismiss = { showDeleteDialog = false },
             title = stringResource(R.string.delete_your_pet),

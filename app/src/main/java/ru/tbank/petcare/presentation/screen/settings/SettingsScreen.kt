@@ -16,8 +16,12 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -26,22 +30,55 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.common.ConfirmDeleteDialog
 import ru.tbank.petcare.presentation.ui.theme.GroomingQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.VetQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
 
 @Composable
-fun SettingsScreen() {
-    SettingContent()
+fun SettingsScreen(
+    onDeleteClick: () -> Unit
+) {
+    SettingContent(
+        onDeleteClick = onDeleteClick
+    )
 }
 
 @Composable
 private fun SettingContent(
     modifier: Modifier = Modifier,
+    onDeleteClick: () -> Unit,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
+    var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+
+    if (showDeleteDialog) {
+        ConfirmDeleteDialog(
+            onConfirm = {
+                showDeleteDialog = false
+                viewModel.processCommand(SettingsCommand.DeleteProfile)
+            },
+            onDismiss = { showDeleteDialog = false },
+            title = stringResource(R.string.delete_your_account),
+            text = stringResource(R.string.you_can_not_restore_it),
+            confirmText = stringResource(R.string.delete),
+            dismissText = stringResource(R.string.cancel)
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is SettingsEvent.Error -> {}
+                SettingsEvent.ProfileDeleted -> {
+                    onDeleteClick()
+                }
+            }
+        }
+    }
+
     Card(
         shape = RoundedCornerShape(48.dp),
         colors = CardDefaults.cardColors(
@@ -53,7 +90,9 @@ private fun SettingContent(
             .verticalScroll(scrollState)
     ) {
         Column(
-            modifier = Modifier.padding(24.dp).fillMaxSize(),
+            modifier = Modifier
+                .padding(24.dp)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -151,7 +190,9 @@ private fun SettingContent(
                 }
             )
             DeleteAccountButton(
-                onClick = {}
+                onClick = {
+                    showDeleteDialog = true
+                }
             )
         }
     }

@@ -23,4 +23,5 @@ interface PetsRepository {
 
     suspend fun getPetInfo(breed: String): ValidationResult<PetInfo>
     suspend fun uploadPetPhoto(uri: Uri): ValidationResult<String>
+    suspend fun deleteAllCurrentUsersPets(): ValidationResult<Unit>
 }

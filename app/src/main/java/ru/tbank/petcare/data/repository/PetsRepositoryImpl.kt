@@ -2,6 +2,7 @@ package ru.tbank.petcare.data.repository
 
 import android.net.Uri
 import android.util.Log
+import android.util.Log.e
 import coil3.network.HttpException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -409,6 +410,37 @@ class PetsRepositoryImpl @Inject constructor(
             )
         } catch (e: Exception) {
             ValidationResult(error = ErrorType.NetworkError(e.message ?: ""))
+        }
+    }
+
+    override suspend fun deleteAllCurrentUsersPets(): ValidationResult<Unit> = withContext(dispatcherIO) {
+        return@withContext try {
+            val currentUserId = firebaseAuth.currentUser?.uid
+            if (currentUserId == null) {
+                ValidationResult(
+                    error = ErrorType.FirebaseAuthenticationError(
+                        resourceProvider.getString(R.string.not_authenticated)
+                    )
+                )
+            } else {
+                val snapshot = collection.whereEqualTo(OWNER_ID_KEY, currentUserId)
+                    .get().await()
+
+                snapshot.documents.chunked(450).forEach { chunk ->
+                    val batch = firestore.batch()
+                    chunk.forEach { doc -> batch.delete(doc.reference) }
+                    batch.commit().await()
+                }
+                petsDao.deleteByOwner(currentUserId)
+                ValidationResult(isSuccess = true)
+            }
+        } catch (
+            e: FirebaseFirestoreException
+        ) {
+            ValidationResult(
+                isSuccess = false,
+                error = ErrorType.NetworkError(e.message ?: "")
+            )
         }
     }
 }

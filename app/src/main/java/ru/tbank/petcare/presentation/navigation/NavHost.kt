@@ -266,7 +266,12 @@ fun NavHost(
                         )
                     }
                     entry<Route.Settings> {
-                        SettingsScreen()
+                        SettingsScreen(
+                            onDeleteClick = {
+                                backStack.clear()
+                                backStack.add(Route.Login)
+                            }
+                        )
                     }
                     entry<NavigationBarRoute.Profile> {
                         UserProfileScreen(

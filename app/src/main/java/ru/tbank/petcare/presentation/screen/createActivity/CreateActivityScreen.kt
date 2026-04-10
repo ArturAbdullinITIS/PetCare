@@ -56,7 +56,7 @@ fun CreateActivityScreen(
     CreateActivityContent(
         petId = petId,
         type = type,
-        instanceid = instanceId,
+        instanceId = instanceId,
         onAddClick = onAddClick,
         onSaveActivityClick = onSaveActivityClick
     )
@@ -71,11 +71,11 @@ fun CreateActivityContent(
     modifier: Modifier = Modifier,
     petId: String?,
     type: String?,
-    instanceid: String?,
+    instanceId: String?,
     viewModel: CreateActivityViewModel = hiltViewModel(
-        key = instanceid,
+        key = instanceId,
         creationCallback = { factory: CreateActivityViewModel.Factory ->
-            factory.create(petId, type, instanceid)
+            factory.create(petId, type)
         }
     ),
     onAddClick: () -> Unit,

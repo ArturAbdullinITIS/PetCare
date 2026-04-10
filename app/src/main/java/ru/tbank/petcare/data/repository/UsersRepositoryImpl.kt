@@ -2,8 +2,10 @@ package ru.tbank.petcare.data.repository
 
 import android.net.Uri
 import android.util.Log
+import android.util.Log.e
 import coil3.network.HttpException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
@@ -207,6 +209,52 @@ class UsersRepositoryImpl @Inject constructor(
         } catch (e: FirebaseFirestoreException) {
             ValidationResult(
                 error = ErrorType.CommonError(e.message ?: "")
+            )
+        }
+    }
+
+    override suspend fun deleteCurrentUser(): ValidationResult<Unit> = withContext(dispatcherIO) {
+        return@withContext try {
+            val currentUserId = firebaseAuth.currentUser?.uid
+            if (currentUserId == null) {
+                ValidationResult(
+                    isSuccess = false,
+                    error = ErrorType.AuthValidation()
+                )
+            } else {
+                collection.document(currentUserId).delete().await()
+                ValidationResult(
+                    isSuccess = true
+                )
+            }
+        } catch (e: FirebaseFirestoreException) {
+            ValidationResult(
+                isSuccess = false,
+                error = ErrorType.NetworkError(e.message ?: "")
+            )
+        }
+    }
+
+    override suspend fun deleteCurrentUserAuth(): ValidationResult<Unit> = withContext(dispatcherIO) {
+        return@withContext try {
+            val user = firebaseAuth.currentUser
+            if (user == null) {
+                ValidationResult(
+                    isSuccess = false,
+                    error = ErrorType.AuthValidation()
+                )
+            } else {
+                user.delete().await()
+                ValidationResult(
+                    isSuccess = true
+                )
+            }
+        } catch (
+            e: FirebaseAuthException
+        ) {
+            ValidationResult(
+                isSuccess = false,
+                error = ErrorType.FirebaseAuthenticationError(e.message ?: "")
             )
         }
     }

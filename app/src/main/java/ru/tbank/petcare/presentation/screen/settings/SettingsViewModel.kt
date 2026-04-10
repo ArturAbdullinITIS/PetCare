@@ -3,7 +3,9 @@ package ru.tbank.petcare.presentation.screen.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,6 +18,7 @@ import ru.tbank.petcare.domain.usecase.settings.UpdateLanguageUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateThemeUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateVetNotificationsEnabledUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateWalkNotificationsEnabledUseCase
+import ru.tbank.petcare.domain.usecase.users.DeleteCurrentUserUseCase
 import javax.inject.Inject
 
 @Suppress("LongParameterList")
@@ -28,9 +31,12 @@ class SettingsViewModel @Inject constructor(
     private val updateVetNotificationsEnabledUseCase: UpdateVetNotificationsEnabledUseCase,
     private val updateGroomingNotificationsEnabledUseCase: UpdateGroomingNotificationsEnabledUseCase,
     private val updateWalkNotificationsEnabledUseCase: UpdateWalkNotificationsEnabledUseCase,
+    private val deleteCurrentUserUseCase: DeleteCurrentUserUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
+    private val _events = MutableSharedFlow<SettingsEvent>()
+    val events = _events.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -81,6 +87,19 @@ class SettingsViewModel @Inject constructor(
                 is SettingsCommand.EnableWalkNotifications -> {
                     updateWalkNotificationsEnabledUseCase(command.enable)
                 }
+
+                SettingsCommand.DeleteProfile -> deleteProfile()
+            }
+        }
+    }
+
+    private fun deleteProfile() {
+        viewModelScope.launch {
+            val result = deleteCurrentUserUseCase()
+            if (result.isSuccess) {
+                _events.emit(SettingsEvent.ProfileDeleted)
+            } else {
+                _events.emit(SettingsEvent.Error(""))
             }
         }
     }
@@ -93,4 +112,5 @@ sealed interface SettingsCommand {
     data class EnableWalkNotifications(val enable: Boolean) : SettingsCommand
     data class EnableDarkTheme(val enable: Boolean) : SettingsCommand
     data class ChangeLanguage(val language: Language) : SettingsCommand
+    object DeleteProfile : SettingsCommand
 }
