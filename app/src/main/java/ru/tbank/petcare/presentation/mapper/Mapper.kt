@@ -201,3 +201,13 @@ fun UserForm.toDomain(): User {
         photoUrl = photoUrl
     )
 }
+
+fun User.toUserForm(): UserForm {
+    return UserForm(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        email = this.email,
+        photoUrl = this.photoUrl
+    )
+}

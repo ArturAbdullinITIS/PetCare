@@ -137,7 +137,7 @@ fun CreateActivityContent(
                 value = state.activityDateText,
                 onValueChange = { },
                 placeholder = "dd.mm.yyyy",
-                label = stringResource(R.string.date_of_birth),
+                label = stringResource(R.string.activity_date),
                 maxLines = 1,
                 readOnly = true,
                 singleLine = true,

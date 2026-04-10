@@ -229,9 +229,8 @@ private fun MenuActionButton(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(32.dp))
-            .clickable(onClick = onClick)
-            .shadow(1.dp, RoundedCornerShape(32.dp), spotColor = Color.Black.copy(0.05f)),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(32.dp)
     ) {
         Row(

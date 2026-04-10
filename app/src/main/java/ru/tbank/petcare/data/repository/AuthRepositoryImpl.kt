@@ -36,6 +36,10 @@ class AuthRepositoryImpl @Inject constructor(
         private const val GOOGLE_ID_ERROR = "Google idToken is blank"
         private const val UNEXPECTED_CREDENTIAL_ERROR = "Unexpected credential type"
         private const val USERS_COLLECTION = "users"
+        private const val KEY_EMAIL = "email"
+        private const val KEY_FIRST_NAME = "first_name"
+        private const val KEY_LAST_NAME = "last_name"
+        private const val KEY_PHOTO_URL = "photo_url"
     }
 
     override suspend fun registerWithEmailAndPassword(
@@ -93,10 +97,10 @@ class AuthRepositoryImpl @Inject constructor(
 
                     if (!document.exists()) {
                         val newUserDto = hashMapOf(
-                            "email" to (user.email ?: ""),
-                            "first_name" to (user.displayName ?: ""),
-                            "last_name" to "",
-                            "photo_url" to (user.photoUrl?.toString() ?: "")
+                            KEY_EMAIL to (user.email ?: ""),
+                            KEY_FIRST_NAME to (user.displayName ?: ""),
+                            KEY_LAST_NAME to "",
+                            KEY_PHOTO_URL to (user.photoUrl?.toString() ?: "")
                         )
                         userDocRef.set(newUserDto).await()
                     }

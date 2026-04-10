@@ -34,10 +34,6 @@ import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.AddPetProfilePicture
 import ru.tbank.petcare.presentation.common.CustomButton
 import ru.tbank.petcare.presentation.common.CustomTextField
-import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationCommand
-import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationEvent
-import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationViewModel
-
 
 @Composable
 fun EditProfileScreen(
@@ -71,6 +67,9 @@ fun EditProfileContent(
                 EditProfileEvent.Saved -> {
                     onContinue()
                 }
+                EditProfileEvent.LaunchImagePicker -> {
+                    imagePicker.launch("image/*")
+                }
             }
         }
     }
@@ -93,9 +92,7 @@ fun EditProfileContent(
         ) {
             AddPetProfilePicture(
                 onClick = {
-                    imagePicker.launch(
-                        "image/*"
-                    )
+                    viewModel.processCommand(EditProfileCommand.PickImage)
                 },
                 imageUrl = if (state.selectedPhotoUri == null) {
                     state.user.photoUrl
