@@ -39,7 +39,10 @@ import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
+import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
+import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
+import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 
 @Suppress("LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)

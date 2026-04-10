@@ -1,10 +1,12 @@
 package ru.tbank.petcare.data.repository
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log.e
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.ClearCredentialException
 import androidx.credentials.exceptions.GetCredentialCancellationException
 import androidx.credentials.exceptions.GetCredentialException
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
@@ -15,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
@@ -24,11 +28,18 @@ import javax.inject.Inject
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val credentialManager: CredentialManager,
-    private val getCredentialRequest: GetCredentialRequest
+    private val getCredentialRequest: GetCredentialRequest,
+    private val firestore: FirebaseFirestore
 ) : AuthRepository {
+
     companion object {
         private const val GOOGLE_ID_ERROR = "Google idToken is blank"
         private const val UNEXPECTED_CREDENTIAL_ERROR = "Unexpected credential type"
+        private const val USERS_COLLECTION = "users"
+        private const val KEY_EMAIL = "email"
+        private const val KEY_FIRST_NAME = "first_name"
+        private const val KEY_LAST_NAME = "last_name"
+        private const val KEY_PHOTO_URL = "photo_url"
     }
 
     override suspend fun registerWithEmailAndPassword(
@@ -77,7 +88,23 @@ class AuthRepositoryImpl @Inject constructor(
                 }
 
                 val authCredential = GoogleAuthProvider.getCredential(idToken, null)
-                firebaseAuth.signInWithCredential(authCredential).await()
+                val authResult = firebaseAuth.signInWithCredential(authCredential).await()
+
+                val user = authResult.user
+                if (user != null) {
+                    val userDocRef = firestore.collection(USERS_COLLECTION).document(user.uid)
+                    val document = userDocRef.get().await()
+
+                    if (!document.exists()) {
+                        val newUserDto = hashMapOf(
+                            KEY_EMAIL to (user.email ?: ""),
+                            KEY_FIRST_NAME to (user.displayName ?: ""),
+                            KEY_LAST_NAME to "",
+                            KEY_PHOTO_URL to (user.photoUrl?.toString() ?: "")
+                        )
+                        userDocRef.set(newUserDto).await()
+                    }
+                }
 
                 ValidationResult(isSuccess = true, data = Unit)
             } else {
@@ -125,6 +152,24 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
+    override suspend fun signOut(): ValidationResult<Unit> {
+        return try {
+            firebaseAuth.signOut()
+            val clearRequest = ClearCredentialStateRequest()
+                credentialManager.clearCredentialState(clearRequest)
+                ValidationResult(
+                    isSuccess = true,
+                    data = Unit
+                )
+            } catch (e: ClearCredentialException) {
+                ValidationResult(
+                    isSuccess = false,
+                    error = ErrorType.AuthCredentials(e.message.orEmpty())
+                )
+            }
+    }
+
     override suspend fun getCurrentUserId(): ValidationResult<String> {
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
@@ -140,3 +185,4 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 }
+

@@ -51,6 +51,10 @@ class LoginViewModel @Inject constructor(
                 }
             }
 
+            LoginCommand.ResetState -> {
+                _state.update { LoginState() }
+            }
+
             LoginCommand.LoginUserFromEmailAndPassword -> loginWithEmail()
             is LoginCommand.SignInWithGoogle -> signInWithGoogle(command.context)
         }
@@ -108,7 +112,7 @@ class LoginViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                _state.update { it.copy(isSuccess = true, error = "", isLoading = false) }
+                _state.update {state -> LoginState(isSuccess = true, error = "", isLoading = false) }
             } else {
                 val message = errorParser.getErrorMessage(result.error)
                 _state.update {
@@ -129,4 +133,5 @@ sealed interface LoginCommand {
     data class ChangePasswordVisibility(val isVisible: Boolean) : LoginCommand
     data object LoginUserFromEmailAndPassword : LoginCommand
     data class SignInWithGoogle(val context: Context) : LoginCommand
+    data object ResetState : LoginCommand
 }

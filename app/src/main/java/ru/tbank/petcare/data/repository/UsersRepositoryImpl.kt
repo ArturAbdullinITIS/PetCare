@@ -1,18 +1,23 @@
 package ru.tbank.petcare.data.repository
 
 import android.net.Uri
+import android.util.Log
 import coil3.network.HttpException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import ru.tbank.petcare.BuildConfig
+import ru.tbank.petcare.data.mapper.toDomain
 import ru.tbank.petcare.data.mapper.toDto
 import ru.tbank.petcare.data.remote.firebase.UserDto
 import ru.tbank.petcare.data.remote.network.cloudinary.CloudinaryApiService
@@ -37,6 +42,8 @@ class UsersRepositoryImpl @Inject constructor(
         private const val FILE_NAME = "user_photo"
         private const val CONTENT_TYPE = "text/plain"
         private const val CLOUDINARY_ERROR = "Cloudinary error"
+
+        private const val USER_ID_ERROR = "User id cannot be blank"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -147,6 +154,60 @@ class UsersRepositoryImpl @Inject constructor(
                     error = ErrorType.NetworkError(e.message ?: "")
                 )
             }
+        }
+    }
+
+    override suspend fun getCurrentUser(): Flow<User> = callbackFlow {
+        val currentUserId: String = firebaseAuth.currentUser?.uid ?: ""
+        Log.d("UserRepositoryImpl", currentUserId)
+
+        if (currentUserId.isBlank()) {
+            close(IllegalArgumentException(USER_ID_ERROR))
+            return@callbackFlow
+        }
+        val listener = collection.document(currentUserId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val userDto = snapshot?.toObject(UserDto::class.java)
+                val user = userDto?.toDomain()
+                Log.d("UserRepositoryImpl", "${user?.email}, ${user?.firstName}")
+                if (user != null) {
+                    trySend(user)
+                } else {
+                    close()
+                }
+            }
+        awaitClose {
+            listener.remove()
+        }
+    }
+
+    override suspend fun editUser(user: User): ValidationResult<Unit> = withContext(dispatcherIO) {
+        try {
+            if (user.id.isBlank()) {
+                return@withContext ValidationResult(
+                    isSuccess = false,
+                    error = ErrorType.CommonError(USER_ID_ERROR)
+                )
+            }
+            val updates = mapOf(
+                "first_name" to user.firstName,
+                "last_name" to user.lastName,
+                "photo_url" to user.photoUrl,
+                "email" to user.email
+            )
+
+            collection.document(user.id).set(updates, SetOptions.merge()).await()
+            ValidationResult(
+                isSuccess = true
+            )
+        } catch (e: Exception) {
+            ValidationResult(
+                error = ErrorType.CommonError(e.message ?: "")
+            )
         }
     }
 }

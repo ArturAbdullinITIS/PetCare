@@ -1,6 +1,7 @@
 package ru.tbank.petcare.data.mapper
 
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseUser
 import ru.tbank.petcare.data.local.PetDbModel
 import ru.tbank.petcare.data.remote.firebase.ActivityDto
 import ru.tbank.petcare.data.remote.firebase.PetDto

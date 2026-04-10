@@ -15,11 +15,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface FirebaseModule {
 
-    @Binds
-    @Singleton
-    fun bindActivityRepository(
-        impl: ActivityRepositoryImpl
-    ): ActivityRepository
 
     companion object {
 

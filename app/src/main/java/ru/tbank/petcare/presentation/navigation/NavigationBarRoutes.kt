@@ -26,15 +26,14 @@ sealed interface Route {
     data object Register : Route
 
     @Serializable
-    data class CreateActivity(
-        val petId: String?,
-        val type: String? = null,
-        val id: String = java.util.UUID.randomUUID().toString()
-    ) : Route
+    data class CreateActivity(val petId: String?, val type: String? = null, val instanceId: String = java.util.UUID.randomUUID().toString()): Route
     data object Continue : Route
 
     @Serializable
     data object Settings : Route
+
+    @Serializable
+    data object EditProfile: Route
 }
 
 @Serializable
@@ -99,5 +98,6 @@ fun getRouteTitle(route: Route): Int {
         is Route.PublicPetProfile -> R.string.public_pet_profile
         Route.Continue -> R.string.continue_registration
         Route.Settings -> R.string.settings
+        Route.EditProfile -> R.string.edit_profile
     }
 }

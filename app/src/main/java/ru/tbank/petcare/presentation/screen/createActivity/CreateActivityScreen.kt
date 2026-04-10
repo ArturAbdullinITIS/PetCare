@@ -49,12 +49,14 @@ import java.util.Date
 fun CreateActivityScreen(
     petId: String?,
     type: String?,
+    instanceId: String?,
     onAddClick: () -> Unit,
     onSaveActivityClick: () -> Unit
 ) {
     CreateActivityContent(
         petId = petId,
         type = type,
+        instanceid = instanceId,
         onAddClick = onAddClick,
         onSaveActivityClick = onSaveActivityClick
     )
@@ -69,10 +71,11 @@ fun CreateActivityContent(
     modifier: Modifier = Modifier,
     petId: String?,
     type: String?,
+    instanceid: String?,
     viewModel: CreateActivityViewModel = hiltViewModel(
-        key = petId + type,
-        creationCallback = { factory: CreateActivityViewModel.Factory ->
-            factory.create(petId, type)
+        key = instanceid,
+        creationCallback = {factory: CreateActivityViewModel.Factory ->
+            factory.create(petId,type, instanceid)
         }
     ),
     onAddClick: () -> Unit,
@@ -133,7 +136,7 @@ fun CreateActivityContent(
                 value = state.activityDateText,
                 onValueChange = { },
                 placeholder = "dd.mm.yyyy",
-                label = stringResource(R.string.date_of_birth),
+                label = stringResource(R.string.activity_date),
                 maxLines = 1,
                 readOnly = true,
                 singleLine = true,

@@ -29,14 +29,16 @@ class CreateActivityViewModel @AssistedInject constructor(
     private val createActivityUseCase: CreateActivityUseCase,
     private val resourceProvider: ResourceProvider,
     @Assisted("petId") private val initialPetId: String?,
-    @Assisted("type") private val initialType: String?
-) : ViewModel() {
+    @Assisted("type") private val initialType: String?,
+    @Assisted("instanceId") private val initialInstaceId: String?
+):  ViewModel() {
 
     @AssistedFactory
     interface Factory {
         fun create(
             @Assisted("petId") petId: String?,
-            @Assisted("type") type: String?
+            @Assisted("type") type: String?,
+            @Assisted("instanceId") instanceId: String?
         ): CreateActivityViewModel
     }
 
@@ -67,7 +69,7 @@ class CreateActivityViewModel @AssistedInject constructor(
     private fun loadPet() {
         viewModelScope.launch {
             getAllPetsUseCase().collect { pets ->
-                val uiPet = pets.map { it.toPetCardUIModel() }
+                val uiPet = pets.map {it.toPetCardUIModel()}
                 _state.update { state ->
                     state.copy(
                         pets = uiPet
