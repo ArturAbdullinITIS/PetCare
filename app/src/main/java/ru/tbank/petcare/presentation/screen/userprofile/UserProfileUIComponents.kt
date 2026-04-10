@@ -1,12 +1,10 @@
 package ru.tbank.petcare.presentation.screen.userprofile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,13 +33,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
-import ru.tbank.petcare.presentation.common.EditPhotoIcon
 
 @Composable
 fun UserProfileHeader(
@@ -147,6 +142,7 @@ fun StatsGridSection(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun StatCard(
     value: String,
@@ -215,6 +211,7 @@ fun MenuActionsSection(
     }
 }
 
+@Suppress("LongParameterList")
 @Composable
 private fun MenuActionButton(
     title: String,
@@ -285,4 +282,3 @@ private fun MenuActionButton(
         }
     }
 }
-

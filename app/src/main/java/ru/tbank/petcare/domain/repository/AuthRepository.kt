@@ -21,4 +21,3 @@ interface AuthRepository {
 
     suspend fun getCurrentUserId(): ValidationResult<String>
 }
-

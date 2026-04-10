@@ -33,14 +33,13 @@ import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
+import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
 import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
-import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
-import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 
@@ -249,7 +248,8 @@ fun NavHost(
                             },
                             onSaveActivityClick = {
                                 backStack.removeLastOrNull()
-                            }
+                            },
+                            instanceId = route.instanceId
                         )
                     }
 
@@ -267,6 +267,28 @@ fun NavHost(
                     }
                     entry<Route.Settings> {
                         SettingsScreen()
+                    }
+                    entry<NavigationBarRoute.Profile> {
+                        UserProfileScreen(
+                            onLogoutSuccess = {
+                                backStack.clear()
+                                backStack.add(Route.Login)
+                            },
+                            onSettingsClick = {
+                                backStack.add(Route.Settings)
+                            },
+                            setTopBarActions = { topBarActions.value = it },
+                            onEditIconClick = {
+                                backStack.add(Route.EditProfile)
+                            },
+                        )
+                    }
+                    entry<Route.EditProfile> {
+                        EditProfileScreen(
+                            onContinue = {
+                                backStack.removeLastOrNull()
+                            }
+                        )
                     }
                 }
             )

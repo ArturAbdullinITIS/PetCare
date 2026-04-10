@@ -26,14 +26,18 @@ sealed interface Route {
     data object Register : Route
 
     @Serializable
-    data class CreateActivity(val petId: String?, val type: String? = null, val instanceId: String = java.util.UUID.randomUUID().toString()): Route
+    data class CreateActivity(
+        val petId: String?,
+        val type: String? = null,
+        val instanceId: String = java.util.UUID.randomUUID().toString()
+    ) : Route
     data object Continue : Route
 
     @Serializable
     data object Settings : Route
 
     @Serializable
-    data object EditProfile: Route
+    data object EditProfile : Route
 }
 
 @Serializable
@@ -83,6 +87,7 @@ fun NavigationBarRoute.getConfig(): RouteConfig? {
     return bottomBarRoutesList.find { it.route == this }
 }
 
+@Suppress("CyclomaticComplexMethod")
 fun getRouteTitle(route: Route): Int {
     return when (route) {
         is NavigationBarRoute.MyPets -> R.string.my_pets_screen_title

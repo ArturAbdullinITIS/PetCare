@@ -1,17 +1,13 @@
 package ru.tbank.petcare.presentation.screen.userprofile
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
-
 import ru.tbank.petcare.domain.usecase.users.GetCurrentUserUseCase
 import ru.tbank.petcare.domain.usecase.users.LogoutUseCase
 import javax.inject.Inject
@@ -52,25 +48,19 @@ class UserProfileViewModel @Inject constructor(
     }
 
     fun processCommand(command: UserProfileCommand) {
-        when(command) {
+        when (command) {
             is UserProfileCommand.Logout -> logout()
         }
     }
 
     private fun logout() {
-    viewModelScope.launch {
-        try {
+        viewModelScope.launch {
             logoutUseCase()
-        } catch (e: Exception) {
         }
     }
-
-}
 }
 
 sealed interface UserProfileCommand {
 
-    object Logout: UserProfileCommand
-
+    object Logout : UserProfileCommand
 }
-

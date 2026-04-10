@@ -112,7 +112,7 @@ class LoginViewModel @Inject constructor(
             )
 
             if (result.isSuccess) {
-                _state.update {state -> LoginState(isSuccess = true, error = "", isLoading = false) }
+                _state.update { state -> LoginState(isSuccess = true, error = "", isLoading = false) }
             } else {
                 val message = errorParser.getErrorMessage(result.error)
                 _state.update {

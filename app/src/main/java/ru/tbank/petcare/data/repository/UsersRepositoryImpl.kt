@@ -204,7 +204,7 @@ class UsersRepositoryImpl @Inject constructor(
             ValidationResult(
                 isSuccess = true
             )
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             ValidationResult(
                 error = ErrorType.CommonError(e.message ?: "")
             )

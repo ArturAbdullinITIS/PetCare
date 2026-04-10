@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
@@ -66,6 +65,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    @Suppress("CyclomaticComplexMethod", "NestedBlockDepth")
     override suspend fun signInWithGoogle(activityContext: Context): ValidationResult<Unit> {
         return try {
             val result = credentialManager.getCredential(
@@ -157,17 +157,17 @@ class AuthRepositoryImpl @Inject constructor(
         return try {
             firebaseAuth.signOut()
             val clearRequest = ClearCredentialStateRequest()
-                credentialManager.clearCredentialState(clearRequest)
-                ValidationResult(
-                    isSuccess = true,
-                    data = Unit
-                )
-            } catch (e: ClearCredentialException) {
-                ValidationResult(
-                    isSuccess = false,
-                    error = ErrorType.AuthCredentials(e.message.orEmpty())
-                )
-            }
+            credentialManager.clearCredentialState(clearRequest)
+            ValidationResult(
+                isSuccess = true,
+                data = Unit
+            )
+        } catch (e: ClearCredentialException) {
+            ValidationResult(
+                isSuccess = false,
+                error = ErrorType.AuthCredentials(e.message.orEmpty())
+            )
+        }
     }
 
     override suspend fun getCurrentUserId(): ValidationResult<String> {
@@ -185,4 +185,3 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 }
-

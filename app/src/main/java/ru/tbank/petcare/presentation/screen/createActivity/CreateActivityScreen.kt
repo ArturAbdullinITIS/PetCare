@@ -74,8 +74,8 @@ fun CreateActivityContent(
     instanceid: String?,
     viewModel: CreateActivityViewModel = hiltViewModel(
         key = instanceid,
-        creationCallback = {factory: CreateActivityViewModel.Factory ->
-            factory.create(petId,type, instanceid)
+        creationCallback = { factory: CreateActivityViewModel.Factory ->
+            factory.create(petId, type, instanceid)
         }
     ),
     onAddClick: () -> Unit,

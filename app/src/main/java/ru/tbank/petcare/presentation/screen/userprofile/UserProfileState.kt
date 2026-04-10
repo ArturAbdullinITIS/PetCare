@@ -7,4 +7,3 @@ data class UserProfileState(
     val bestScore: Int = 0,
     val avatarUrl: String? = null
 )
-

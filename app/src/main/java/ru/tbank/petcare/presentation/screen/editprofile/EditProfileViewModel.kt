@@ -1,7 +1,6 @@
 package ru.tbank.petcare.presentation.screen.editprofile
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,12 +16,8 @@ import ru.tbank.petcare.domain.usecase.users.GetCurrentUserUseCase
 import ru.tbank.petcare.domain.usecase.users.UploadUsersPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toUserForm
-import ru.tbank.petcare.presentation.model.UserForm
-import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationCommand
-import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationEvent
 import ru.tbank.petcare.utils.ResourceProvider
 import javax.inject.Inject
-
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
@@ -30,7 +25,7 @@ class EditProfileViewModel @Inject constructor(
     private val editUserUseCase: EditUserUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val resourceProvider: ResourceProvider
-): ViewModel(){
+) : ViewModel() {
 
     private val _state = MutableStateFlow(EditProfileState())
     val state = _state.asStateFlow()
@@ -42,15 +37,14 @@ class EditProfileViewModel @Inject constructor(
         loadUser()
     }
 
-
     private fun loadUser() {
-            viewModelScope.launch {
-                getCurrentUserUseCase().collect { user ->
-                    _state.update { state ->
-                        state.copy(user = user.toUserForm())
-                    }
+        viewModelScope.launch {
+            getCurrentUserUseCase().collect { user ->
+                _state.update { state ->
+                    state.copy(user = user.toUserForm())
                 }
             }
+        }
     }
 
     fun processCommand(command: EditProfileCommand) {
@@ -75,6 +69,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun handleEdit() {
         val uri = state.value.selectedPhotoUri
         val user = state.value.user.toDomain()
@@ -141,8 +136,6 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 }
-
-
 
 sealed interface EditProfileCommand {
     object Edit : EditProfileCommand

@@ -10,4 +10,3 @@ class LogoutUseCase @Inject constructor(
         authRepository.signOut()
     }
 }
-
