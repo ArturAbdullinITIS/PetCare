@@ -18,7 +18,7 @@ import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.usecase.pets.DeletePetUseCase
 import ru.tbank.petcare.domain.usecase.pets.EditPetUseCase
-import ru.tbank.petcare.domain.usecase.pets.GetPetUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetLocalPetUseCase
 import ru.tbank.petcare.domain.usecase.pets.UploadPetPhotoUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toForm
@@ -29,7 +29,7 @@ import java.util.Date
 @HiltViewModel(assistedFactory = EditPetViewModel.Factory::class)
 class EditPetViewModel @AssistedInject constructor(
     @Assisted(PET_ID) private val petId: String,
-    private val getPetUseCase: GetPetUseCase,
+    private val getPetUseCase: GetLocalPetUseCase,
     private val editPetUseCase: EditPetUseCase,
     private val uploadPetPhotoUseCase: UploadPetPhotoUseCase,
     private val deletePetUseCase: DeletePetUseCase,

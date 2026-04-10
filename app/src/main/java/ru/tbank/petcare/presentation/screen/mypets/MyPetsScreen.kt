@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -28,14 +30,16 @@ fun MyPetsScreen(
     onNavigateToProfile: (String) -> Unit
 ) {
     MyPetsContent(
-        onWalkClick =  onWalkClick ,
-        onGroomingClick = onGroomingClick ,
+        onWalkClick = onWalkClick,
+        onGroomingClick = onGroomingClick,
         onVetClick = onVetClick,
-        onNavigateToProfile = onNavigateToProfile)
+        onNavigateToProfile = onNavigateToProfile
+    )
 }
 
 private const val FRACTION = 0.6f
 
+@Suppress("LongParameterList")
 @Composable
 private fun MyPetsContent(
     onNavigateToProfile: (String) -> Unit,
@@ -46,84 +50,94 @@ private fun MyPetsContent(
     viewModel: MyPetsViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val pullState = rememberPullToRefreshState()
+    val isOnline by viewModel.isOnline.collectAsState()
 
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+    PullToRefreshBox(
+        state = pullState,
+        onRefresh = { viewModel.refresh() },
+        modifier = Modifier.fillMaxSize(),
+        isRefreshing = state.isRefreshing
     ) {
-        item {
-            QuickActionsTitleRow()
-        }
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            item {
+                QuickActionsTitleRow()
+            }
 
-        item {
-            QuickActionRow(
-                onWalkClick = onWalkClick,
-                onGroomingClick = onGroomingClick,
-                onVetClick = onVetClick
-            )
-        }
-
-        item {
-            if (state.isTipsLoading) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(96.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            } else {
-                TipCard(
-                    text = state.currentTip?.text ?: stringResource(R.string.no_tips_available),
-                    onClick = { viewModel.nextTip() }
+            item {
+                QuickActionRow(
+                    onWalkClick = onWalkClick,
+                    onGroomingClick = onGroomingClick,
+                    onVetClick = onVetClick
                 )
             }
-        }
 
-        item {
-            YourFamilyTitle()
-        }
-
-        when {
-            state.isPetsLoading -> {
-                item {
+            item {
+                if (state.isTipsLoading) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp),
+                            .height(96.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         CircularProgressIndicator()
                     }
+                } else {
+                    TipCard(
+                        text = state.currentTip?.text ?: stringResource(R.string.no_tips_available),
+                        onClick = { viewModel.nextTip() }
+                    )
                 }
             }
 
-            state.pets.isEmpty() -> {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillParentMaxHeight(FRACTION),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        EmptyPetsTitle(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+            item {
+                YourFamilyTitle()
+            }
+
+            when {
+                state.isPetsLoading -> {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
-            }
 
-            else -> {
-                items(
-                    items = state.pets,
-                    key = { it.id }
-                ) { pet ->
-                    MyPetsPetCard(
-                        pet = pet,
-                        onPetClick = { onNavigateToProfile(pet.id) }
-                    )
+                state.pets.isEmpty() -> {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillParentMaxHeight(FRACTION),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            EmptyPetsTitle(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp))
+                        }
+                    }
+                }
+
+                else -> {
+                    items(
+                        items = state.pets,
+                        key = { it.id }
+                    ) { pet ->
+                        MyPetsPetCard(
+                            pet = pet,
+                            onPetClick = { onNavigateToProfile(pet.id) },
+                            clickable = isOnline
+                        )
+                    }
                 }
             }
         }

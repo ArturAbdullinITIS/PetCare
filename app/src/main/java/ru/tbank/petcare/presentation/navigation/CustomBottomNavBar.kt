@@ -85,7 +85,7 @@ fun CustomBottomNavBar(
                                 painter = painterResource(item.icon),
                                 contentDescription = stringResource(R.string.nav_bar_icon),
                                 tint = if (isSelected) {
-                                    MaterialTheme.colorScheme.onPrimaryContainer
+                                    MaterialTheme.colorScheme.onPrimary
                                 } else {
                                     MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                                 }

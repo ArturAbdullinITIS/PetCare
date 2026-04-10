@@ -13,4 +13,3 @@ enum class GroomingProcedureType(val value: String) {
     BRUSH("Brush"),
     FULL_SERVICE("Full service")
 }
-

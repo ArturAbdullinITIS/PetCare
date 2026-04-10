@@ -153,4 +153,8 @@
     <string name="account_management">Управление аккаунтом</string>
     <string name="settings">Настройки</string>
     <string name="analytics">Аналитика</string>
+    <string name="sort_icon">Значок сортировки</string>
+    <string name="choose_sorting_method">Выберите метод сортировки</string>
+    <string name="game_score">Счет мини-игры</string>
+    <string name="sort_option_icon">Значок опции сортировки</string>
 </resources>

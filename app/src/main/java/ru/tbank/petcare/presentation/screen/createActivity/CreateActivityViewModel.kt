@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.usecase.CreateActivityUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
@@ -23,7 +22,6 @@ import ru.tbank.petcare.presentation.model.VetProcedureType
 import ru.tbank.petcare.utils.DateFormatter
 import ru.tbank.petcare.utils.ResourceProvider
 import java.util.Date
-
 
 @HiltViewModel(assistedFactory = CreateActivityViewModel.Factory::class)
 class CreateActivityViewModel @AssistedInject constructor(
@@ -81,7 +79,6 @@ class CreateActivityViewModel @AssistedInject constructor(
         }
     }
 
-
     fun processCommand(command: CreateActivityCommand) {
         when (command) {
             is CreateActivityCommand.SelectPet -> setPet(command.petId)
@@ -100,7 +97,8 @@ class CreateActivityViewModel @AssistedInject constructor(
         }
     }
 
-    private fun handleCreateActivity(){
+    @Suppress("TooGenericExceptionCaught", "SwallowedException")
+    private fun handleCreateActivity() {
         val activity = state.value.toDomain()
 
         viewModelScope.launch {
@@ -116,8 +114,11 @@ class CreateActivityViewModel @AssistedInject constructor(
                             activityType = getActivityFormState(initialType)
                         )
                     }
-                } else
-                    _events.emit(CreateActivityEvent.Error(resourceProvider.getString(R.string.could_not_save_activity)))
+                } else {
+                    _events.emit(
+                        CreateActivityEvent.Error(resourceProvider.getString(R.string.could_not_save_activity))
+                    )
+                }
             } catch (t: Throwable) {
                 _events.emit(CreateActivityEvent.Error(resourceProvider.getString(R.string.unknown_error)))
             } finally {
@@ -137,7 +138,6 @@ class CreateActivityViewModel @AssistedInject constructor(
         }
     }
 
-
     private fun changeActivityType(activityType: ActivityFormState) {
         _state.update { state ->
             state.copy(activityType = activityType)
@@ -148,8 +148,10 @@ class CreateActivityViewModel @AssistedInject constructor(
         val normalized = date?.let { DateFormatter.normalizeToStartOfDayUtc(it) }
         val text = DateFormatter.formatDob(normalized)
         _state.update { state ->
-            state.copy(activityDate = date,
-                activityDateText = text)
+            state.copy(
+                activityDate = date,
+                activityDateText = text
+            )
         }
     }
 
@@ -237,24 +239,25 @@ class CreateActivityViewModel @AssistedInject constructor(
     }
 }
 
-
 sealed interface CreateActivityCommand {
 
     data class SelectPet(val petId: String) : CreateActivityCommand
     data class ChangeActivityType(val activityType: ActivityFormState) : CreateActivityCommand
-    data class InputActivityDate(val date: Date?): CreateActivityCommand
-    data class InputNotes(val activityNotes: String): CreateActivityCommand
-    //walk
-    data class InputGoalKm(val goalKm: String): CreateActivityCommand
-    data class InputActualKm(val actualKm: String): CreateActivityCommand
-    //grooming
-    data class InputGroomingCost(val cost: String): CreateActivityCommand
-    data class InputGroomingDuration(val duration: String): CreateActivityCommand
-    data class InputGroomingProcedure(val procedureType: GroomingProcedureType): CreateActivityCommand
-    //vet
-    data class InputVetCost(val cost: String): CreateActivityCommand
-    data class InputVetProcedure(val procedureType: VetProcedureType): CreateActivityCommand
-    object IsReminder: CreateActivityCommand
-    object SaveActivity: CreateActivityCommand
+    data class InputActivityDate(val date: Date?) : CreateActivityCommand
+    data class InputNotes(val activityNotes: String) : CreateActivityCommand
 
+    // walk
+    data class InputGoalKm(val goalKm: String) : CreateActivityCommand
+    data class InputActualKm(val actualKm: String) : CreateActivityCommand
+
+    // grooming
+    data class InputGroomingCost(val cost: String) : CreateActivityCommand
+    data class InputGroomingDuration(val duration: String) : CreateActivityCommand
+    data class InputGroomingProcedure(val procedureType: GroomingProcedureType) : CreateActivityCommand
+
+    // vet
+    data class InputVetCost(val cost: String) : CreateActivityCommand
+    data class InputVetProcedure(val procedureType: VetProcedureType) : CreateActivityCommand
+    object IsReminder : CreateActivityCommand
+    object SaveActivity : CreateActivityCommand
 }

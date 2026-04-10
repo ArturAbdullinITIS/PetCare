@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
-import ru.tbank.petcare.domain.usecase.pets.GetPetUseCase
+import ru.tbank.petcare.domain.usecase.pets.GetRemotePetUseCase
 import ru.tbank.petcare.domain.usecase.users.GetUserNameUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
@@ -20,7 +20,7 @@ import ru.tbank.petcare.utils.ResourceProvider
 
 @HiltViewModel(assistedFactory = PublicPetProfileViewModel.Factory::class)
 class PublicPetProfileViewModel @AssistedInject constructor(
-    private val getPetUseCase: GetPetUseCase,
+    private val getPetUseCase: GetRemotePetUseCase,
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val errorParser: ErrorParser,
     @Assisted(PET_ID) private val petId: String,

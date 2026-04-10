@@ -15,19 +15,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuAnchorType.Companion.PrimaryNotEditable
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import ru.tbank.petcare.presentation.model.VetProcedureType
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,9 +41,9 @@ import ru.tbank.petcare.presentation.common.CustomButton
 import ru.tbank.petcare.presentation.common.CustomTextField
 import ru.tbank.petcare.presentation.common.DobDatePickerDialog
 import ru.tbank.petcare.presentation.model.GroomingProcedureType
+import ru.tbank.petcare.presentation.model.VetProcedureType
 import ru.tbank.petcare.utils.filterFloatInput
 import java.util.Date
-
 
 @Composable
 fun CreateActivityScreen(
@@ -63,6 +62,9 @@ fun CreateActivityScreen(
     )
 }
 
+private const val HALF_WEIGHT = 0.5f
+
+@Suppress("LongParameterList", "LongMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateActivityContent(
@@ -78,8 +80,7 @@ fun CreateActivityContent(
     ),
     onAddClick: () -> Unit,
     onSaveActivityClick: () -> Unit
-    ) {
-
+) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val scrollState = rememberScrollState()
     var showDobPicker by remember { mutableStateOf(false) }
@@ -95,13 +96,11 @@ fun CreateActivityContent(
         }
     }
 
-        Card(
+    Card(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(16.dp)
-
-            ,
+            .padding(16.dp),
         shape = RoundedCornerShape(48.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
@@ -174,9 +173,9 @@ fun CreateActivityContent(
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
-                       ) {
+                    ) {
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = (state.activityType as ActivityFormState.Walk).form.goalKm,
                             onValueChange = {
                                 viewModel.processCommand(
@@ -191,7 +190,7 @@ fun CreateActivityContent(
                             placeholder = stringResource(R.string.goal_km_placeholder)
                         )
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = (state.activityType as ActivityFormState.Walk).form.actualKm,
                             onValueChange = {
                                 viewModel.processCommand(
@@ -241,7 +240,9 @@ fun CreateActivityContent(
                                 DropdownMenuItem(
                                     text = { Text(procedure.value) },
                                     onClick = {
-                                        viewModel.processCommand(CreateActivityCommand.InputGroomingProcedure(procedure))
+                                        viewModel.processCommand(
+                                            CreateActivityCommand.InputGroomingProcedure(procedure)
+                                        )
                                         expandedGrooming = false
                                     }
                                 )
@@ -253,7 +254,7 @@ fun CreateActivityContent(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = form.groomingCost,
                             onValueChange = {
                                 viewModel.processCommand(CreateActivityCommand.InputGroomingCost(filterFloatInput(it)))
@@ -264,10 +265,12 @@ fun CreateActivityContent(
                             placeholder = "0.0"
                         )
                         CustomTextField(
-                            modifier = Modifier.weight(0.5f),
+                            modifier = Modifier.weight(HALF_WEIGHT),
                             value = form.durationMinutes,
                             onValueChange = {
-                                viewModel.processCommand(CreateActivityCommand.InputGroomingDuration(filterFloatInput(it)))
+                                viewModel.processCommand(
+                                    CreateActivityCommand.InputGroomingDuration(filterFloatInput(it))
+                                )
                             },
                             maxLines = 1,
                             minLines = 1,

@@ -4,7 +4,6 @@ import ru.tbank.petcare.presentation.model.GroomingProcedureType
 import ru.tbank.petcare.presentation.model.VetProcedureType
 import java.util.Date
 
-
 data class Activity(
     val id: String = "",
     val activityType: ActivityType = ActivityType.WALK,
@@ -12,8 +11,7 @@ data class Activity(
     val notes: String = "",
     val details: ActivityDetails = ActivityDetails.Walk(),
     val isReminder: Boolean = false,
-    )
-
+)
 
 enum class ActivityType(val value: String) {
     WALK("Walk"),
@@ -26,7 +24,7 @@ sealed interface ActivityDetails {
     data class Walk(
         val goalKm: String = "0",
         val actualKm: String = "0"
-    ): ActivityDetails
+    ) : ActivityDetails
 
     data class Grooming(
         val procedureType: GroomingProcedureType = GroomingProcedureType.FULL_SERVICE,
@@ -38,5 +36,4 @@ sealed interface ActivityDetails {
         val procedureType: VetProcedureType = VetProcedureType.CHECKUP,
         val vetCost: String = "0"
     ) : ActivityDetails
-
 }
