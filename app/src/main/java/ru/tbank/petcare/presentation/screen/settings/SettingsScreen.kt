@@ -137,7 +137,7 @@ private fun SettingContent(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 LanguageSegmentedControl(
-                    language = state.settingsConfig.language,
+                    languageState = state.languageState,
                     onSelected = {
                         viewModel.processCommand(SettingsCommand.ChangeLanguage(it))
                     }

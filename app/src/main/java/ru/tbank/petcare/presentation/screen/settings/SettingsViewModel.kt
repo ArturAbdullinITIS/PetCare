@@ -35,12 +35,19 @@ class SettingsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getAllSettingsUseCase().collect { settings ->
+                val ruSelected = settings.language == Language.RUSSIAN
+                val enSelected = settings.language == Language.ENGLISH
                 _state.update { state ->
                     state.copy(
                         settingsConfig = Settings(
                             language = settings.language,
                             darkTheme = settings.darkTheme,
                             notifications = settings.notifications
+                        ),
+                        languageState = LanguageState(
+                            selected = settings.language,
+                            ruSelected = ruSelected,
+                            enSelected = enSelected
                         )
                     )
                 }
@@ -49,34 +56,29 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun processCommand(command: SettingsCommand) {
-        when (command) {
-            is SettingsCommand.ChangeLanguage -> {
-                viewModelScope.launch {
+        viewModelScope.launch {
+            when (command) {
+                is SettingsCommand.ChangeLanguage -> {
                     updateLanguageUseCase(command.language)
                 }
-            }
-            is SettingsCommand.EnableAllNotifications -> {
-                viewModelScope.launch {
+
+                is SettingsCommand.EnableAllNotifications -> {
                     updateAllNotificationsEnabledUseCase(command.enable)
                 }
-            }
-            is SettingsCommand.EnableDarkTheme -> {
-                viewModelScope.launch {
+
+                is SettingsCommand.EnableDarkTheme -> {
                     updateThemeUseCase(command.enable)
                 }
-            }
-            is SettingsCommand.EnableGroomingNotifications -> {
-                viewModelScope.launch {
+
+                is SettingsCommand.EnableGroomingNotifications -> {
                     updateGroomingNotificationsEnabledUseCase(command.enable)
                 }
-            }
-            is SettingsCommand.EnableVetNotifications -> {
-                viewModelScope.launch {
+
+                is SettingsCommand.EnableVetNotifications -> {
                     updateVetNotificationsEnabledUseCase(command.enable)
                 }
-            }
-            is SettingsCommand.EnableWalkNotifications -> {
-                viewModelScope.launch {
+
+                is SettingsCommand.EnableWalkNotifications -> {
                     updateWalkNotificationsEnabledUseCase(command.enable)
                 }
             }

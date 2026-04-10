@@ -282,7 +282,7 @@ fun ThemeSegmentedControl(
 
 @Composable
 fun LanguageSegmentedControl(
-    language: Language,
+    languageState: LanguageState,
     onSelected: (Language) -> Unit
 ) {
     Card(
@@ -304,12 +304,12 @@ fun LanguageSegmentedControl(
                 onClick = { onSelected(Language.RUSSIAN) },
                 contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = if (language == Language.RUSSIAN) {
+                    contentColor = if (languageState.ruSelected) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     },
-                    containerColor = if (language == Language.RUSSIAN) {
+                    containerColor = if (languageState.ruSelected) {
                         MaterialTheme.colorScheme.surface
                     } else {
                         Color.Transparent
@@ -334,12 +334,12 @@ fun LanguageSegmentedControl(
                 onClick = { onSelected(Language.ENGLISH) },
                 contentPadding = PaddingValues(vertical = 6.dp, horizontal = 12.dp),
                 colors = ButtonDefaults.textButtonColors(
-                    contentColor = if (language == Language.ENGLISH) {
+                    contentColor = if (languageState.enSelected) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
                         MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                     },
-                    containerColor = if (language == Language.ENGLISH) {
+                    containerColor = if (languageState.enSelected) {
                         MaterialTheme.colorScheme.surface
                     } else {
                         Color.Transparent

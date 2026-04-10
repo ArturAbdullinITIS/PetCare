@@ -13,6 +13,6 @@ data class NotificationSettings(
     val vet: Boolean = true
 )
 
-enum class Language {
-    ENGLISH, RUSSIAN
+enum class Language(val tag: String) {
+    ENGLISH("en"), RUSSIAN("ru")
 }
