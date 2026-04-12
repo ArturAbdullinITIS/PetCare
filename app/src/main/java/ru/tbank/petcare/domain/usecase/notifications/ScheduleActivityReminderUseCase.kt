@@ -31,7 +31,7 @@ class ScheduleActivityReminderUseCase @Inject constructor(
             return
         }
 
-        val delayMillis = 5000L
+        val delayMillis = reminderTimeMillis - currentTimeMillis
 
         val input = Data.Builder()
             .putString(NotificationsWorker.TYPE_KEY, type.name.lowercase())
