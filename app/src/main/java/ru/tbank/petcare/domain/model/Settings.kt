@@ -7,10 +7,10 @@ data class Settings(
 )
 
 data class NotificationSettings(
-    val enabled: Boolean = true,
-    val walk: Boolean = true,
-    val grooming: Boolean = true,
-    val vet: Boolean = true
+    val enabled: Boolean = false,
+    val walk: Boolean = false,
+    val grooming: Boolean = false,
+    val vet: Boolean = false
 )
 
 enum class Language(val tag: String) {

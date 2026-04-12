@@ -13,7 +13,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
-import ru.tbank.petcare.domain.usecase.CreateActivityUseCase
+import ru.tbank.petcare.domain.usecase.notifications.ScheduleActivityReminderUseCase
+import ru.tbank.petcare.domain.usecase.pets.CreateActivityUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain
 import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
@@ -28,6 +29,7 @@ class CreateActivityViewModel @AssistedInject constructor(
     private val getAllPetsUseCase: GetAllPetsUseCase,
     private val createActivityUseCase: CreateActivityUseCase,
     private val resourceProvider: ResourceProvider,
+    private val scheduleActivityReminderUseCase: ScheduleActivityReminderUseCase,
     @Assisted("petId") private val initialPetId: String?,
     @Assisted("type") private val initialType: String?,
 ) : ViewModel() {
@@ -98,20 +100,27 @@ class CreateActivityViewModel @AssistedInject constructor(
     @Suppress("TooGenericExceptionCaught", "SwallowedException")
     private fun handleCreateActivity() {
         val activity = state.value.toDomain()
-
+        val petId = state.value.selectedPetId
+        val activityDate = state.value.activityDate
+        if (activityDate == null) {
+            return
+        }
+        if (activity.isReminder) {
+            scheduleActivityReminderUseCase.schedule(
+                petId = petId,
+                type = activity.activityType,
+                activityDate = activityDate
+            )
+        } else {
+            scheduleActivityReminderUseCase.cancel(petId, activity.activityType)
+        }
         viewModelScope.launch {
             _state.update { state -> state.copy(isCreating = true) }
             try {
                 val result = createActivityUseCase(activity)
+
                 if (result.isSuccess) {
                     _events.emit(CreateActivityEvent.Saved)
-                    _state.update { currentState ->
-                        CreateActivityState(
-                            pets = currentState.pets,
-                            selectedPetId = initialPetId ?: "",
-                            activityType = getActivityFormState(initialType)
-                        )
-                    }
                 } else {
                     _events.emit(
                         CreateActivityEvent.Error(resourceProvider.getString(R.string.could_not_save_activity))

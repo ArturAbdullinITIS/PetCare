@@ -1,6 +1,7 @@
 package ru.tbank.petcare.presentation.screen.userprofile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -124,19 +125,19 @@ fun StatsGridSection(
     ) {
         StatCard(
             value = numberOfPets.toString().padStart(2, '0'),
-            label = stringResource(R.string.number_of_pets),
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
-            valueColor = MaterialTheme.colorScheme.onSecondary,
-            labelColor = MaterialTheme.colorScheme.onSecondary,
+            label = stringResource(R.string.number_of_pets).uppercase(),
+            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            valueColor = MaterialTheme.colorScheme.onSecondaryContainer,
+            labelColor = MaterialTheme.colorScheme.onSecondaryContainer,
             modifier = Modifier.weight(1f)
         )
 
         StatCard(
             value = bestScore.toString(),
-            label = stringResource(R.string.best_score),
-            backgroundColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
-            valueColor = MaterialTheme.colorScheme.onSecondary,
-            labelColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.5f),
+            label = stringResource(R.string.best_score).uppercase(),
+            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+            valueColor = MaterialTheme.colorScheme.onTertiaryContainer,
+            labelColor = MaterialTheme.colorScheme.onTertiaryContainer,
             modifier = Modifier.weight(1f)
         )
     }
@@ -155,9 +156,10 @@ private fun StatCard(
     Box(
         modifier = modifier
             .height(150.dp)
-            .background(backgroundColor, RoundedCornerShape(32.dp))
+            .border(width = 1.dp, color = backgroundColor, shape = RoundedCornerShape(32.dp))
+            .background(backgroundColor.copy(alpha = 0.3f), RoundedCornerShape(32.dp))
             .padding(vertical = 24.dp, horizontal = 24.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -197,7 +199,8 @@ fun MenuActionsSection(
             iconResId = R.drawable.ic_settings,
             iconContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f),
             titleColor = MaterialTheme.colorScheme.onSurface,
-            onClick = onSettingsClick
+            onClick = onSettingsClick,
+            iconTint = MaterialTheme.colorScheme.onSecondaryContainer
         )
 
         MenuActionButton(
@@ -206,7 +209,8 @@ fun MenuActionsSection(
             iconResId = R.drawable.ic_logout,
             iconContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.5f),
             titleColor = Color.Red.copy(alpha = 0.8f),
-            onClick = onLogoutClick
+            onClick = onLogoutClick,
+            iconTint = MaterialTheme.colorScheme.error
         )
     }
 }
@@ -218,6 +222,7 @@ private fun MenuActionButton(
     subtitle: String?,
     iconResId: Int,
     iconContainerColor: Color,
+    iconTint: Color,
     titleColor: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -251,7 +256,7 @@ private fun MenuActionButton(
                         painter = painterResource(id = iconResId),
                         contentDescription = null,
                         modifier = Modifier.size(20.dp),
-                        tint = Color.Unspecified
+                        tint = iconTint
                     )
                 }
 

@@ -121,6 +121,13 @@ dependencies {
     ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
+
+
+
     implementation(libs.androidx.appcompat)
     implementation(libs.compose.shimmer)
     implementation(libs.androidx.compose.material.icons.extended)

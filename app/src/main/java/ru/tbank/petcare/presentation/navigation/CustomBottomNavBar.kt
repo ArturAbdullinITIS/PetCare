@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.ripple
@@ -35,16 +33,18 @@ import ru.tbank.petcare.presentation.ui.theme.PetCareTheme
 
 @Composable
 fun CustomBottomNavBar(
+    modifier: Modifier = Modifier,
     currentRoute: Route,
     onSelected: (Route) -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
-            .windowInsetsPadding(NavigationBarDefaults.windowInsets),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 16.dp),
         shape = RoundedCornerShape(40.dp),
-
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 1.dp
         )
     ) {
         Row(

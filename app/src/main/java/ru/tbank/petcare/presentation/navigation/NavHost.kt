@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.navigation
 
+import android.R.attr.onClick
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -106,22 +107,11 @@ fun NavHost(
         floatingActionButton = {
             if (currentRoute is NavigationBarRoute.MyPets) {
                 CustomFAB(
+                    modifier = Modifier.padding(bottom = 100.dp),
                     onClick = {
                         backStack.add(Route.AddPet)
                     },
                     enabled = isOnline
-                )
-            }
-        },
-        bottomBar = {
-            if (isBottomBar) {
-                CustomBottomNavBar(
-                    currentRoute = currentRoute,
-                    onSelected = { route ->
-                        if (route != currentRoute) {
-                            backStack.add(route)
-                        }
-                    }
                 )
             }
         }
@@ -297,6 +287,21 @@ fun NavHost(
                     }
                 }
             )
+
+            if (isBottomBar) {
+                CustomBottomNavBar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 4.dp),
+                    currentRoute = currentRoute,
+                    onSelected = { route ->
+                        if (route != currentRoute) {
+                            backStack.add(route)
+                        }
+                    }
+                )
+            }
+
             if (!isOnline) {
                 NoInternetBanner(
                     modifier = Modifier

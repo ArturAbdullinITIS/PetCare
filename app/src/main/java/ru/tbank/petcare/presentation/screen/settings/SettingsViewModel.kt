@@ -1,5 +1,7 @@
 package ru.tbank.petcare.presentation.screen.settings
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,12 +14,9 @@ import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.model.Settings
 import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
-import ru.tbank.petcare.domain.usecase.settings.UpdateAllNotificationsEnabledUseCase
-import ru.tbank.petcare.domain.usecase.settings.UpdateGroomingNotificationsEnabledUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateLanguageUseCase
+import ru.tbank.petcare.domain.usecase.settings.UpdateNotificationsUseCase
 import ru.tbank.petcare.domain.usecase.settings.UpdateThemeUseCase
-import ru.tbank.petcare.domain.usecase.settings.UpdateVetNotificationsEnabledUseCase
-import ru.tbank.petcare.domain.usecase.settings.UpdateWalkNotificationsEnabledUseCase
 import ru.tbank.petcare.domain.usecase.users.DeleteCurrentUserUseCase
 import javax.inject.Inject
 
@@ -26,18 +25,14 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val getAllSettingsUseCase: GetAllSettingsUseCase,
     private val updateLanguageUseCase: UpdateLanguageUseCase,
-    private val updateAllNotificationsEnabledUseCase: UpdateAllNotificationsEnabledUseCase,
     private val updateThemeUseCase: UpdateThemeUseCase,
-    private val updateVetNotificationsEnabledUseCase: UpdateVetNotificationsEnabledUseCase,
-    private val updateGroomingNotificationsEnabledUseCase: UpdateGroomingNotificationsEnabledUseCase,
-    private val updateWalkNotificationsEnabledUseCase: UpdateWalkNotificationsEnabledUseCase,
-    private val deleteCurrentUserUseCase: DeleteCurrentUserUseCase
+    private val deleteCurrentUserUseCase: DeleteCurrentUserUseCase,
+    private val updateNotificationsUseCase: UpdateNotificationsUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(SettingsState())
     val state = _state.asStateFlow()
     private val _events = MutableSharedFlow<SettingsEvent>()
     val events = _events.asSharedFlow()
-
     init {
         viewModelScope.launch {
             getAllSettingsUseCase().collect { settings ->
@@ -69,7 +64,7 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 is SettingsCommand.EnableAllNotifications -> {
-                    updateAllNotificationsEnabledUseCase(command.enable)
+                    setAllNotifications(command.enable)
                 }
 
                 is SettingsCommand.EnableDarkTheme -> {
@@ -77,15 +72,15 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 is SettingsCommand.EnableGroomingNotifications -> {
-                    updateGroomingNotificationsEnabledUseCase(command.enable)
+                    setGrooming(command.enable)
                 }
 
                 is SettingsCommand.EnableVetNotifications -> {
-                    updateVetNotificationsEnabledUseCase(command.enable)
+                    setVet(command.enable)
                 }
 
                 is SettingsCommand.EnableWalkNotifications -> {
-                    updateWalkNotificationsEnabledUseCase(command.enable)
+                    setWalk(command.enable)
                 }
 
                 SettingsCommand.DeleteProfile -> deleteProfile()
@@ -102,6 +97,43 @@ class SettingsViewModel @Inject constructor(
                 _events.emit(SettingsEvent.Error(""))
             }
         }
+    }
+    private suspend fun setAllNotifications(enable: Boolean) {
+        val current = state.value.settingsConfig.notifications
+        val updated = current.copy(
+            enabled = enable,
+            walk = enable,
+            grooming = enable,
+            vet = enable
+        )
+        updateNotificationsUseCase(updated)
+    }
+
+    private suspend fun setWalk(enable: Boolean) {
+        val current = state.value.settingsConfig.notifications
+        val updated = current.copy(
+            walk = enable,
+            enabled = enable || current.grooming || current.vet
+        )
+        updateNotificationsUseCase(updated)
+    }
+
+    private suspend fun setGrooming(enable: Boolean) {
+        val current = state.value.settingsConfig.notifications
+        val updated = current.copy(
+            grooming = enable,
+            enabled = current.walk || enable || current.vet
+        )
+        updateNotificationsUseCase(updated)
+    }
+
+    private suspend fun setVet(enable: Boolean) {
+        val current = state.value.settingsConfig.notifications
+        val updated = current.copy(
+            vet = enable,
+            enabled = current.walk || current.grooming || enable
+        )
+        updateNotificationsUseCase(updated)
     }
 }
 

@@ -29,4 +29,7 @@ interface PetsDao {
 
     @Query("DELETE FROM pets")
     suspend fun clearAll()
+
+    @Query("SELECT * FROM pets WHERE id = :petId LIMIT 1")
+    suspend fun getPetByIdOnce(petId: String): PetDbModel?
 }

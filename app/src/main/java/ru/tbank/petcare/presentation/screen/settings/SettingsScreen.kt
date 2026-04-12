@@ -1,5 +1,9 @@
 package ru.tbank.petcare.presentation.screen.settings
 
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,14 +24,17 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.ConfirmDeleteDialog
@@ -52,7 +59,37 @@ private fun SettingContent(
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
     var showDeleteDialog by rememberSaveable { mutableStateOf(false) }
+    var pendingCommand by remember { mutableStateOf<SettingsCommand?>(null) }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { granted ->
+            if (granted) {
+                pendingCommand?.let(viewModel::processCommand)
+            } else {
+                pendingCommand = null
+            }
+        }
+    )
+
+    fun handleNotificationCommand(command: SettingsCommand) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val hasPermission = ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+
+            if (hasPermission) {
+                viewModel.processCommand(command)
+            } else {
+                pendingCommand = command
+                permissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            viewModel.processCommand(command)
+        }
+    }
 
     if (showDeleteDialog) {
         ConfirmDeleteDialog(
@@ -105,7 +142,7 @@ private fun SettingContent(
             AllNotificationsSwitch(
                 enabled = state.settingsConfig.notifications.enabled,
                 onEnable = {
-                    viewModel.processCommand(SettingsCommand.EnableAllNotifications(it))
+                    handleNotificationCommand(SettingsCommand.EnableAllNotifications(it))
                 }
             )
             Column(
@@ -117,7 +154,7 @@ private fun SettingContent(
                     text = stringResource(R.string.grooming),
                     enabled = state.settingsConfig.notifications.grooming,
                     onEnable = {
-                        viewModel.processCommand(SettingsCommand.EnableGroomingNotifications(it))
+                        handleNotificationCommand(SettingsCommand.EnableGroomingNotifications(it))
                     }
                 )
                 NotificationsSwitch(
@@ -125,7 +162,7 @@ private fun SettingContent(
                     text = stringResource(R.string.veterinarian),
                     enabled = state.settingsConfig.notifications.vet,
                     onEnable = {
-                        viewModel.processCommand(SettingsCommand.EnableVetNotifications(it))
+                        handleNotificationCommand(SettingsCommand.EnableVetNotifications(it))
                     }
                 )
                 NotificationsSwitch(
@@ -133,7 +170,7 @@ private fun SettingContent(
                     text = stringResource(R.string.walk),
                     enabled = state.settingsConfig.notifications.walk,
                     onEnable = {
-                        viewModel.processCommand(SettingsCommand.EnableWalkNotifications(it))
+                        handleNotificationCommand(SettingsCommand.EnableWalkNotifications(it))
                     }
                 )
             }

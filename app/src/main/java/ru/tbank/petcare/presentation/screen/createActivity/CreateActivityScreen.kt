@@ -261,7 +261,7 @@ fun CreateActivityContent(
                             },
                             maxLines = 1,
                             minLines = 1,
-                            label = "Cost",
+                            label = stringResource(R.string.cost),
                             placeholder = "0.0"
                         )
                         CustomTextField(

@@ -14,10 +14,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -59,16 +59,18 @@ private fun PublicProfilesContent(
 
     LaunchedEffect(Unit) {
         setTopBarActions {
-            IconButton(onClick = { showSortSheet = true }) {
+            IconButton(
+                onClick = { showSortSheet = true },
+                colors = IconButtonDefaults.iconButtonColors(
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.Sort,
                     contentDescription = stringResource(R.string.sort_icon)
                 )
             }
         }
-    }
-    DisposableEffect(Unit) {
-        onDispose { setTopBarActions(null) }
     }
     if (showSortSheet) {
         BottomSheet(

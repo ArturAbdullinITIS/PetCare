@@ -1,6 +1,7 @@
 package ru.tbank.petcare.di
 
 import android.content.Context
+import androidx.work.WorkManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -92,6 +93,14 @@ interface CoreModule {
             resourceProvider: ResourceProvider
         ): ErrorParser {
             return ErrorParser(resourceProvider)
+        }
+
+        @Provides
+        @Singleton
+        fun provideWorkManager(
+            @ApplicationContext context: Context
+        ): WorkManager {
+            return WorkManager.getInstance(context)
         }
     }
 }

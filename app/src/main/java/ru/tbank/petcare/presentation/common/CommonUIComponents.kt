@@ -112,10 +112,12 @@ fun ScreenTitleRow(
 
 @Composable
 fun CustomFAB(
+    modifier: Modifier,
     onClick: () -> Unit,
     enabled: Boolean
 ) {
     FloatingActionButton(
+        modifier = modifier,
         onClick = {
             if (enabled) onClick()
         },

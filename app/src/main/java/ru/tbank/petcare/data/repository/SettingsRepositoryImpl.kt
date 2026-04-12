@@ -19,8 +19,6 @@ class SettingsRepositoryImpl @Inject constructor(
     companion object Keys {
         val DARK_THEME = booleanPreferencesKey("dark_theme")
         val LANGUAGE = stringPreferencesKey("language")
-
-        val NOTIF_ENABLED = booleanPreferencesKey("notif_enabled")
         val NOTIF_WALK = booleanPreferencesKey("notif_walk")
         val NOTIF_GROOMING = booleanPreferencesKey("notif_grooming")
         val NOTIF_VET = booleanPreferencesKey("notif_vet")
@@ -31,14 +29,18 @@ class SettingsRepositoryImpl @Inject constructor(
             val language = runCatching {
                 Language.valueOf(prefs[LANGUAGE] ?: Language.ENGLISH.name)
             }.getOrDefault(Language.ENGLISH)
+            val walk = prefs[NOTIF_WALK] ?: false
+            val grooming = prefs[NOTIF_GROOMING] ?: false
+            val vet = prefs[NOTIF_VET] ?: false
+            val enabled = walk || grooming || vet
             Settings(
                 language = language,
                 darkTheme = prefs[DARK_THEME] ?: false,
                 notifications = NotificationSettings(
-                    enabled = prefs[NOTIF_ENABLED] ?: true,
-                    walk = prefs[NOTIF_WALK] ?: true,
-                    grooming = prefs[NOTIF_GROOMING] ?: true,
-                    vet = prefs[NOTIF_VET] ?: true
+                    enabled = enabled,
+                    walk = walk,
+                    grooming = grooming,
+                    vet = vet
                 )
             )
         }
@@ -55,28 +57,11 @@ class SettingsRepositoryImpl @Inject constructor(
             prefs[DARK_THEME] = darkTheme
         }
     }
-
-    override suspend fun updateNotificationsEnabled(enabled: Boolean) {
+    override suspend fun updateNotifications(notifications: NotificationSettings) {
         dataStore.edit { prefs ->
-            prefs[NOTIF_ENABLED] = enabled
-        }
-    }
-
-    override suspend fun updateWalkNotifications(enabled: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[NOTIF_WALK] = enabled
-        }
-    }
-
-    override suspend fun updateGroomingNotifications(enabled: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[NOTIF_GROOMING] = enabled
-        }
-    }
-
-    override suspend fun updateVetNotifications(enabled: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[NOTIF_VET] = enabled
+            prefs[NOTIF_WALK] = notifications.walk
+            prefs[NOTIF_GROOMING] = notifications.grooming
+            prefs[NOTIF_VET] = notifications.vet
         }
     }
 }

@@ -180,7 +180,8 @@ fun CreateActivityState.toDomain(): Activity {
                 goalKm = this.activityType.form.goalKm,
                 actualKm = this.activityType.form.actualKm
             )
-        }
+        },
+        isReminder = isReminder
     )
 }
 fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {

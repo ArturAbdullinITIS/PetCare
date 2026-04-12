@@ -190,4 +190,11 @@
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="delete_your_account">Delete your account?</string>
     <string name="failed_to_delete">Failed to delete</string>
+    <string name="cost">Cost</string>
+    <string name="grooming_reminder">Grooming reminder</string>
+    <string name="walk_reminder">Walk reminder</string>
+    <string name="vet_reminder">Vet reminder</string>
+    <string name="grooming_session_for_is_coming">Grooming session for %1$s is coming!</string>
+    <string name="vet_visit_for_is_coming">Vet visit for %1$s is coming!</string>
+    <string name="don_t_forget_to_walk">Don\'t forget to walk %1$s</string>
 </resources>
