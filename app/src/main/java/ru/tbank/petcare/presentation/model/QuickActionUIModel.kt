@@ -11,6 +11,6 @@ data class QuickActionUIModel(
     val contentColor: Color
 )
 
-enum class QuickActionType() {
+enum class QuickActionType {
     WALK, VET, GROOMING
 }

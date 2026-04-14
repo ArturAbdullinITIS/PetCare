@@ -131,7 +131,7 @@ class MiniGameViewModel @Inject constructor(
             newObstacles.add(Obstacle(x = 1500f, y = 0f, width = 120f, height = treeHeight, type = randomType))
         }
 
-        var newExactScore = currentState.exactScore + (deltaTime * 10f)
+        val newExactScore = currentState.exactScore + (deltaTime * 10f)
         val newScore = newExactScore.toInt()
         var gameOver = false
 

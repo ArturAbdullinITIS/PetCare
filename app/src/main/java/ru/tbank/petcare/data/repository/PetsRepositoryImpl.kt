@@ -2,7 +2,6 @@ package ru.tbank.petcare.data.repository
 
 import android.net.Uri
 import android.util.Log
-import android.util.Log.e
 import coil3.network.HttpException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -50,7 +49,7 @@ import javax.inject.Inject
 import kotlin.collections.emptyList
 import kotlin.jvm.java
 
-@Suppress("LongParameterList")
+@Suppress("LongParameterList", "TooGenericExceptionCaught")
 class PetsRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
@@ -111,13 +110,21 @@ class PetsRepositoryImpl @Inject constructor(
             petsDao.upsertAll(pets.map { it.toDbModel() })
 
             ValidationResult(isSuccess = true, data = Unit)
-        } catch (e: Exception) {
+        } catch (e: FirebaseFirestoreException) {
             ValidationResult(
                 error = ErrorType.NetworkError(
                     e.message ?: resourceProvider.getString(
                         R.string.sync_error
                     )
                 )
+            )
+        } catch (e: IllegalArgumentException) {
+            ValidationResult(
+                error = ErrorType.NetworkError(e.message ?: "")
+            )
+        } catch (e: HttpException) {
+            ValidationResult(
+                error = ErrorType.NetworkError(e.message ?: "")
             )
         }
     }
