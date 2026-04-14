@@ -219,4 +219,6 @@
     <string name="don_t_forget_to_take_for_a_walk_today">Не забудьте сегодня выгулять %1$s!</string>
     <string name="don_t_forget_to_take_to_the_vet_soon">Не забудьте скоро отвести %1$s к ветеринару!</string>
     <string name="cost">Стоимость</string>
+    <string name="last_activity_icon">Иконка последней активности</string>
+    <string name="recent_activities">Недавние активности</string>
 </resources>

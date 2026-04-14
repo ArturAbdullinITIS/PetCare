@@ -43,7 +43,7 @@ class UserProfileViewModel @Inject constructor(
                 _state.update { state ->
                     state.copy(
                         numberOfPets = pets.size,
-                        bestScore = pets.maxBy { it.gameScore }.gameScore
+                        bestScore = pets.maxByOrNull { it.gameScore }?.gameScore ?: 0
                     )
                 }
             }
