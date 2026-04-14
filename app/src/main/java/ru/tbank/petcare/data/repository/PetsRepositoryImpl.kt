@@ -70,6 +70,8 @@ class PetsRepositoryImpl @Inject constructor(
         const val NAME = "file"
         const val FILE_NAME = "pet_photo"
         const val CONTENT_TYPE = "text/plain"
+
+        const val GAME_SCORE_KEY = "game_score"
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
@@ -374,6 +376,20 @@ class PetsRepositoryImpl @Inject constructor(
             ValidationResult(
                 error = ErrorType.NetworkError(e.message ?: "")
             )
+        }
+    }
+
+    override suspend fun updatePetHighScore(petId: String, newScore: Int): ValidationResult<Unit> = withContext(dispatcherIO) {
+        try {
+            val updates = mapOf(
+                GAME_SCORE_KEY to newScore
+            )
+            collection.document(petId).set(updates, SetOptions.merge()).await()
+            petsDao.updateGameScore(petId, newScore)
+            ValidationResult(isSuccess = true, data = Unit)
+        } catch (e: Exception) {
+            ValidationResult(isSuccess = false,
+                error = ErrorType.NetworkError(message = e.message ?: ""))
         }
     }
 

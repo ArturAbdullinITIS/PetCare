@@ -15,7 +15,7 @@ interface PetsRepository {
     suspend fun addPet(pet: Pet): ValidationResult<Pet>
     suspend fun editPet(pet: Pet): ValidationResult<Unit>
     suspend fun deletePet(petId: String): ValidationResult<Unit>
-
+    suspend fun updatePetHighScore(petId: String, newScore: Int): ValidationResult<Unit>
     fun getLocalPetById(petId: String): Flow<Pet>
     fun getRemotePetById(petId: String): Flow<Pet>
     fun getAllPublicPets(): Flow<List<Pet>>

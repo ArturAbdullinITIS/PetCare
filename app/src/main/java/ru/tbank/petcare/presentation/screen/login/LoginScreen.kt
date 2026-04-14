@@ -159,6 +159,7 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             GoogleButton(
+                isLoading = state.isLoading,
                 onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) }
             )
 

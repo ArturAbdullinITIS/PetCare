@@ -212,4 +212,11 @@
     <string name="don_t_forget_to_take_for_a_walk_today">Don\'t forget to take %1$s for a walk today!</string>
     <string name="don_t_forget_to_take_to_the_vet_soon">Don\'t forget to take %1$s to the vet soon!</string>
     <string name="cost">Cost</string>
+    <string name="select_your_runner">Select your runner</string>
+    <string name="tap_to_jump">Tap to jump</string>
+    <string name="game_over">Game over</string>
+    <string name="score">Score %1$s</string>
+    <string name="high_score">High score: %1$s</string>
+    <string name="restart">Restart</string>
+    <string name="high">HIGH %1$s</string>
 </resources>

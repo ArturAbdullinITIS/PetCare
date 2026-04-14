@@ -179,6 +179,7 @@ fun RegistrationContent(
             CustomDivider()
             Spacer(modifier = Modifier.height(16.dp))
             GoogleButton(
+                isLoading = state.isLoading,
                 onClick = { viewModel.processCommand(RegistrationCommand.SignInWithGoogle(context)) }
             )
             Spacer(modifier = Modifier.height(16.dp))

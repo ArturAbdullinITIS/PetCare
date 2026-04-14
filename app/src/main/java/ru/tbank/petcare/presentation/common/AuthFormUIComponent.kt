@@ -140,6 +140,7 @@ fun PasswordTextField(
 
 @Composable
 fun GoogleButton(
+    isLoading: Boolean,
     onClick: () -> Unit,
 ) {
     OutlinedButton(

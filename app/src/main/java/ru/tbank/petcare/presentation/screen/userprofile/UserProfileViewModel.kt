@@ -41,7 +41,9 @@ class UserProfileViewModel @Inject constructor(
         viewModelScope.launch {
             getAllPetsUseCase().collect { pets ->
                 _state.update { state ->
-                    state.copy(numberOfPets = pets.size)
+                    state.copy(
+                        numberOfPets = pets.size,
+                        bestScore = pets.maxBy { it.gameScore }.gameScore)
                 }
             }
         }

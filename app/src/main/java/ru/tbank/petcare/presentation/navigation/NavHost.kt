@@ -37,6 +37,8 @@ import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
 import ru.tbank.petcare.presentation.screen.editpet.EditPetScreen
 import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
+import ru.tbank.petcare.presentation.screen.minigame.MiniGameCommand
+import ru.tbank.petcare.presentation.screen.minigame.MiniGameScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
@@ -169,6 +171,9 @@ fun NavHost(
                             },
                             setTopBarActions = { topBarActions.value = it }
                         )
+                    }
+                    entry<NavigationBarRoute.PetRunner> {
+                        MiniGameScreen()
                     }
                     entry<Route.AddPet> {
                         AddPetScreen(

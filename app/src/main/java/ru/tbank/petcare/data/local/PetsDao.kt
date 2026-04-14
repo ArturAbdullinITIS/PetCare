@@ -18,6 +18,9 @@ interface PetsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(pets: List<PetDbModel>)
 
+    @Query("UPDATE pets SET gameScore = :newScore where id = :petId and :newScore > gameScore")
+    suspend fun updateGameScore(petId: String, newScore: Int)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(pet: PetDbModel)
 

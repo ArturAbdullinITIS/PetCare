@@ -206,4 +206,11 @@
     <string name="completed_of_the_distance_goals">%1$s достиг %2$d%% из всех целей.</string>
     <string name="goal_completion">Прогресс по целям</string>
     <string name="logout">Выйти</string>
+    <string name="select_your_runner">Выбери своего бегуна</string>
+    <string name="tap_to_jump">Нажми для прыжка</string>
+    <string name="game_over">Игра окончена</string>
+    <string name="score">Счет %1$s</string>
+    <string name="high_score">Максимальный счет: %1$s</string>
+    <string name="restart">Рестарт</string>
+    <string name="high">МАКС %1$s</string>
 </resources>
