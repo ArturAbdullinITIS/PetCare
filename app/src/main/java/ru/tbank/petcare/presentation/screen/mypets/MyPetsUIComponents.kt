@@ -8,6 +8,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -45,6 +46,7 @@ import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
+import ru.tbank.petcare.presentation.model.LastActivityUIModel
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.QuickActionType
 import ru.tbank.petcare.presentation.model.QuickActionUIModel
@@ -54,7 +56,8 @@ import ru.tbank.petcare.presentation.ui.theme.PetTipsIcon
 fun MyPetsPetCard(
     pet: PetCardUIModel,
     onPetClick: () -> Unit,
-    clickable: Boolean
+    clickable: Boolean,
+    model: LastActivityUIModel?
 ) {
     Card(
         modifier = Modifier
@@ -125,6 +128,11 @@ fun MyPetsPetCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
+                if (model != null) {
+                    LastActivityCard(
+                        model = model
+                    )
+                }
             }
         }
     }
@@ -296,5 +304,41 @@ fun EmptyPetsTitle(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.Medium,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )
+    }
+}
+
+@Composable
+fun LastActivityCard(
+    modifier: Modifier = Modifier,
+    model: LastActivityUIModel
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = model.colors.bg.copy(alpha = 0.5f),
+            contentColor = model.colors.fg
+        ),
+        shape = RoundedCornerShape(32.dp),
+        border = BorderStroke(
+            width = 1.dp,
+            color = model.colors.bg
+        )
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Icon(
+                modifier = Modifier.size(12.dp),
+                imageVector = model.icon,
+                contentDescription = stringResource(R.string.last_activity_icon)
+            )
+            Text(
+                text = model.text.uppercase(),
+                fontSize = 8.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.R.attr.data
 import android.R.attr.text
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -63,7 +64,7 @@ import ru.tbank.petcare.utils.DateFormatter
 @Composable
 fun ActivityHistoryCard(
     modifier: Modifier = Modifier,
-    model: ActivityHistoryModel
+    model: ActivityHistoryModel,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -285,6 +286,7 @@ fun AnalyticsPeriodSegmentedControl(
 @Composable
 fun ActivityHistoryTitle(
     modifier: Modifier = Modifier,
+    onViewAllClick: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -302,7 +304,10 @@ fun ActivityHistoryTitle(
             text = stringResource(R.string.view_all),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimary,
+            modifier = Modifier.clickable(
+                onClick = onViewAllClick
+            )
         )
     }
 }
@@ -384,7 +389,7 @@ private fun AnalyticsChartCard(
                 )
             }
 
-            if (entries.isEmpty()) {
+            if (entries.isEmpty() || entries.all { it.value.toInt() == 0 }) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

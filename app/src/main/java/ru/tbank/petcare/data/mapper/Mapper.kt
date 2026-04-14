@@ -3,6 +3,7 @@ package ru.tbank.petcare.data.mapper
 import com.google.firebase.Timestamp
 import ru.tbank.petcare.data.local.PetDbModel
 import ru.tbank.petcare.data.remote.firebase.ActivityDto
+import ru.tbank.petcare.data.remote.firebase.LastActivityDto
 import ru.tbank.petcare.data.remote.firebase.PetDto
 import ru.tbank.petcare.data.remote.firebase.TipDto
 import ru.tbank.petcare.data.remote.firebase.UserDto
@@ -12,6 +13,7 @@ import ru.tbank.petcare.domain.model.ActivityDetails
 import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.domain.model.LastActivity
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
@@ -33,7 +35,7 @@ fun PetDto.toDomain(): Pet {
         weight = weight,
         dateOfBirth = dateOfBirth?.toDate(),
         iconStatus = IconStatus.getIconStatusFromValue(iconStatus),
-        photoUrl = photoUrl
+        photoUrl = photoUrl,
     )
 }
 
@@ -147,7 +149,10 @@ fun Pet.toDbModel(): PetDbModel {
         note = note,
         ownerId = ownerId,
         photoUrl = photoUrl,
-        weight = weight
+        weight = weight,
+        lastActivityId = lastActivity?.id,
+        lastActivityType = lastActivity?.type?.name,
+        lastActivityDateMillis = lastActivity?.date?.time
     )
 }
 
@@ -163,7 +168,20 @@ fun PetDbModel.toDomain(): Pet = Pet(
     weight = weight,
     dateOfBirth = dateOfBirthMillis?.let { Date(it) },
     iconStatus = IconStatus.getIconStatusFromValue(iconStatus),
-    photoUrl = photoUrl
+    photoUrl = photoUrl,
+    lastActivity = if (
+        lastActivityId != null &&
+        lastActivityType != null
+    ) {
+        LastActivity(
+            id = lastActivityId,
+            type = ActivityType.entries.firstOrNull { it.name == lastActivityType }
+                ?: ActivityType.WALK,
+            date = lastActivityDateMillis?.let { Date(it) }
+        )
+    } else {
+        null
+    }
 )
 
 fun ActivityDto.toDomain(): Activity {
@@ -215,4 +233,12 @@ private fun Map<String, Any>?.toActivityDetails(activityType: ActivityType): Act
             )
         }
     }
+}
+
+fun LastActivityDto.toDomain(): LastActivity {
+    return LastActivity(
+        id = id,
+        type = ActivityType.entries.firstOrNull { it.name == type } ?: ActivityType.WALK,
+        date = date?.toDate()
+    )
 }

@@ -17,5 +17,8 @@ data class PetDbModel(
     val note: String,
     val ownerId: String,
     val photoUrl: String,
-    val weight: Double
+    val weight: Double,
+    val lastActivityId: String? = null,
+    val lastActivityType: String? = null,
+    val lastActivityDateMillis: Long? = null
 )

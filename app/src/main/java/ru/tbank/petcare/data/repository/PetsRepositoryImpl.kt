@@ -35,9 +35,11 @@ import ru.tbank.petcare.data.remote.network.animals.AnimalsApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.CloudinaryApiService
 import ru.tbank.petcare.data.remote.network.cloudinary.ImageBytesProvider
 import ru.tbank.petcare.di.IoDispatcher
+import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.domain.model.LastActivity
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
@@ -456,6 +458,29 @@ private fun DocumentSnapshot.getDobCompat(): Date? {
     }
 }
 
+@Suppress("ReturnCount")
+private fun DocumentSnapshot.getLastActivityCompat(): LastActivity? {
+    val raw = get("last_activity") as? Map<*, *> ?: return null
+
+    val id = raw["id"] as? String ?: ""
+    val typeRaw = raw["type"] as? String ?: return null
+    val dateRaw = raw["date"]
+
+    val date = when (dateRaw) {
+        is Timestamp -> dateRaw.toDate()
+        is Date -> dateRaw
+        is Long -> Date(dateRaw)
+        is Double -> Date(dateRaw.toLong())
+        else -> null
+    }
+
+    return LastActivity(
+        id = id,
+        type = ActivityType.entries.firstOrNull { it.name == typeRaw } ?: ActivityType.WALK,
+        date = date
+    )
+}
+
 private fun DocumentSnapshot.toPetCompat(): Pet {
     return Pet(
         id = id,
@@ -469,6 +494,7 @@ private fun DocumentSnapshot.toPetCompat(): Pet {
         note = getString("note") ?: "",
         photoUrl = getString("photo_url") ?: "",
         gameScore = (getLong("game_score") ?: 0L).toInt(),
-        ownerId = getString("owner_id") ?: ""
+        ownerId = getString("owner_id") ?: "",
+        lastActivity = getLastActivityCompat()
     )
 }

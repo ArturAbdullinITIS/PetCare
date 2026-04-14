@@ -212,4 +212,6 @@
     <string name="don_t_forget_to_take_for_a_walk_today">Don\'t forget to take %1$s for a walk today!</string>
     <string name="don_t_forget_to_take_to_the_vet_soon">Don\'t forget to take %1$s to the vet soon!</string>
     <string name="cost">Cost</string>
+    <string name="last_activity_icon">Last Activity Icon</string>
+    <string name="recent_activities">Recent Activities</string>
 </resources>

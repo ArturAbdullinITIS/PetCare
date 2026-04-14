@@ -50,5 +50,9 @@ data class PetDto(
 
     @get:PropertyName("weight")
     @set:PropertyName("weight")
-    var weight: Double = 0.0
+    var weight: Double = 0.0,
+
+    @get:PropertyName("last_activity")
+    @set:PropertyName("last_activity")
+    var lastActivity: LastActivityDto? = null
 )

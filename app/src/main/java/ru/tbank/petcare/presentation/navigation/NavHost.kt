@@ -31,6 +31,7 @@ import ru.tbank.petcare.presentation.common.NoInternetBanner
 import ru.tbank.petcare.presentation.common.ScreenTitleRow
 import ru.tbank.petcare.presentation.root.StartDestination
 import ru.tbank.petcare.presentation.screen.addpet.AddPetScreen
+import ru.tbank.petcare.presentation.screen.allRecentActivities.AllRecentActivitiesScreen
 import ru.tbank.petcare.presentation.screen.analytics.AnalyticsScreen
 import ru.tbank.petcare.presentation.screen.continueRegistration.ContinueRegistrationScreen
 import ru.tbank.petcare.presentation.screen.createActivity.CreateActivityScreen
@@ -291,6 +292,14 @@ fun NavHost(
                     }
                     entry<Route.Analytics> { route ->
                         AnalyticsScreen(
+                            petId = route.petId,
+                            onNavigateToRecent = { petId ->
+                                backStack.add(Route.AllRecent(petId))
+                            }
+                        )
+                    }
+                    entry<Route.AllRecent> { route ->
+                        AllRecentActivitiesScreen(
                             petId = route.petId
                         )
                     }

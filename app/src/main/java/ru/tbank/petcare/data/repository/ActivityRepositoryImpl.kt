@@ -53,6 +53,17 @@ class ActivityRepositoryImpl @Inject constructor(
             val docRef = collection.add(activityToSave.toDto()).await()
             val activityId = docRef.id
 
+            val lastActivityMap = mapOf(
+                "id" to activityId,
+                "type" to activityToSave.activityType.name,
+                "date" to (activityToSave.activityDate?.let { Timestamp(it) })
+            )
+
+            firestore.collection("pets")
+                .document(petId)
+                .update("last_activity", lastActivityMap)
+                .await()
+
             ValidationResult(
                 data = activityToSave.copy(id = activityId),
                 isSuccess = true
