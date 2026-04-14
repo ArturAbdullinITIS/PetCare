@@ -213,4 +213,10 @@
     <string name="high_score">Максимальный счет: %1$s</string>
     <string name="restart">Рестарт</string>
     <string name="high">МАКС %1$s</string>
+    <string name="grooming_reminder">Напоминание о груминге</string>
+    <string name="walk_reminder">Напоминание о прогулке</string>
+    <string name="grooming_for_is_due_soon_don_t_forget_to_schedule_an_appointment">Груминг для %1$s скоро нужно сделать. Не забудьте записаться на приём!</string>
+    <string name="don_t_forget_to_take_for_a_walk_today">Не забудьте сегодня выгулять %1$s!</string>
+    <string name="don_t_forget_to_take_to_the_vet_soon">Не забудьте скоро отвести %1$s к ветеринару!</string>
+    <string name="cost">Стоимость</string>
 </resources>

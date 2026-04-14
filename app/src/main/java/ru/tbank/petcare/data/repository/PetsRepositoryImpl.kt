@@ -379,7 +379,9 @@ class PetsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updatePetHighScore(petId: String, newScore: Int): ValidationResult<Unit> = withContext(dispatcherIO) {
+    override suspend fun updatePetHighScore(petId: String, newScore: Int): ValidationResult<Unit> = withContext(
+        dispatcherIO
+    ) {
         try {
             val updates = mapOf(
                 GAME_SCORE_KEY to newScore
@@ -388,8 +390,10 @@ class PetsRepositoryImpl @Inject constructor(
             petsDao.updateGameScore(petId, newScore)
             ValidationResult(isSuccess = true, data = Unit)
         } catch (e: Exception) {
-            ValidationResult(isSuccess = false,
-                error = ErrorType.NetworkError(message = e.message ?: ""))
+            ValidationResult(
+                isSuccess = false,
+                error = ErrorType.NetworkError(message = e.message ?: "")
+            )
         }
     }
 

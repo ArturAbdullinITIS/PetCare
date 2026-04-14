@@ -16,7 +16,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -153,16 +155,20 @@ fun GoogleButton(
             containerColor = Color.White,
         ),
     ) {
-        Image(
-            painter = painterResource(R.drawable.ic_google),
-            contentDescription = stringResource(R.string.google_icon),
-        )
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = stringResource(R.string.google_button),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-        )
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            Image(
+                painter = painterResource(R.drawable.ic_google),
+                contentDescription = stringResource(R.string.google_icon),
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = stringResource(R.string.google_button),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
     }
 }
 
@@ -172,7 +178,7 @@ fun CustomDivider() {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),
@@ -184,7 +190,7 @@ fun CustomDivider() {
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
         )
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.weight(1f),
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f),

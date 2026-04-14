@@ -1,19 +1,18 @@
 package ru.tbank.petcare.presentation.screen.minigame
 
 import android.util.Log
+import androidx.compose.ui.geometry.Rect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
-import androidx.compose.ui.geometry.Rect
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
-import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
-import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.domain.usecase.pets.UpdatePetHighScoreUseCase
+import ru.tbank.petcare.presentation.mapper.toPetCardUIModel
+import javax.inject.Inject
 
 @HiltViewModel
 class MiniGameViewModel @Inject constructor(
@@ -73,7 +72,7 @@ class MiniGameViewModel @Inject constructor(
 
     private fun updateHighScore() {
         _state.update {
-            state ->
+                state ->
             Log.d("MiniGameViewModel", "updateHighScore. Score: ${state.score}, HighScore: ${state.highScore}")
             if (state.score == state.highScore) {
                 viewModelScope.launch {
@@ -153,7 +152,6 @@ class MiniGameViewModel @Inject constructor(
 
         val newHighScore = if (newScore > currentState.highScore) newScore else currentState.highScore
 
-
         _state.update {
             it.copy(
                 runnerY = newY,
@@ -211,5 +209,5 @@ sealed interface MiniGameCommand {
     object Restart : MiniGameCommand
     object StartGame : MiniGameCommand
     data class SelectPet(val petId: String) : MiniGameCommand
-    object UpdateHighScore: MiniGameCommand
+    object UpdateHighScore : MiniGameCommand
 }
