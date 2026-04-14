@@ -22,10 +22,12 @@ import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
 
 @Composable
 fun AnalyticsScreen(
-    petId: String
+    petId: String,
+    onNavigateToRecent: (String) -> Unit
 ) {
     AnalyticsContent(
-        petId = petId
+        petId = petId,
+        onNavigateToRecent = onNavigateToRecent
     )
 }
 
@@ -33,6 +35,7 @@ fun AnalyticsScreen(
 private fun AnalyticsContent(
     modifier: Modifier = Modifier,
     petId: String,
+    onNavigateToRecent: (String) -> Unit,
     viewModel: AnalyticsViewModel = hiltViewModel(
         key = petId,
         creationCallback = { factory: AnalyticsViewModel.Factory ->
@@ -107,7 +110,11 @@ private fun AnalyticsContent(
             value = state.summary.totalExpenses.toString(),
             bgColor = MaterialTheme.colorScheme.tertiaryContainer
         )
-        ActivityHistoryTitle()
+        ActivityHistoryTitle(
+            onViewAllClick = {
+                onNavigateToRecent(petId)
+            }
+        )
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
