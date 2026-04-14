@@ -206,4 +206,10 @@
     <string name="goals">GOALS</string>
     <string name="completed_of_the_distance_goals">%1$s completed %2$d%% of the distance goals.</string>
     <string name="goal_completion">Goal Completion</string>
+    <string name="grooming_reminder">Grooming Reminder</string>
+    <string name="walk_reminder">Walk Reminder</string>
+    <string name="grooming_for_is_due_soon_don_t_forget_to_schedule_an_appointment">Grooming for %1$s is due soon. Don\'t forget to schedule an appointment!</string>
+    <string name="don_t_forget_to_take_for_a_walk_today">Don\'t forget to take %1$s for a walk today!</string>
+    <string name="don_t_forget_to_take_to_the_vet_soon">Don\'t forget to take %1$s to the vet soon!</string>
+    <string name="cost">Cost</string>
 </resources>

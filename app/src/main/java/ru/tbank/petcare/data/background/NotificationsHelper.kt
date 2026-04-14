@@ -52,7 +52,12 @@ class NotificationsHelper @Inject constructor(
         val groomingNotification = NotificationCompat.Builder(context, GROOMING_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_pet_care_main)
             .setContentTitle(context.getString(R.string.grooming_reminder))
-            .setContentText(context.getString(R.string.grooming_session_for_is_coming, petName))
+            .setContentText(
+                context.getString(
+                    R.string.grooming_for_is_due_soon_don_t_forget_to_schedule_an_appointment,
+                    petName
+                )
+            )
             .setAutoCancel(true)
             .build()
         notificationManager?.notify(generateId(GROOMING_CHANNEL_ID), groomingNotification)
@@ -62,7 +67,12 @@ class NotificationsHelper @Inject constructor(
         val walkNotification = NotificationCompat.Builder(context, WALK_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_pet_care_main)
             .setContentTitle(context.getString(R.string.walk_reminder))
-            .setContentText(context.getString(R.string.don_t_forget_to_walk, petName))
+            .setContentText(
+                context.getString(
+                    R.string.don_t_forget_to_take_for_a_walk_today,
+                    petName
+                )
+            )
             .setAutoCancel(true)
             .build()
         notificationManager?.notify(generateId(WALK_CHANNEL_ID), walkNotification)
@@ -71,8 +81,13 @@ class NotificationsHelper @Inject constructor(
     fun showVetNotification(petName: String) {
         val vetNotification = NotificationCompat.Builder(context, VET_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_pet_care_main)
-            .setContentTitle(context.getString(R.string.vet_reminder))
-            .setContentText(context.getString(R.string.vet_visit_for_is_coming, petName))
+            .setContentTitle("Vet Visit Reminder")
+            .setContentText(
+                context.getString(
+                    R.string.don_t_forget_to_take_to_the_vet_soon,
+                    petName
+                )
+            )
             .setAutoCancel(true)
             .build()
         notificationManager?.notify(generateId(VET_CHANNEL_ID), vetNotification)

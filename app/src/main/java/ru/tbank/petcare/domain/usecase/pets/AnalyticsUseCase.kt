@@ -13,6 +13,7 @@ import ru.tbank.petcare.domain.repository.ActivityRepository
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.Month
 import java.time.ZoneId
 import java.time.format.TextStyle
 import java.time.temporal.TemporalAdjusters
@@ -281,8 +282,10 @@ class AnalyticsUseCase @Inject constructor(
         return with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
     }
 
-    private fun java.time.Month.shortLabel(): String {
+    private fun Month.shortLabel(): String {
         return getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            .first()
+            .uppercase()
     }
 
     private fun DayOfWeek.shortLabel(): String {

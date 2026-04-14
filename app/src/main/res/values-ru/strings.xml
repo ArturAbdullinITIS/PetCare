@@ -127,7 +127,7 @@
     <string name="could_not_save_activity">Не удалось сохранить активность.</string>
     <string name="game_score_icon">Иконка игрового счета</string>
     <string name="community_feed">Лента сообщества</string>
-    <string name="meet_the_pack">Знакомьтесь, стая</string>
+    <string name="meet_the_pack">Познакомьтесь со стаей</string>
     <string name="public_pet_profile">Публичный профиль питомца</string>
     <string name="owner_icon">Иконка владельца</string>
     <string name="owned_by">Владелец</string>
@@ -172,7 +172,6 @@
     <string name="choose_sorting_method">Выберите способ сортировки</string>
     <string name="game_score">Игровой счет</string>
     <string name="sort_option_icon">Иконка опции сортировки</string>
-    <string name="logout">Выйти</string>
     <string name="settings_discription"><![CDATA[Уведомления, Внешний вид и Управление аккаунтом]]></string>
     <string name="profile_avatar">Аватар профиля</string>
     <string name="number_of_pets">Питомцев</string>

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
+import ru.tbank.petcare.domain.usecase.notifications.ScheduleActivityReminderUseCase
 import ru.tbank.petcare.domain.usecase.pets.CreateActivityUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetAllPetsUseCase
 import ru.tbank.petcare.presentation.mapper.toDomain

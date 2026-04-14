@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.screen.analytics
 
+import android.R.attr.data
 import android.R.attr.text
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -36,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,6 +49,7 @@ import com.himanshoe.charty.bar.config.BarChartConfig
 import com.himanshoe.charty.bar.data.BarData
 import com.himanshoe.charty.color.ChartyColor
 import com.himanshoe.charty.common.config.Animation
+import com.himanshoe.charty.common.config.ChartScaffoldConfig
 import com.himanshoe.charty.common.config.CornerRadius
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.model.AnalyticsChartEntry
@@ -420,7 +423,8 @@ private fun AnalyticsBarChart(
     BarChart(
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp),
+            .height(240.dp)
+            .padding(horizontal = 12.dp),
         data = {
             entries.map { entry ->
                 BarData(
@@ -440,6 +444,11 @@ private fun AnalyticsBarChart(
             cornerRadius = CornerRadius.Custom(radius = 50f),
             animation = Animation.Enabled()
         ),
+        scaffoldConfig = ChartScaffoldConfig(
+            labelTextStyle = TextStyle.Default.copy(
+                color = MaterialTheme.colorScheme.onSurface
+            )
+        )
     )
 }
 
@@ -463,7 +472,7 @@ private fun PagerIndicator(
                     .clip(CircleShape)
                     .background(
                         if (isSelected) {
-                            MaterialTheme.colorScheme.onPrimary
+                            MaterialTheme.colorScheme.onPrimaryContainer
                         } else {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.18f)
                         }
