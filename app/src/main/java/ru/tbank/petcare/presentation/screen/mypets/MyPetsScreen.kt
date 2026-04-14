@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.mapper.mapToLastActivityUIModel
 
 @Composable
 fun MyPetsScreen(
@@ -136,7 +137,12 @@ private fun MyPetsContent(
                         MyPetsPetCard(
                             pet = pet,
                             onPetClick = { onNavigateToProfile(pet.id) },
-                            clickable = isOnline
+                            clickable = isOnline,
+                            model = mapToLastActivityUIModel(
+                                activityType = pet.lastActivityType,
+                                activityDate = pet.lastActivityDate,
+                                iconStatus = pet.iconStatus
+                            )
                         )
                     }
                 }

@@ -23,7 +23,9 @@ object RoomModule {
             context = context,
             klass = Database::class.java,
             name = "pets.db",
-        ).build()
+        )
+            .fallbackToDestructiveMigration(dropAllTables = true)
+            .build()
     }
 
     @Provides

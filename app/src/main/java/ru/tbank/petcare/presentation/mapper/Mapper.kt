@@ -12,6 +12,8 @@ import ru.tbank.petcare.domain.model.IconStatus
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.presentation.model.ActivityHistoryModel
+import ru.tbank.petcare.presentation.model.LastActivityColors
+import ru.tbank.petcare.presentation.model.LastActivityUIModel
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
@@ -28,6 +30,7 @@ import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import ru.tbank.petcare.presentation.ui.theme.VetQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
 import ru.tbank.petcare.utils.DateFormatter
+import java.util.Date
 
 @Composable
 fun getIconStatusUI(iconStatus: IconStatus): PetIconStatusUIModel? {
@@ -138,13 +141,14 @@ fun Pet.toForm(): PetForm {
 fun Pet.toPetCardUIModel(): PetCardUIModel {
     val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
     val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
-
     return PetCardUIModel(
         id = id,
         name = name,
         photoUrl = photoUrl,
         iconStatus = iconStatus,
-        subtitle = subtitle
+        subtitle = subtitle,
+        lastActivityType = lastActivity?.type,
+        lastActivityDate = lastActivity?.date
     )
 }
 
@@ -273,4 +277,50 @@ fun AnalyticsPeriod.toUiText(): String {
         AnalyticsPeriod.THREE_MONTHS -> "3M"
         AnalyticsPeriod.YEAR -> "Year"
     }
+}
+
+@Composable
+fun mapToLastActivityUIModel(
+    activityType: ActivityType?,
+    activityDate: Date?,
+    iconStatus: IconStatus
+): LastActivityUIModel? {
+    if ((activityDate == null) || (activityType == null) || (iconStatus == IconStatus.NONE)) return null
+    val colors = when (iconStatus) {
+        IconStatus.HEART -> {
+            LastActivityColors(
+                bg = MaterialTheme.colorScheme.primaryContainer,
+                fg = MaterialTheme.colorScheme.onPrimaryContainer
+            )
+        }
+        IconStatus.STAR -> {
+            LastActivityColors(
+                bg = MaterialTheme.colorScheme.secondaryContainer,
+                fg = MaterialTheme.colorScheme.onSecondaryContainer
+            )
+        }
+        IconStatus.SPARKLES -> {
+            LastActivityColors(
+                bg = MaterialTheme.colorScheme.tertiaryContainer,
+                fg = MaterialTheme.colorScheme.onTertiaryContainer
+            )
+        }
+
+        IconStatus.NONE -> LastActivityColors(
+            bg = MaterialTheme.colorScheme.surface,
+            fg = MaterialTheme.colorScheme.surface
+        )
+    }
+    val icon = when (activityType) {
+        ActivityType.WALK -> WalkQuickActionIcon
+        ActivityType.GROOMING -> GroomingQuickActionIcon
+        ActivityType.VET -> VetQuickActionIcon
+    }
+    val text = "$activityType ${DateFormatter.formatDob(activityDate)}"
+
+    return LastActivityUIModel(
+        colors = colors,
+        icon = icon,
+        text = text
+    )
 }

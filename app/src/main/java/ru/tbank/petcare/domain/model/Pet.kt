@@ -13,7 +13,8 @@ data class Pet(
     val weight: Double = 0.0,
     val dateOfBirth: Date? = null,
     val iconStatus: IconStatus = IconStatus.NONE,
-    val photoUrl: String = ""
+    val photoUrl: String = "",
+    val lastActivity: LastActivity? = null
 )
 
 enum class IconStatus(name: String) {

@@ -384,7 +384,7 @@ private fun AnalyticsChartCard(
                 )
             }
 
-            if (entries.isEmpty()) {
+            if (entries.isEmpty() || entries.all { it.value.toInt() == 0 }) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
