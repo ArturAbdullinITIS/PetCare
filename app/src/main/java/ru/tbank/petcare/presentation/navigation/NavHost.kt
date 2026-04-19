@@ -52,7 +52,8 @@ import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 @Composable
 fun NavHost(
     modifier: Modifier = Modifier,
-    startDestination: StartDestination
+    startDestination: StartDestination,
+    onFinishOnBoarding: () -> Unit
 ) {
     val navHostViewModel: NavHostViewModel = hiltViewModel()
     val isOnline by navHostViewModel.isOnline.collectAsState()
@@ -60,6 +61,7 @@ fun NavHost(
     val startRoute = when (startDestination) {
         StartDestination.Auth -> Route.Login
         StartDestination.Main -> NavigationBarRoute.MyPets
+        StartDestination.Onboarding -> Route.Onboarding
     }
 
     val backStack = rememberSaveable {

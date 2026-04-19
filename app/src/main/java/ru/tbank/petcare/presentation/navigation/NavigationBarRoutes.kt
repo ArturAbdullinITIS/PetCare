@@ -49,7 +49,11 @@ sealed interface Route : Parcelable {
     data class AllRecent(
         val petId: String
     ) : Route
+
+    @Parcelize
+    data object Onboarding : Route
 }
+
 
 @Parcelize
 sealed interface NavigationBarRoute : Route {
@@ -117,5 +121,6 @@ fun getRouteTitle(route: Route): Int {
         Route.EditProfile -> R.string.edit_profile
         is Route.Analytics -> R.string.analytics
         is Route.AllRecent -> R.string.recent_activities
+        Route.Onboarding -> R.string.app_name
     }
 }
