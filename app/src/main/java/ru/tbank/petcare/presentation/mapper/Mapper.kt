@@ -326,6 +326,7 @@ fun mapToLastActivityUIModel(
     )
 }
 
+@Suppress("MaximumLineLength")
 fun toOnboardingPageUIModel(page: Int): OnboardingPageUIModel {
     return when (page) {
         0 -> OnboardingPageUIModel(

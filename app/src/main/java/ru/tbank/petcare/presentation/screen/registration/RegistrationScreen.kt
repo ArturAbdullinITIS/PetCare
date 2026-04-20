@@ -54,6 +54,7 @@ fun RegistrationScreen(
     )
 }
 
+@Suppress("LongParameterList")
 @Composable
 fun RegistrationContent(
     onNavigateToLogin: () -> Unit,
