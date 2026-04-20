@@ -40,6 +40,7 @@ import ru.tbank.petcare.presentation.screen.editprofile.EditProfileScreen
 import ru.tbank.petcare.presentation.screen.login.LoginScreen
 import ru.tbank.petcare.presentation.screen.minigame.MiniGameScreen
 import ru.tbank.petcare.presentation.screen.mypets.MyPetsScreen
+import ru.tbank.petcare.presentation.screen.onboarding.OnboardingScreen
 import ru.tbank.petcare.presentation.screen.petProfile.PetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicPetProfile.PublicPetProfileScreen
 import ru.tbank.petcare.presentation.screen.publicProfiles.PublicProfilesScreen
@@ -47,7 +48,7 @@ import ru.tbank.petcare.presentation.screen.registration.RegistrationScreen
 import ru.tbank.petcare.presentation.screen.settings.SettingsScreen
 import ru.tbank.petcare.presentation.screen.userprofile.UserProfileScreen
 
-@Suppress("LongMethod")
+@Suppress("LongMethod", "CyclomaticComplexMethod")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavHost(
@@ -60,6 +61,7 @@ fun NavHost(
     val startRoute = when (startDestination) {
         StartDestination.Auth -> Route.Login
         StartDestination.Main -> NavigationBarRoute.MyPets
+        StartDestination.Onboarding -> Route.Onboarding
     }
 
     val backStack = rememberSaveable {
@@ -86,17 +88,20 @@ fun NavHost(
                             name = currentRoute.getConfig()?.titleRes ?: R.string.missing_title,
                             icon = currentRoute.getConfig()?.icon ?: R.drawable.photo_placeholder
                         )
+                    } else if (currentRoute is Route.Login || currentRoute is Route.Register) {
+                        null
+                    } else if (currentRoute is Route.Onboarding) {
+                        MainScreenTitleRow(
+                            name = R.string.app_name,
+                            icon = R.drawable.ic_pet_care_main
+                        )
                     } else {
-                        if (currentRoute is Route.Login || currentRoute is Route.Register) {
-                            null
-                        } else {
-                            ScreenTitleRow(
-                                name = getRouteTitle(currentRoute),
-                                onClick = {
-                                    backStack.removeLastOrNull()
-                                }
-                            )
-                        }
+                        ScreenTitleRow(
+                            name = getRouteTitle(currentRoute),
+                            onClick = {
+                                backStack.removeLastOrNull()
+                            }
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -221,6 +226,10 @@ fun NavHost(
                             },
                             onNavigateToRegistration = {
                                 backStack.add(Route.Register)
+                            },
+                            onNavigateToOnboarding = {
+                                backStack.clear()
+                                backStack.add(Route.Onboarding)
                             }
                         )
                     }
@@ -235,6 +244,10 @@ fun NavHost(
                             onGoogleRegisterSuccess = {
                                 backStack.clear()
                                 backStack.add(NavigationBarRoute.MyPets)
+                            },
+                            onNavigateToOnboarding = {
+                                backStack.clear()
+                                backStack.add(Route.Onboarding)
                             }
                         )
                     }
@@ -305,6 +318,17 @@ fun NavHost(
                     entry<Route.AllRecent> { route ->
                         AllRecentActivitiesScreen(
                             petId = route.petId
+                        )
+                    }
+                    entry<Route.Onboarding> {
+                        OnboardingScreen(
+                            setTopBarActions = {
+                                topBarActions.value = it
+                            },
+                            onFinished = {
+                                backStack.clear()
+                                backStack.add(Route.Register)
+                            }
                         )
                     }
                 }

@@ -221,4 +221,27 @@
     <string name="cost">Стоимость</string>
     <string name="last_activity_icon">Иконка последней активности</string>
     <string name="recent_activities">Недавние активности</string>
+    <string name="welcome_image">Приветсвенная картинка</string>
+    <string name="mini_card_icon">Инконка мини карточки</string>
+    <string name="daily_walks">Ежедневные Прогулки</string>
+    <string name="grooming_plans">Планирование Грумминга</string>
+    <string name="smart_stats">Статистика</string>
+    <string name="vet_visit">Посещения Ветеринара</string>
+    <string name="public_pets">Публичные питомцы</string>
+    <string name="walks_stat">Статистика прогулок</string>
+    <string name="grooming_stat">Статистика грумминга</string>
+    <string name="analytics_stats">Аналитика</string>
+    <string name="vet_stats">Статистика клиник</string>
+    <string name="skip">Пропустить</string>
+    <string name="the_ultimate_sanctuary_for_your_furry_friends_track_care_health_and_more">Идеальное пространство для ваших пушистых друзей. Отслеживайте уход, здоровье и многое другое.</string>
+    <string name="next">Далее</string>
+    <string name="log_walks_groomig_and_vet_visits_stay_on_top_of_reminders_and_follow_your_pet_s_progress_in_analytics">Записывайте прогулки, груминг и визиты к ветеринару. Следите за напоминаниями и прогрессом вашего питомца в аналитике.</string>
+    <string name="explore_public_pet_profiles_share_the_journey_and_jump_into_pet_runner_with_your_own_companion">Изучайте публичные профили питомцев, делитесь моментами и запускайте Pet Runner со своим собственным компаньоном.</string>
+    <string name="help_icon">Иконка помощи</string>
+    <string name="back">Назад</string>
+    <string name="weclome_to">Добро пожаловать в</string>
+    <string name="track_daily">Ежедневный уход</string>
+    <string name="care">Уход</string>
+    <string name="play"><![CDATA[Играй и]]></string>
+    <string name="connect">Общайся</string>
 </resources>

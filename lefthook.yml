@@ -1,7 +1,7 @@
 pre-commit:
   commands:
-    lint:
-      run: ./gradlew lint
+    detekt:
+      run: ./gradlew :app:detekt
 
 pre-push:
   commands:

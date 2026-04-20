@@ -221,4 +221,28 @@
     <string name="high">HIGH %1$s</string>
     <string name="last_activity_icon">Last Activity Icon</string>
     <string name="recent_activities">Recent Activities</string>
+    <string name="welcome_image">Welcome image</string>
+    <string name="mini_card_icon">Mini Card Icon</string>
+    <string name="daily_walks">Daily Walks</string>
+    <string name="grooming_plans">Grooming plans</string>
+    <string name="smart_stats">Smart Stats</string>
+    <string name="vet_visit">Vet Visit</string>
+    <string name="pet_runner" translatable="false">Pet runner</string>
+    <string name="public_pets">Public pets</string>
+    <string name="walks_stat">Walks stat</string>
+    <string name="grooming_stat">Grooming stat</string>
+    <string name="analytics_stats">Analytics stats</string>
+    <string name="vet_stats">Vet stats</string>
+    <string name="skip">Skip</string>
+    <string name="the_ultimate_sanctuary_for_your_furry_friends_track_care_health_and_more">The ultimate sanctuary for your furry friends. Track care, health and more.</string>
+    <string name="next">Next</string>
+    <string name="log_walks_groomig_and_vet_visits_stay_on_top_of_reminders_and_follow_your_pet_s_progress_in_analytics">Log walks, groomig, and vet visits. Stay on top of reminders and follow your pet\'s progress in analytics</string>
+    <string name="explore_public_pet_profiles_share_the_journey_and_jump_into_pet_runner_with_your_own_companion">Explore public pet profiles, share the journey, and jump into Pet Runner with your own companion.</string>
+    <string name="help_icon">Help icon</string>
+    <string name="back">Back</string>
+    <string name="weclome_to">Weclome to</string>
+    <string name="track_daily">Track Daily</string>
+    <string name="care">Care</string>
+    <string name="play"><![CDATA[Play &]]></string>
+    <string name="connect">Connect</string>
 </resources>

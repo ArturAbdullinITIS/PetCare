@@ -18,7 +18,9 @@ fun PetCareAppRoot(
 
     if (startDestination != null) {
         PetCareTheme(darkTheme = settings.darkTheme) {
-            NavHost(startDestination = startDestination!!)
+            NavHost(
+                startDestination = startDestination!!,
+            )
         }
     }
 }

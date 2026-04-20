@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.usecase.OnboardingInteractor
 import ru.tbank.petcare.domain.usecase.users.RegisterUseCase
 import ru.tbank.petcare.domain.usecase.users.SignInWithGoogleUseCase
 import ru.tbank.petcare.utils.AuthFieldsValidator
@@ -21,7 +22,8 @@ class RegistrationViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val errorParser: ErrorParser,
-    private val authFieldsValidator: AuthFieldsValidator
+    private val authFieldsValidator: AuthFieldsValidator,
+    private val onboardingInteractor: OnboardingInteractor
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(RegistrationState())
@@ -73,6 +75,12 @@ class RegistrationViewModel @Inject constructor(
 
             RegistrationCommand.RegisterUserFromEmailAndPassword -> registerWithEmail()
             is RegistrationCommand.SignInWithGoogle -> signInWithGoogle(command.context)
+            RegistrationCommand.CheckOnboarding -> {
+                viewModelScope.launch {
+                    onboardingInteractor.setOnBoardingShown(false)
+                    _events.emit(RegistrationEvent.ShowOnboarding)
+                }
+            }
         }
     }
 
@@ -157,4 +165,5 @@ sealed interface RegistrationCommand {
     data class ChangeRepeatPasswordVisibility(val isVisible: Boolean) : RegistrationCommand
     data object RegisterUserFromEmailAndPassword : RegistrationCommand
     data class SignInWithGoogle(val context: Context) : RegistrationCommand
+    data object CheckOnboarding : RegistrationCommand
 }

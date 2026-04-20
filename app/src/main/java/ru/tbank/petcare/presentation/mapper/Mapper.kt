@@ -14,6 +14,7 @@ import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.presentation.model.ActivityHistoryModel
 import ru.tbank.petcare.presentation.model.LastActivityColors
 import ru.tbank.petcare.presentation.model.LastActivityUIModel
+import ru.tbank.petcare.presentation.model.OnboardingPageUIModel
 import ru.tbank.petcare.presentation.model.PetCardUIModel
 import ru.tbank.petcare.presentation.model.PetForm
 import ru.tbank.petcare.presentation.model.PetIconStatusUIModel
@@ -323,4 +324,29 @@ fun mapToLastActivityUIModel(
         icon = icon,
         text = text
     )
+}
+
+@Suppress("MaximumLineLength", "MaxLineLength")
+fun toOnboardingPageUIModel(page: Int): OnboardingPageUIModel {
+    return when (page) {
+        0 -> OnboardingPageUIModel(
+            titleRes = R.string.weclome_to,
+            descriptionRes = R.string.the_ultimate_sanctuary_for_your_furry_friends_track_care_health_and_more,
+            buttonTextRes = R.string.next,
+            subtitleRes = R.string.app_name
+        )
+        1 -> OnboardingPageUIModel(
+            titleRes = R.string.track_daily,
+            descriptionRes = R.string.log_walks_groomig_and_vet_visits_stay_on_top_of_reminders_and_follow_your_pet_s_progress_in_analytics,
+            buttonTextRes = R.string.next,
+            subtitleRes = R.string.care
+        )
+        2 -> OnboardingPageUIModel(
+            titleRes = R.string.play,
+            descriptionRes = R.string.explore_public_pet_profiles_share_the_journey_and_jump_into_pet_runner_with_your_own_companion,
+            buttonTextRes = R.string.get_started,
+            subtitleRes = R.string.connect
+        )
+        else -> throw IllegalArgumentException("Invalid onboarding page index")
+    }
 }

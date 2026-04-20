@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -46,19 +45,21 @@ import ru.tbank.petcare.presentation.common.PetCareHeader
 fun LoginScreen(
     onNavigateToRegistration: () -> Unit,
     onLoginSuccess: () -> Unit,
+    onNavigateToOnboarding: () -> Unit
 ) {
     LoginContent(
         onNavigateToRegistration = onNavigateToRegistration,
-        onLoginSuccess = onLoginSuccess
+        onLoginSuccess = onLoginSuccess,
+        onNavigateToOnboarding = onNavigateToOnboarding
     )
 }
 private const val HALF_WEIGHT = 0.5f
 
 @Composable
 fun LoginContent(
-
     onNavigateToRegistration: () -> Unit,
     onLoginSuccess: () -> Unit,
+    onNavigateToOnboarding: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
@@ -69,6 +70,15 @@ fun LoginContent(
             viewModel.processCommand(LoginCommand.ResetState)
         }
     }
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { events ->
+            when (events) {
+                is LoginEvents.ShowOnboarding -> {
+                    onNavigateToOnboarding()
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +86,11 @@ fun LoginContent(
             .padding(horizontal = 16.dp, vertical = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        PetCareHeader()
+        PetCareHeader(
+            onHelpClick = {
+                viewModel.processCommand(LoginCommand.CheckOnboarding)
+            }
+        )
 
         Spacer(modifier = Modifier.weight(HALF_WEIGHT))
 

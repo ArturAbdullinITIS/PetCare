@@ -4,10 +4,13 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.domain.usecase.OnboardingInteractor
 import ru.tbank.petcare.domain.usecase.users.LoginUseCase
 import ru.tbank.petcare.domain.usecase.users.SignInWithGoogleUseCase
 import ru.tbank.petcare.utils.AuthFieldsValidator
@@ -19,11 +22,15 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
     private val signInWithGoogleUseCase: SignInWithGoogleUseCase,
     private val errorParser: ErrorParser,
-    private val authFieldsValidator: AuthFieldsValidator
+    private val authFieldsValidator: AuthFieldsValidator,
+    private val onboardingInteractor: OnboardingInteractor
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(LoginState())
     val state = _state.asStateFlow()
+
+    private val _events = MutableSharedFlow<LoginEvents>()
+    val events = _events.asSharedFlow()
 
     fun processCommand(command: LoginCommand) {
         when (command) {
@@ -57,6 +64,12 @@ class LoginViewModel @Inject constructor(
 
             LoginCommand.LoginUserFromEmailAndPassword -> loginWithEmail()
             is LoginCommand.SignInWithGoogle -> signInWithGoogle(command.context)
+            LoginCommand.CheckOnboarding -> {
+                viewModelScope.launch {
+                    onboardingInteractor.setOnBoardingShown(false)
+                    _events.emit(LoginEvents.ShowOnboarding)
+                }
+            }
         }
     }
 
@@ -134,4 +147,5 @@ sealed interface LoginCommand {
     data object LoginUserFromEmailAndPassword : LoginCommand
     data class SignInWithGoogle(val context: Context) : LoginCommand
     data object ResetState : LoginCommand
+    data object CheckOnboarding : LoginCommand
 }

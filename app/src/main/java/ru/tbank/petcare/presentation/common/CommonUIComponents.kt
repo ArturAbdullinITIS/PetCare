@@ -156,11 +156,6 @@ fun CustomButton(
             containerColor = bg,
             contentColor = fg
         ),
-        elevation = ButtonDefaults.buttonElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp,
-            hoveredElevation = 6.dp
-        ),
         enabled = enabled
     ) {
         if (text != null) {

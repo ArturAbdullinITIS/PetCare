@@ -6,18 +6,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import ru.tbank.petcare.data.local.OnBoardingPreferencesDataSource
 import ru.tbank.petcare.domain.usecase.users.GetCurrentUserIdUseCase
 import javax.inject.Inject
 
 sealed class StartDestination {
+    data object Onboarding : StartDestination()
     data object Auth : StartDestination()
     data object Main : StartDestination()
 }
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
+    private val onboardingPreferencesDataSource: OnBoardingPreferencesDataSource
 ) : ViewModel() {
 
     private val _startDestination = MutableStateFlow<StartDestination?>(null)
@@ -25,8 +30,23 @@ class SplashViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val onboardingShown = onboardingPreferencesDataSource.isOnBoardingShown.first()
+
+            if (!onboardingShown) {
+                _startDestination.update {
+                    StartDestination.Onboarding
+                }
+                return@launch
+            }
+
             val result = getCurrentUserIdUseCase()
-            _startDestination.value = if (result.isSuccess) StartDestination.Main else StartDestination.Auth
+            _startDestination.update {
+                if (result.isSuccess) {
+                    StartDestination.Main
+                } else {
+                    StartDestination.Auth
+                }
+            }
         }
     }
 }
