@@ -70,7 +70,7 @@ fun OnboardingPageContent(
             text = stringResource(model.subtitleRes),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary
+            color = MaterialTheme.colorScheme.onPrimaryContainer
         )
 
         Spacer(modifier = Modifier.height(12.dp))
@@ -215,7 +215,7 @@ fun ConnectCard(
                 Icon(
                     imageVector = Icons.Default.Groups,
                     contentDescription = null,
-                    tint = Color.Black,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(72.dp)
                 )
             }
