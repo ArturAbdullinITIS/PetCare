@@ -91,13 +91,13 @@ fun PetRunnerItem(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .clickable(enabled = enabled, onClick = onClick)
             .padding(8.dp)
     ) {
         Box(
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
+                .clickable(enabled = enabled, onClick = onClick)
                 .background(
                     if (isSelected) {
                         MaterialTheme.colorScheme.onPrimary
