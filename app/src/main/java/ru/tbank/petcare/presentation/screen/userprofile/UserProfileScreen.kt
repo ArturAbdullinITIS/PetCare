@@ -1,6 +1,5 @@
 package ru.tbank.petcare.presentation.screen.userprofile
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.navigation.BottomNavDefaults
 
 @Composable
 fun UserProfileScreen(
@@ -50,6 +50,7 @@ fun UserProfileContent(
     viewModel: UserProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         setTopBarActions {
@@ -66,35 +67,34 @@ fun UserProfileContent(
             }
         }
     }
-    Box(modifier = modifier.fillMaxSize()) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 16.dp),
-        ) {
-            UserProfileHeader(
-                name = state.name,
-                email = state.email,
-                avatarUrl = state.avatarUrl
-            )
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(bottom = BottomNavDefaults.ContentPadding),
+    ) {
+        UserProfileHeader(
+            name = state.name,
+            email = state.email,
+            avatarUrl = state.avatarUrl
+        )
 
-            Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
-            StatsGridSection(
-                numberOfPets = state.numberOfPets,
-                bestScore = state.bestScore
-            )
+        StatsGridSection(
+            numberOfPets = state.numberOfPets,
+            bestScore = state.bestScore
+        )
 
-            Spacer(modifier = Modifier.height(28.dp))
+        Spacer(modifier = Modifier.height(28.dp))
 
-            MenuActionsSection(
-                onSettingsClick = onSettingsClick,
-                onLogoutClick = {
-                    viewModel.processCommand(UserProfileCommand.Logout)
-                    onLogoutSuccess()
-                }
-            )
-        }
+        MenuActionsSection(
+            onSettingsClick = onSettingsClick,
+            onLogoutClick = {
+                viewModel.processCommand(UserProfileCommand.Logout)
+                onLogoutSuccess()
+            }
+        )
     }
 }

@@ -304,7 +304,7 @@ fun ActivityHistoryTitle(
             text = stringResource(R.string.view_all),
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.onPrimaryContainer,
             modifier = Modifier.clickable(
                 onClick = onViewAllClick
             )

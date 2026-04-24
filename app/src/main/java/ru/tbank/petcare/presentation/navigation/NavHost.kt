@@ -63,7 +63,7 @@ fun NavHost(
     }
 
     val backStack = rememberSaveable {
-        mutableStateListOf<Route>(startRoute)
+        mutableStateListOf(startRoute)
     }
     val currentRoute = backStack.lastOrNull() ?: Route.Register
 
@@ -123,6 +123,7 @@ fun NavHost(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+
         ) {
             NavDisplay(
                 modifier = Modifier.fillMaxSize(),
@@ -314,7 +315,7 @@ fun NavHost(
                 CustomBottomNavBar(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 4.dp),
+                        .padding(bottom = 8.dp),
                     currentRoute = currentRoute,
                     onSelected = { route ->
                         if (route != currentRoute) {

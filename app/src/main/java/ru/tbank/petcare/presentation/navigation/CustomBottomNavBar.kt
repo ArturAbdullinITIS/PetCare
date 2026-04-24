@@ -113,3 +113,7 @@ fun CustomBottomNavBarPreview() {
         )
     }
 }
+
+object BottomNavDefaults {
+    val ContentPadding = 96.dp
+}

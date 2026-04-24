@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
 import ru.tbank.petcare.presentation.mapper.mapToLastActivityUIModel
+import ru.tbank.petcare.presentation.navigation.BottomNavDefaults
 
 @Composable
 fun MyPetsScreen(
@@ -64,7 +65,7 @@ private fun MyPetsContent(
             modifier = modifier
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            contentPadding = PaddingValues(vertical = 16.dp),
+            contentPadding = PaddingValues(bottom = BottomNavDefaults.ContentPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             item {
