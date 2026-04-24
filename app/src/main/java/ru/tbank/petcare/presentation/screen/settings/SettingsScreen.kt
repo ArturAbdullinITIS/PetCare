@@ -123,7 +123,7 @@ private fun SettingContent(
         ),
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
             .verticalScroll(scrollState)
     ) {
         Column(

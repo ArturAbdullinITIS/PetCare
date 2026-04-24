@@ -3,6 +3,7 @@ package ru.tbank.petcare.presentation.screen.publicProfiles
 import BottomSheet
 import android.R.attr.text
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.navigation.BottomNavDefaults
 
 @Composable
 fun PublicProfilesScreen(
@@ -86,7 +88,8 @@ private fun PublicProfilesContent(
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 16.dp),
+            contentPadding = PaddingValues(bottom = BottomNavDefaults.ContentPadding),
         ) {
             item { Spacer(modifier = Modifier.height(40.dp)) }
             item {
