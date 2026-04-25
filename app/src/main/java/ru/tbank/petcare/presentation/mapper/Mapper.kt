@@ -285,7 +285,7 @@ fun mapToLastActivityUIModel(
     activityDate: Date?,
     iconStatus: IconStatus
 ): LastActivityUIModel? {
-    if ((activityDate == null) || (activityType == null) || (iconStatus == IconStatus.NONE)) return null
+    if ((activityDate == null) || (activityType == null)) return null
     val colors = when (iconStatus) {
         IconStatus.HEART -> {
             LastActivityColors(
@@ -307,8 +307,8 @@ fun mapToLastActivityUIModel(
         }
 
         IconStatus.NONE -> LastActivityColors(
-            bg = MaterialTheme.colorScheme.surface,
-            fg = MaterialTheme.colorScheme.surface
+            bg = MaterialTheme.colorScheme.surfaceVariant,
+            fg = MaterialTheme.colorScheme.onSurface
         )
     }
     val icon = when (activityType) {

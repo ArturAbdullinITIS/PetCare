@@ -321,7 +321,7 @@ fun LastActivityCard(
         shape = RoundedCornerShape(32.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = model.colors.bg
+            color = model.colors.bg.copy(alpha = 0.5f)
         )
     ) {
         Row(
