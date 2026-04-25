@@ -5,7 +5,7 @@ data class PublicPetCardUIModel(
     val name: String,
     val photoUrl: String,
     val note: String,
-    val gameScore: String,
+    val gameScore: Int,
     val gender: String,
     val breed: String,
     val isMine: Boolean = false

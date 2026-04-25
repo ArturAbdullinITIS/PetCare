@@ -128,7 +128,7 @@ fun PublicPetCard(
 
                     Spacer(modifier = Modifier.weight(1f))
 
-                    GameScoreCard(gameScore = pet.gameScore)
+                    GameScoreCard(gameScore = "${pet.gameScore} pts")
                 }
 
                 Text(
@@ -200,7 +200,7 @@ fun PublicPetPreview() {
                 photoUrl = "",
                 note = "Professional ball chaser and nap specialist.\n" +
                     "Looking for friends in the park!",
-                gameScore = "1240 pts",
+                gameScore = 1240,
                 gender = "Male",
                 breed = "Golden Retriever"
             ),

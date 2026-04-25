@@ -189,7 +189,6 @@ fun CreateActivityState.toDomain(): Activity {
     )
 }
 fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
-    val gameScoreField = "$gameScore pts"
     val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
         if (ch.isLowerCase()) ch.titlecase() else ch.toString()
     }
@@ -199,7 +198,7 @@ fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
         name = name,
         photoUrl = photoUrl,
         note = noteFormatted,
-        gameScore = gameScoreField,
+        gameScore = gameScore,
         gender = genderFormatted,
         breed = breed,
         isMine = isMine
