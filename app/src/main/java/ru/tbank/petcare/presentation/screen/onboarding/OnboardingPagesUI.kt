@@ -62,11 +62,13 @@ fun OnboardingPageContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
+            modifier = Modifier.weight(1f),
             text = stringResource(model.titleRes),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
+            modifier = Modifier.weight(1f),
             text = stringResource(model.subtitleRes),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
