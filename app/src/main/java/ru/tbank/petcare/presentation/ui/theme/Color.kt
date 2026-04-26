@@ -8,7 +8,7 @@ val SecondaryLight = Color(0xFFF4BBD3)
 val TertiaryLight = Color(0xFFB8C0FF)
 val BackgroundLight = Color(0xFFF6F6F6)
 val SurfaceLight = Color(0xFFFFFFFF)
-val SurfaceVariantLight = Color(0xFF808080)
+val SurfaceVariantLight = Color(0xFFF0F1F1)
 
 val PrimaryContainerLight = Color(0xFF93EFCC)
 val OnPrimaryContainerLight = Color(0xFF005A43)
