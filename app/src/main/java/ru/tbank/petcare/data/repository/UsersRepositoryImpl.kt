@@ -13,6 +13,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaType
@@ -28,12 +30,14 @@ import ru.tbank.petcare.di.IoDispatcher
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.User
 import ru.tbank.petcare.domain.model.ValidationResult
+import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.UsersRepository
 import javax.inject.Inject
 
 class UsersRepositoryImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val firebaseAuth: FirebaseAuth,
+    private val authRepository: AuthRepository,
     @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
     private val imageBytesProvider: ImageBytesProvider,
     private val cloudinaryApiService: CloudinaryApiService
@@ -159,34 +163,37 @@ class UsersRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentUser(): Flow<User> = callbackFlow {
-        val currentUserId: String = firebaseAuth.currentUser?.uid ?: ""
-        Log.d("UserRepositoryImpl", currentUserId)
-
-        if (currentUserId.isBlank()) {
-            close(IllegalArgumentException(USER_ID_ERROR))
-            return@callbackFlow
-        }
-        val listener = collection.document(currentUserId)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    close(error)
-                    return@addSnapshotListener
-                }
-                val userDto = snapshot?.toObject(UserDto::class.java)
-                val user = userDto?.toDomain()
-                Log.d("UserRepositoryImpl", "${user?.email}, ${user?.firstName}")
-                if (user != null) {
-                    trySend(user)
-                } else {
-                    close()
+    override suspend fun getCurrentUser(): Flow<User> {
+        return authRepository
+            .authState
+            .filterNotNull()
+            .flatMapLatest { userId ->
+                callbackFlow {
+                    if (userId.isBlank()) {
+                        close(IllegalArgumentException(USER_ID_ERROR))
+                        return@callbackFlow
+                    }
+                    val listener = collection.document(userId)
+                        .addSnapshotListener { snapshot, error ->
+                            if (error != null) {
+                                close()
+                                return@addSnapshotListener
+                            }
+                            val userDto = snapshot?.toObject(UserDto::class.java)
+                            val user = userDto?.toDomain()
+                            Log.d("UserRepositoryImpl", "${user?.email}, ${user?.firstName}")
+                            if (user != null) {
+                                trySend(user)
+                            } else {
+                                close()
+                            }
+                        }
+                    awaitClose {
+                        listener.remove()
+                    }
                 }
             }
-        awaitClose {
-            listener.remove()
-        }
     }
-
     override suspend fun editUser(user: User): ValidationResult<Unit> = withContext(dispatcherIO) {
         try {
             if (user.id.isBlank()) {

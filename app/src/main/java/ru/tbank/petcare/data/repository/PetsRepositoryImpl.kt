@@ -10,10 +10,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -43,6 +45,7 @@ import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
+import ru.tbank.petcare.domain.repository.AuthRepository
 import ru.tbank.petcare.domain.repository.ConnectivityRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
 import ru.tbank.petcare.utils.ResourceProvider
@@ -58,6 +61,7 @@ class PetsRepositoryImpl @Inject constructor(
     @IoDispatcher private val dispatcherIO: CoroutineDispatcher,
     private val animalsApiService: AnimalsApiService,
     private val cloudinaryApiService: CloudinaryApiService,
+    private val authRepository: AuthRepository,
     private val imageBytesProvider: ImageBytesProvider,
     private val connectivityRepository: ConnectivityRepository,
     private val petsDao: PetsDao,
@@ -76,12 +80,20 @@ class PetsRepositoryImpl @Inject constructor(
     }
     private val collection = firestore.collection(COLLECTION_PATH)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override fun getCurrentUsersPets(): Flow<List<Pet>> {
-        val currentUserId = firebaseAuth.currentUser?.uid ?: return flowOf(emptyList())
-
-        return petsDao.observePetsByOwner(currentUserId)
-            .map { dbPets -> dbPets.map { it.toDomain() } }
-            .flowOn(dispatcherIO)
+        return authRepository.authState
+            .flatMapLatest { userId ->
+                if (userId == null) {
+                    flowOf(emptyList())
+                } else {
+                    petsDao.observePetsByOwner(userId).map { dbPets ->
+                        dbPets.map {
+                            it.toDomain()
+                        }
+                    }
+                }
+            }.flowOn(dispatcherIO)
     }
 
     override suspend fun syncCurrentUsersPets(): ValidationResult<Unit> = withContext(dispatcherIO) {

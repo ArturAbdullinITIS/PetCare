@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
@@ -30,6 +33,18 @@ class AuthRepositoryImpl @Inject constructor(
     private val getCredentialRequest: GetCredentialRequest,
     private val firestore: FirebaseFirestore
 ) : AuthRepository {
+
+    override val authState: Flow<String?> = callbackFlow {
+        val listener = FirebaseAuth.AuthStateListener {
+            trySend(it.currentUser?.uid)
+        }
+
+        firebaseAuth.addAuthStateListener(listener)
+
+        awaitClose {
+            firebaseAuth.removeAuthStateListener(listener)
+        }
+    }
 
     companion object {
         private const val GOOGLE_ID_ERROR = "Google idToken is blank"
