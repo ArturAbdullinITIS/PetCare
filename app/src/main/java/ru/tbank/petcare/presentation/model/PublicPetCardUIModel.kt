@@ -8,5 +8,4 @@ data class PublicPetCardUIModel(
     val gameScore: Int,
     val gender: String,
     val breed: String,
-    val isMine: Boolean = false
 )

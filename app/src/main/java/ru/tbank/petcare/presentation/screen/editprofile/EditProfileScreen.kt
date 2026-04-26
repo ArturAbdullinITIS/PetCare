@@ -37,17 +37,22 @@ import ru.tbank.petcare.presentation.common.CustomTextField
 
 @Composable
 fun EditProfileScreen(
-    onContinue: () -> Unit
+    onContinue: () -> Unit,
+    userId: String
 ) {
     EditProfileContent(
-        onContinue = onContinue
+        onContinue = onContinue,
+        userId = userId
     )
 }
 
 @Composable
 fun EditProfileContent(
+    userId: String,
     onContinue: () -> Unit,
-    viewModel: EditProfileViewModel = hiltViewModel()
+    viewModel: EditProfileViewModel = hiltViewModel(
+        key = userId
+    )
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()

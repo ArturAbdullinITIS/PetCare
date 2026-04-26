@@ -18,6 +18,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.ValidationResult
@@ -170,18 +173,27 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentUserId(): ValidationResult<String> {
-        val currentUser = firebaseAuth.currentUser
-        if (currentUser != null) {
-            return ValidationResult(
-                isSuccess = true,
-                data = currentUser.uid
-            )
-        } else {
-            return ValidationResult(
-                isSuccess = false,
-                error = ErrorType.AuthValidation()
-            )
+    override suspend fun getCurrentUserId(): Flow<ValidationResult<String>> = callbackFlow {
+        val authStateListener = FirebaseAuth.AuthStateListener { auth ->
+            val currentUser = auth.currentUser
+            val result = if (currentUser != null) {
+                ValidationResult(
+                    isSuccess = true,
+                    data = currentUser.uid
+                )
+            } else {
+                ValidationResult(
+                    isSuccess = false,
+                    error = ErrorType.AuthValidation()
+                )
+            }
+            trySend(result)
+        }
+
+        firebaseAuth.addAuthStateListener(authStateListener)
+
+        awaitClose {
+            firebaseAuth.removeAuthStateListener(authStateListener)
         }
     }
 }

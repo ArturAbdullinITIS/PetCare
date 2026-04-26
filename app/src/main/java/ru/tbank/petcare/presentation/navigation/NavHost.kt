@@ -57,6 +57,7 @@ fun NavHost(
 ) {
     val navHostViewModel: NavHostViewModel = hiltViewModel()
     val isOnline by navHostViewModel.isOnline.collectAsState()
+    val currentUserId by navHostViewModel.currentUserId.collectAsState()
 
     val startRoute = when (startDestination) {
         StartDestination.Auth -> Route.Login
@@ -287,26 +288,32 @@ fun NavHost(
                         )
                     }
                     entry<NavigationBarRoute.Profile> {
-                        UserProfileScreen(
-                            onLogoutSuccess = {
-                                backStack.clear()
-                                backStack.add(Route.Login)
-                            },
-                            onSettingsClick = {
-                                backStack.add(Route.Settings)
-                            },
-                            setTopBarActions = { topBarActions.value = it },
-                            onEditIconClick = {
-                                backStack.add(Route.EditProfile)
-                            },
-                        )
+                        if (currentUserId != null) {
+                            UserProfileScreen(
+                                userId = currentUserId ?: "",
+                                onLogoutSuccess = {
+                                    backStack.clear()
+                                    backStack.add(Route.Login)
+                                },
+                                onSettingsClick = {
+                                    backStack.add(Route.Settings)
+                                },
+                                setTopBarActions = { topBarActions.value = it },
+                                onEditIconClick = {
+                                    backStack.add(Route.EditProfile)
+                                }
+                            )
+                        }
                     }
                     entry<Route.EditProfile> {
-                        EditProfileScreen(
-                            onContinue = {
-                                backStack.removeLastOrNull()
-                            }
-                        )
+                        if (currentUserId != null) {
+                            EditProfileScreen(
+                                onContinue = {
+                                    backStack.removeLastOrNull()
+                                },
+                                userId = currentUserId ?: ""
+                            )
+                        }
                     }
                     entry<Route.Analytics> { route ->
                         AnalyticsScreen(

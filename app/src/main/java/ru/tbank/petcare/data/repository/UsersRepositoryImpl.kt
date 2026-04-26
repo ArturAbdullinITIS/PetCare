@@ -170,7 +170,7 @@ class UsersRepositoryImpl @Inject constructor(
         val listener = collection.document(currentUserId)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    close(error)
+                    close()
                     return@addSnapshotListener
                 }
                 val userDto = snapshot?.toObject(UserDto::class.java)

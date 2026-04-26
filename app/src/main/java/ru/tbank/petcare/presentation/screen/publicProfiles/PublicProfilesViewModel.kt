@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.domain.usecase.pets.GetAllPublicPetsUseCase
 import ru.tbank.petcare.domain.usecase.pets.IsOnlineUseCase
-import ru.tbank.petcare.domain.usecase.users.GetCurrentUserIdUseCase
 import ru.tbank.petcare.presentation.mapper.toPublicPetCardUIModel
 import ru.tbank.petcare.presentation.model.PublicProfilesSortOption
 import javax.inject.Inject
@@ -19,7 +18,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PublicProfilesViewModel @Inject constructor(
     private val getAllPublicPetsUseCase: GetAllPublicPetsUseCase,
-    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
     private val isOnlineUseCase: IsOnlineUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(PublicProfilesState())
@@ -61,15 +59,13 @@ class PublicProfilesViewModel @Inject constructor(
                     }
                 }
                 .collect { pets ->
-                    val myId = getCurrentUserIdUseCase()
-                    if (myId.isSuccess) {
-                        val publicPetsUI = pets.map { it.toPublicPetCardUIModel(isMine = myId.data.equals(it.ownerId)) }
-                        _state.update { state ->
-                            state.copy(
-                                isPetsLoading = false,
-                                pets = publicPetsUI
-                            )
-                        }
+                    val publicPetsUI =
+                        pets.map { it.toPublicPetCardUIModel() }
+                    _state.update { state ->
+                        state.copy(
+                            isPetsLoading = false,
+                            pets = publicPetsUI
+                        )
                     }
                 }
         }

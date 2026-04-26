@@ -26,12 +26,14 @@ import ru.tbank.petcare.presentation.navigation.BottomNavDefaults
 
 @Composable
 fun UserProfileScreen(
+    userId: String,
     onLogoutSuccess: () -> Unit,
     onEditIconClick: () -> Unit,
     setTopBarActions: ((@Composable () -> Unit)?) -> Unit,
     onSettingsClick: () -> Unit,
 ) {
     UserProfileContent(
+        userId = userId,
         onLogoutSuccess = onLogoutSuccess,
         setTopBarActions = setTopBarActions,
         onEditIconClick = onEditIconClick,
@@ -42,12 +44,18 @@ fun UserProfileScreen(
 @Suppress("LongParameterList")
 @Composable
 fun UserProfileContent(
+    userId: String,
     modifier: Modifier = Modifier,
     setTopBarActions: ((@Composable () -> Unit)?) -> Unit,
     onEditIconClick: () -> Unit,
     onLogoutSuccess: () -> Unit,
     onSettingsClick: () -> Unit,
-    viewModel: UserProfileViewModel = hiltViewModel()
+    viewModel: UserProfileViewModel = hiltViewModel(
+        key = userId,
+        creationCallback = { factory: UserProfileViewModel.Factory ->
+            factory.create(userId)
+        }
+    )
 ) {
     val state by viewModel.state.collectAsState()
     val scrollState = rememberScrollState()

@@ -1,6 +1,7 @@
 package ru.tbank.petcare.domain.repository
 
 import android.content.Context
+import kotlinx.coroutines.flow.Flow
 import ru.tbank.petcare.domain.model.ValidationResult
 
 interface AuthRepository {
@@ -19,5 +20,5 @@ interface AuthRepository {
 
     suspend fun signOut(): ValidationResult<Unit>
 
-    suspend fun getCurrentUserId(): ValidationResult<String>
+    suspend fun getCurrentUserId(): Flow<ValidationResult<String>>
 }

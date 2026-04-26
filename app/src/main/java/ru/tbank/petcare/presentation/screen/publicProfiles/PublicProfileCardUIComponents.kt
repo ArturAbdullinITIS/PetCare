@@ -1,6 +1,5 @@
 package ru.tbank.petcare.presentation.screen.publicProfiles
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -89,15 +88,7 @@ fun PublicPetCard(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.surface
             ),
-            onClick = onClick,
-            border = if (pet.isMine) {
-                BorderStroke(
-                    width = 2.dp,
-                    color = MaterialTheme.colorScheme.secondaryContainer
-                )
-            } else {
-                null
-            }
+            onClick = onClick
         ) {
             Column(
                 modifier = Modifier

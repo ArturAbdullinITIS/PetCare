@@ -1,5 +1,6 @@
 package ru.tbank.petcare.presentation.mapper
 
+import android.R.attr.name
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import ru.tbank.petcare.R
@@ -189,7 +190,7 @@ fun CreateActivityState.toDomain(): Activity {
         isReminder = isReminder
     )
 }
-fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
+fun Pet.toPublicPetCardUIModel(): PublicPetCardUIModel {
     val genderFormatted = gender.name.lowercase().replaceFirstChar { ch ->
         if (ch.isLowerCase()) ch.titlecase() else ch.toString()
     }
@@ -202,7 +203,6 @@ fun Pet.toPublicPetCardUIModel(isMine: Boolean): PublicPetCardUIModel {
         gameScore = gameScore,
         gender = genderFormatted,
         breed = breed,
-        isMine = isMine
     )
 }
 

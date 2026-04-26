@@ -2,6 +2,7 @@ package ru.tbank.petcare.presentation.root
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil3.util.CoilUtils.result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -39,12 +40,13 @@ class SplashViewModel @Inject constructor(
                 return@launch
             }
 
-            val result = getCurrentUserIdUseCase()
-            _startDestination.update {
-                if (result.isSuccess) {
-                    StartDestination.Main
-                } else {
-                    StartDestination.Auth
+            getCurrentUserIdUseCase().collect { result ->
+                _startDestination.update {
+                    if (result.isSuccess) {
+                        StartDestination.Main
+                    } else {
+                        StartDestination.Auth
+                    }
                 }
             }
         }
