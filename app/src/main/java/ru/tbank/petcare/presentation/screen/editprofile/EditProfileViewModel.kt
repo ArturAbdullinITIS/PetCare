@@ -73,6 +73,7 @@ class EditProfileViewModel @Inject constructor(
     private fun handleEdit() {
         val uri = state.value.selectedPhotoUri
         val user = state.value.user.toDomain()
+        val currentUser = state.value.user
         _state.update { state ->
             state.copy(
                 isEditing = true
@@ -92,7 +93,7 @@ class EditProfileViewModel @Inject constructor(
                     }
                     upload.data
                 } else {
-                    ""
+                    currentUser.photoUrl
                 }
                 val result = editUserUseCase(user.copy(photoUrl = photoUrl))
                 if (result.isSuccess) {
