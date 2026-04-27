@@ -1,7 +1,5 @@
 package ru.tbank.petcare.presentation.screen.login
 
-import android.R.attr.enabled
-import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,7 +51,6 @@ fun LoginScreen(
         onNavigateToOnboarding = onNavigateToOnboarding
     )
 }
-private const val HALF_WEIGHT = 0.5f
 
 @Composable
 fun LoginContent(
@@ -92,7 +89,7 @@ fun LoginContent(
             }
         )
 
-        Spacer(modifier = Modifier.weight(HALF_WEIGHT))
+        Spacer(modifier = Modifier.height(104.dp))
 
         AuthTitle(
             mainTitle = stringResource(R.string.login),
@@ -104,7 +101,6 @@ fun LoginContent(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(2f)
                 .background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(32.dp)
@@ -163,7 +159,7 @@ fun LoginContent(
                     )
                 },
                 text = stringResource(R.string.login),
-                enabled = true
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -173,8 +169,9 @@ fun LoginContent(
             Spacer(modifier = Modifier.height(16.dp))
 
             GoogleButton(
-                isLoading = state.isLoading,
-                onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) }
+                isLoading = state.isGoogleLoading,
+                onClick = { viewModel.processCommand(LoginCommand.SignInWithGoogle(context)) },
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
 
             Spacer(modifier = Modifier.height(24.dp))

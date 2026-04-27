@@ -246,4 +246,6 @@
     <string name="play"><![CDATA[Play &]]></string>
     <string name="connect">Connect</string>
     <string name="birthday_icon">Birthday Icon</string>
+    <string name="you_dont_have_any_pets">You don\'t have any pets</string>
+    <string name="create_a_pet">Create a pet before you play</string>
 </resources>

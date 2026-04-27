@@ -137,7 +137,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
     private fun signInWithGoogle(context: Context) {
-        _state.update { it.copy(isLoading = true) }
+        _state.update { it.copy(isGoogleLoading = true) }
 
         viewModelScope.launch {
             val result = signInWithGoogleUseCase(context = context)
@@ -149,7 +149,7 @@ class RegistrationViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         error = errorParser.getErrorMessage(result.error),
-                        isLoading = false
+                        isGoogleLoading = false
                     )
                 }
             }

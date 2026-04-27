@@ -244,4 +244,6 @@
     <string name="care">Уход</string>
     <string name="play"><![CDATA[Играй и]]></string>
     <string name="connect">Общайся</string>
+    <string name="you_dont_have_any_pets">У тебя пока нет питомцев</string>
+    <string name="create_a_pet">Создай питомца прежде чем играть</string>
 </resources>

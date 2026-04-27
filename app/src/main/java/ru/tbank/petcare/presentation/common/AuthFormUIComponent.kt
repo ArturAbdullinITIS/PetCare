@@ -144,6 +144,7 @@ fun PasswordTextField(
 
 @Composable
 fun GoogleButton(
+    enabled: Boolean,
     isLoading: Boolean,
     onClick: () -> Unit,
 ) {
@@ -156,6 +157,7 @@ fun GoogleButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.White,
         ),
+        enabled = enabled
     ) {
         if (isLoading) {
             CircularProgressIndicator()

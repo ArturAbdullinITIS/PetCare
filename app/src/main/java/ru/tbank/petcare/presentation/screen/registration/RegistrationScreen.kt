@@ -184,15 +184,18 @@ fun RegistrationContent(
                     )
                 },
                 text = stringResource(R.string.register),
-                enabled = true
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
 
             Spacer(modifier = Modifier.height(16.dp))
             CustomDivider()
             Spacer(modifier = Modifier.height(16.dp))
             GoogleButton(
-                isLoading = state.isLoading,
-                onClick = { viewModel.processCommand(RegistrationCommand.SignInWithGoogle(context)) }
+                isLoading = state.isGoogleLoading,
+                onClick = {
+                    viewModel.processCommand(RegistrationCommand.SignInWithGoogle(context))
+                },
+                enabled = !state.isLoading && !state.isGoogleLoading
             )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
