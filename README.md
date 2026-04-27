@@ -1,5 +1,5 @@
 # Pet Care
-
+![Uploading Screenshot_20260427_191231.png…]() ![Uploading Screenshot_20260427_191241.png…]() ![Uploading Screenshot_20260427_191246.png…]()
 ## About
 
 Pet Care is a mobile app for managing pet profiles, tracking care activities, viewing statistics, setting reminders, exploring public pet profiles, and playing a mini-game.
