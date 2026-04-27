@@ -32,6 +32,7 @@ import ru.tbank.petcare.presentation.ui.theme.StarIconStatus
 import ru.tbank.petcare.presentation.ui.theme.VetQuickActionIcon
 import ru.tbank.petcare.presentation.ui.theme.WalkQuickActionIcon
 import ru.tbank.petcare.utils.DateFormatter
+import java.util.Calendar
 import java.util.Date
 
 @Composable
@@ -131,7 +132,7 @@ fun Pet.toForm(): PetForm {
         note = note,
         weight = weight.toString(),
         dateOfBirth = dateOfBirth,
-        dateOfBirthText = DateFormatter.formatDob(dateOfBirth),
+        dateOfBirthText = DateFormatter.formatAgeYearsMonths(dateOfBirth),
         iconStatus = iconStatus,
         photoUrl = photoUrl,
         gameScore = gameScore,
@@ -142,7 +143,10 @@ fun Pet.toForm(): PetForm {
 
 fun Pet.toPetCardUIModel(): PetCardUIModel {
     val age = DateFormatter.formatAgeYearsMonths(dateOfBirth)
-    val subtitle = listOf(breed, age).filter { it.isNotBlank() }.joinToString(" • ")
+    val subtitle = listOf(breed, age)
+        .filter { it.isNotBlank() }
+        .joinToString(" • ")
+
     return PetCardUIModel(
         id = id,
         name = name,
@@ -150,7 +154,8 @@ fun Pet.toPetCardUIModel(): PetCardUIModel {
         iconStatus = iconStatus,
         subtitle = subtitle,
         lastActivityType = lastActivity?.type,
-        lastActivityDate = lastActivity?.date
+        lastActivityDate = lastActivity?.date,
+        isBirthdayToday = dateOfBirth?.isBirthdayToday() ?: false
     )
 }
 
@@ -348,4 +353,14 @@ fun toOnboardingPageUIModel(page: Int): OnboardingPageUIModel {
         )
         else -> throw IllegalArgumentException("Invalid onboarding page index")
     }
+}
+
+private fun Date.isBirthdayToday(): Boolean {
+    val today = Calendar.getInstance()
+    val birthday = Calendar.getInstance().apply {
+        time = this@isBirthdayToday
+    }
+
+    return today.get(Calendar.DAY_OF_MONTH) == birthday.get(Calendar.DAY_OF_MONTH) &&
+        today.get(Calendar.MONTH) == birthday.get(Calendar.MONTH)
 }

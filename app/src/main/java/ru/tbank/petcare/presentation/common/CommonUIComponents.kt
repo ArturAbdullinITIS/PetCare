@@ -21,6 +21,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.SignalWifiConnectedNoInternet4
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -342,6 +343,37 @@ fun NoInternetBanner(modifier: Modifier = Modifier) {
                 text = stringResource(R.string.no_internet_connection).uppercase(),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
+            )
+        }
+    }
+}
+
+@Composable
+fun BirthDayBadge(
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.6f),
+            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+        ),
+        shape = CircleShape,
+        border = BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape)
+                .padding(4.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Cake,
+                contentDescription = stringResource(R.string.birthday_icon)
             )
         }
     }

@@ -11,5 +11,6 @@ data class PetCardUIModel(
     val iconStatus: IconStatus = IconStatus.NONE,
     val subtitle: String = "",
     val lastActivityType: ActivityType? = null,
-    val lastActivityDate: Date? = null
+    val lastActivityDate: Date? = null,
+    val isBirthdayToday: Boolean = false
 )

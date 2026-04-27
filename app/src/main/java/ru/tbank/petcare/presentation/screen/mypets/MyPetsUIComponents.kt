@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import ru.tbank.petcare.R
+import ru.tbank.petcare.presentation.common.BirthDayBadge
 import ru.tbank.petcare.presentation.common.IconStatusUI
 import ru.tbank.petcare.presentation.mapper.getQuickActionUI
 import ru.tbank.petcare.presentation.model.LastActivityUIModel
@@ -59,81 +60,88 @@ fun MyPetsPetCard(
     clickable: Boolean,
     model: LastActivityUIModel?
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(36.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        onClick = {
-            if (clickable) onPetClick()
-        }
-    ) {
-        Row(
+    Box {
+        Card(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .height(80.dp)
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(36.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            onClick = {
+                if (clickable) onPetClick()
+            }
         ) {
-            Box {
-                Surface(
-                    modifier = Modifier.size(80.dp),
-                    shape = CircleShape,
-                    color = MaterialTheme.colorScheme.surface,
-                    shadowElevation = 1.dp
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .height(80.dp)
+            ) {
+                Box {
+                    Surface(
+                        modifier = Modifier.size(80.dp),
+                        shape = CircleShape,
+                        color = MaterialTheme.colorScheme.surface,
+                        shadowElevation = 1.dp
+                    ) {
+                        Box(modifier = Modifier.padding(3.dp)) {
+                            AsyncImage(
+                                model = pet.photoUrl,
+                                contentDescription = stringResource(R.string.pets_photo),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .clip(CircleShape),
+                                placeholder = painterResource(R.drawable.photo_placeholder),
+                                contentScale = ContentScale.Crop,
+                                error = painterResource(R.drawable.photo_placeholder)
+                            )
+                        }
+                    }
+
+                    IconStatusUI(
+                        status = pet.iconStatus,
+                        modifier = Modifier
+                            .align(Alignment.BottomEnd)
+                            .padding(2.dp),
+                        iconSize = 24
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceEvenly,
+
                 ) {
-                    Box(modifier = Modifier.padding(3.dp)) {
-                        AsyncImage(
-                            model = pet.photoUrl,
-                            contentDescription = stringResource(R.string.pets_photo),
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .clip(CircleShape),
-                            placeholder = painterResource(R.drawable.photo_placeholder),
-                            contentScale = ContentScale.Crop,
-                            error = painterResource(R.drawable.photo_placeholder)
+                    Text(
+                        text = pet.name,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        text = pet.subtitle,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    if (model != null) {
+                        LastActivityCard(
+                            model = model
                         )
                     }
                 }
-
-                IconStatusUI(
-                    status = pet.iconStatus,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(2.dp),
-                    iconSize = 24
-                )
             }
-
-            Column(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceEvenly,
-
-            ) {
-                Text(
-                    text = pet.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = pet.subtitle,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
-                if (model != null) {
-                    LastActivityCard(
-                        model = model
-                    )
-                }
-            }
+        }
+        if (pet.isBirthdayToday) {
+            BirthDayBadge(
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
         }
     }
 }

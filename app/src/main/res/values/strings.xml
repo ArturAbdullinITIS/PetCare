@@ -245,4 +245,5 @@
     <string name="care">Care</string>
     <string name="play"><![CDATA[Play &]]></string>
     <string name="connect">Connect</string>
+    <string name="birthday_icon">Birthday Icon</string>
 </resources>
