@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,13 +63,11 @@ fun OnboardingPageContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            modifier = Modifier.weight(1f),
             text = stringResource(model.titleRes),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold
         )
         Text(
-            modifier = Modifier.weight(1f),
             text = stringResource(model.subtitleRes),
             fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
@@ -280,6 +279,8 @@ fun MiniCard(
         ) {
             icon()
             Text(
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 text = title,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold

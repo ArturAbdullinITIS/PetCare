@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -53,6 +55,7 @@ private fun OnboardingContent(
     onFinished: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         setTopBarActions {
@@ -112,6 +115,7 @@ private fun OnboardingContent(
                 state = pagerState,
                 userScrollEnabled = false,
                 modifier = Modifier.weight(1f)
+                    .verticalScroll(scrollState)
             ) { page ->
                 val model = toOnboardingPageUIModel(page)
 
