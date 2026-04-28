@@ -8,21 +8,25 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import ru.tbank.petcare.R
 import ru.tbank.petcare.domain.usecase.pets.GetPetInfoUseCase
 import ru.tbank.petcare.domain.usecase.pets.GetRemotePetUseCase
+import ru.tbank.petcare.domain.usecase.settings.GetAllSettingsUseCase
 import ru.tbank.petcare.domain.usecase.users.GetUserNameUseCase
 import ru.tbank.petcare.presentation.mapper.toForm
 import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
 
+@Suppress("LongParameterList")
 @HiltViewModel(assistedFactory = PublicPetProfileViewModel.Factory::class)
 class PublicPetProfileViewModel @AssistedInject constructor(
     private val getPetUseCase: GetRemotePetUseCase,
     private val getPetInfoUseCase: GetPetInfoUseCase,
     private val errorParser: ErrorParser,
+    private val getAllSettingsUseCase: GetAllSettingsUseCase,
     @Assisted(PET_ID) private val petId: String,
     private val getUserNameUseCase: GetUserNameUseCase,
     private val resourceProvider: ResourceProvider
@@ -92,7 +96,7 @@ class PublicPetProfileViewModel @AssistedInject constructor(
                             errorMessage = null
                         )
                     }
-                    val petInfo = getPetInfoUseCase(command.breed)
+                    val petInfo = getPetInfoUseCase(command.breed, getAllSettingsUseCase().first().language)
 
                     if (petInfo.isSuccess && petInfo.data != null) {
                         _state.update { state ->

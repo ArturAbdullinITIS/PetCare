@@ -2,6 +2,7 @@ package ru.tbank.petcare.domain.repository
 
 import android.net.Uri
 import kotlinx.coroutines.flow.Flow
+import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
 import ru.tbank.petcare.domain.model.Tip
@@ -19,9 +20,9 @@ interface PetsRepository {
     fun getLocalPetById(petId: String): Flow<Pet>
     fun getRemotePetById(petId: String): Flow<Pet>
     fun getAllPublicPets(): Flow<List<Pet>>
-    fun getAllTips(): Flow<List<Tip>>
+    fun getAllTips(currentLanguage: Language): Flow<List<Tip>>
+    suspend fun getPetInfo(breed: String, currentLanguage: Language): ValidationResult<PetInfo>
 
-    suspend fun getPetInfo(breed: String): ValidationResult<PetInfo>
     suspend fun uploadPetPhoto(uri: Uri): ValidationResult<String>
     suspend fun deleteAllCurrentUsersPets(): ValidationResult<Unit>
 }

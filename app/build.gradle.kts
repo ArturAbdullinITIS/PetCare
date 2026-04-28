@@ -33,6 +33,8 @@ android {
     val presetName = localProperties.getProperty("CLOUDINARY_PRESET_NAME") ?: ""
     val petsFolder = localProperties.getProperty("CLOUDINARY_PETS_FOLDER") ?: ""
     val usersFolder = localProperties.getProperty("CLOUDINARY_USERS_FOLDER") ?: ""
+    val deeplApiKey = localProperties.getProperty("DEEPL_API_KEY") ?: ""
+    val baseUrlDeepl = localProperties.getProperty("BASE_URL_DEEPL") ?: "https://api-free.deepl.com/"
 
     defaultConfig {
         applicationId = "ru.tbank.petcare"
@@ -49,6 +51,8 @@ android {
         buildConfigField("String", "CLOUDINARY_PRESET_NAME", "\"$presetName\"")
         buildConfigField("String", "CLOUDINARY_PETS_FOLDER", "\"$petsFolder\"")
         buildConfigField("String", "CLOUDINARY_USERS_FOLDER", "\"$usersFolder\"")
+        buildConfigField("String", "DEEPL_API_KEY", "\"$deeplApiKey\"")
+        buildConfigField("String", "BASE_URL_DEEPL", "\"$baseUrlDeepl\"")
     }
 
     buildTypes {
@@ -141,6 +145,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.translate)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

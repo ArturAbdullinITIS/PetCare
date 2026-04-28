@@ -14,6 +14,7 @@ import ru.tbank.petcare.data.repository.ConnectivityRepositoryImpl
 import ru.tbank.petcare.data.repository.LocaleRepositoryImpl
 import ru.tbank.petcare.data.repository.PetsRepositoryImpl
 import ru.tbank.petcare.data.repository.SettingsRepositoryImpl
+import ru.tbank.petcare.data.repository.TranslationRepositoryImpl
 import ru.tbank.petcare.data.repository.UsersRepositoryImpl
 import ru.tbank.petcare.domain.repository.ActivityRepository
 import ru.tbank.petcare.domain.repository.AuthRepository
@@ -21,6 +22,7 @@ import ru.tbank.petcare.domain.repository.ConnectivityRepository
 import ru.tbank.petcare.domain.repository.LocaleRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
 import ru.tbank.petcare.domain.repository.SettingsRepository
+import ru.tbank.petcare.domain.repository.TranslationRepository
 import ru.tbank.petcare.domain.repository.UsersRepository
 import ru.tbank.petcare.utils.ErrorParser
 import ru.tbank.petcare.utils.ResourceProvider
@@ -78,6 +80,12 @@ interface CoreModule {
     fun bindLocaleRepository(
         impl: LocaleRepositoryImpl
     ): LocaleRepository
+
+    @Binds
+    @Singleton
+    fun bindTranslationRepository(
+        impl: TranslationRepositoryImpl
+    ): TranslationRepository
 
     companion object {
 

@@ -34,6 +34,8 @@ interface NetworkModule {
         private const val ANIMALS_HEADER_KEY = "X-Api-Key"
         private const val ANIMALS_QUAL = "animals"
         private const val CLOUDINARY_QUAL = "cloudinary"
+        private const val DEEPL_QUAL = "deepl"
+        private const val DEEPL_HEADER_KEY = "Authorization"
 
         @Provides
         @Singleton
@@ -46,11 +48,17 @@ interface NetworkModule {
                     val request = chain.request()
                     val url = request.url
                     val baseHost = BuildConfig.BASE_URL_ANIMALS.toHttpUrl().host
+                    val deeplHost = BuildConfig.BASE_URL_DEEPL.toHttpUrl().host
                     val isAnimalsHost = url.host == baseHost
+                    val isDeeplHost = url.host == deeplHost
 
                     val newRequest = if (isAnimalsHost) {
                         request.newBuilder()
-                            .header(ANIMALS_HEADER_KEY, BuildConfig.API_KEY_ANIMALS)
+                            .addHeader(ANIMALS_HEADER_KEY, BuildConfig.API_KEY_ANIMALS)
+                            .build()
+                    } else if (isDeeplHost) {
+                        request.newBuilder()
+                            .addHeader(DEEPL_HEADER_KEY, "DeepL-Auth-Key ${BuildConfig.DEEPL_API_KEY}")
                             .build()
                     } else {
                         request
@@ -97,6 +105,17 @@ interface NetworkModule {
 
         @Provides
         @Singleton
+        @Named(DEEPL_QUAL)
+        fun provideDeeplRetrofit(okHttpClient: OkHttpClient): Retrofit {
+            return Retrofit.Builder()
+                .baseUrl(BuildConfig.BASE_URL_DEEPL)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        }
+
+        @Provides
+        @Singleton
         fun provideAnimalsApiService(
             @Named(ANIMALS_QUAL) retrofit: Retrofit
         ): AnimalsApiService {
@@ -109,6 +128,16 @@ interface NetworkModule {
             @Named(CLOUDINARY_QUAL) retrofit: Retrofit
         ): CloudinaryApiService {
             return retrofit.create(CloudinaryApiService::class.java)
+        }
+
+        @Provides
+        @Singleton
+        fun provideDeeplApiService(
+            @Named(
+                DEEPL_QUAL
+            ) retrofit: Retrofit
+        ): ru.tbank.petcare.data.remote.network.deepl.DeeplApiService {
+            return retrofit.create(ru.tbank.petcare.data.remote.network.deepl.DeeplApiService::class.java)
         }
     }
 }

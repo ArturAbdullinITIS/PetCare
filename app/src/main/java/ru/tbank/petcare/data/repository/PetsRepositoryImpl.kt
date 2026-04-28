@@ -1,7 +1,6 @@
 package ru.tbank.petcare.data.repository
 
 import android.net.Uri
-import android.util.Log
 import coil3.network.HttpException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -10,7 +9,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.catch
@@ -38,6 +40,7 @@ import ru.tbank.petcare.domain.model.ActivityType
 import ru.tbank.petcare.domain.model.ErrorType
 import ru.tbank.petcare.domain.model.Gender
 import ru.tbank.petcare.domain.model.IconStatus
+import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.model.LastActivity
 import ru.tbank.petcare.domain.model.Pet
 import ru.tbank.petcare.domain.model.PetInfo
@@ -45,6 +48,7 @@ import ru.tbank.petcare.domain.model.Tip
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.ConnectivityRepository
 import ru.tbank.petcare.domain.repository.PetsRepository
+import ru.tbank.petcare.domain.repository.TranslationRepository
 import ru.tbank.petcare.utils.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
@@ -61,6 +65,7 @@ class PetsRepositoryImpl @Inject constructor(
     private val imageBytesProvider: ImageBytesProvider,
     private val connectivityRepository: ConnectivityRepository,
     private val petsDao: PetsDao,
+    private val translationRepository: TranslationRepository,
     private val resourceProvider: ResourceProvider
 ) : PetsRepository {
     private companion object {
@@ -337,7 +342,7 @@ class PetsRepositoryImpl @Inject constructor(
     }.flowOn(dispatcherIO)
         .catch { e -> emit(emptyList()) }
 
-    override fun getAllTips(): Flow<List<Tip>> = callbackFlow {
+    override fun getAllTips(currentLanguage: Language): Flow<List<Tip>> = callbackFlow {
         val listener = firestore.collection(TIPS_KEY)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
@@ -359,32 +364,93 @@ class PetsRepositoryImpl @Inject constructor(
         awaitClose {
             listener.remove()
         }
-    }.flowOn(dispatcherIO)
-
-    override suspend fun getPetInfo(breed: String): ValidationResult<PetInfo> = withContext(dispatcherIO) {
-        try {
-            val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
-            Log.d("ANIMAL_RESPONSE", animalsResponse.toString())
-            val animal = animalsResponse.find { it.breedName.equals(breed, ignoreCase = true) }
-            return@withContext if (animal != null) {
-                ValidationResult(
-                    data = animal,
-                    isSuccess = true
-                )
+    }
+        .map { tips ->
+            if (currentLanguage == Language.RUSSIAN) {
+                coroutineScope {
+                    tips.map { tip ->
+                        async {
+                            tip.copy(
+                                text = translateText(tip.text, currentLanguage)
+                            )
+                        }
+                    }.awaitAll()
+                }
             } else {
-                ValidationResult(
-                    error = ErrorType.CommonError(
-                        resourceProvider.getString(
-                            R.string.no_breed_information_found_for,
-                            breed
+                tips
+            }
+        }.flowOn(dispatcherIO)
+
+    override suspend fun getPetInfo(breed: String, currentLanguage: Language): ValidationResult<PetInfo> {
+        return withContext(dispatcherIO) {
+            try {
+                val animalsResponse = animalsApiService.getAnimalsByBreed(breed).toEntities()
+                val animal = animalsResponse.find { it.breedName.equals(breed, ignoreCase = true) }
+
+                if (animal == null) {
+                    return@withContext ValidationResult(
+                        error = ErrorType.CommonError(
+                            resourceProvider.getString(R.string.no_breed_information_found_for, breed)
                         )
                     )
+                }
+
+                if (currentLanguage == Language.ENGLISH) {
+                    return@withContext ValidationResult(data = animal, isSuccess = true)
+                }
+
+                val translatedBreedName = translateText(animal.breedName, currentLanguage)
+                val translatedDiet = translateText(animal.diet, currentLanguage)
+                val translatedGroup = translateText(animal.group, currentLanguage)
+                val translatedLifespan = translateText(animal.lifespan, currentLanguage)
+                val translatedSkinType = translateText(animal.skinType, currentLanguage)
+                val translatedSlogan = translateText(animal.slogan, currentLanguage)
+                val translatedWeight = translateText(animal.weight, currentLanguage)
+
+                val translatedLocations = if (animal.locations.isNotEmpty()) {
+                    translateTextList(animal.locations, currentLanguage)
+                } else {
+                    emptyList()
+                }
+
+                val translatedPetInfo = PetInfo(
+                    breedName = translatedBreedName,
+                    diet = translatedDiet,
+                    group = translatedGroup,
+                    lifespan = translatedLifespan,
+                    skinType = translatedSkinType,
+                    slogan = translatedSlogan,
+                    weight = translatedWeight,
+                    locations = translatedLocations
+                )
+
+                ValidationResult(data = translatedPetInfo, isSuccess = true)
+            } catch (e: Exception) {
+                ValidationResult(
+                    error = ErrorType.NetworkError(e.message ?: "")
                 )
             }
-        } catch (e: Exception) {
-            ValidationResult(
-                error = ErrorType.NetworkError(e.message ?: "")
-            )
+        }
+    }
+
+    private suspend fun translateText(text: String, targetLanguage: Language): String {
+        if (text.isBlank()) return text
+
+        var result = text
+        translationRepository.translate(text, Language.ENGLISH, targetLanguage)
+            .collect { translationResult ->
+                result = translationResult
+            }
+        return result
+    }
+
+    private suspend fun translateTextList(texts: List<String>, targetLanguage: Language): List<String> {
+        if (texts.isEmpty()) return emptyList()
+
+        return coroutineScope {
+            texts.map { text ->
+                async { translateText(text, targetLanguage) }
+            }.awaitAll()
         }
     }
 
