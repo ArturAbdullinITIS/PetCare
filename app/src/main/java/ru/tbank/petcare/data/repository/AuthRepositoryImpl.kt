@@ -21,17 +21,24 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.tasks.await
 import ru.tbank.petcare.domain.model.ErrorType
+import ru.tbank.petcare.domain.model.Language
 import ru.tbank.petcare.domain.model.ValidationResult
 import ru.tbank.petcare.domain.repository.AuthRepository
+import ru.tbank.petcare.domain.repository.SettingsRepository
+import ru.tbank.petcare.domain.repository.TranslationRepository
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val credentialManager: CredentialManager,
     private val getCredentialRequest: GetCredentialRequest,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val translationRepository: TranslationRepository,
+    private val settingsRepository: SettingsRepository
 ) : AuthRepository {
 
     companion object {
@@ -52,18 +59,19 @@ class AuthRepositoryImpl @Inject constructor(
             firebaseAuth.createUserWithEmailAndPassword(email, password).await()
             ValidationResult(isSuccess = true, data = Unit)
         } catch (e: FirebaseAuthException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
             when (e) {
                 is FirebaseAuthWeakPasswordException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthValidation(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthValidation(errorMessage))
 
                 is FirebaseAuthInvalidCredentialsException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(errorMessage))
 
                 is FirebaseAuthUserCollisionException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthConflict(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthConflict(errorMessage))
 
                 else ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
             }
         }
     }
@@ -111,25 +119,29 @@ class AuthRepositoryImpl @Inject constructor(
 
                 ValidationResult(isSuccess = true, data = Unit)
             } else {
+                val errorMessage = translateErrorMessage(UNEXPECTED_CREDENTIAL_ERROR)
                 ValidationResult(
                     isSuccess = false,
-                    error = ErrorType.AuthUnknown(UNEXPECTED_CREDENTIAL_ERROR)
+                    error = ErrorType.AuthUnknown(errorMessage)
                 )
             }
         } catch (e: GetCredentialCancellationException) {
-            ValidationResult(isSuccess = false, error = ErrorType.AuthCancelled(e.message.orEmpty()))
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
+            ValidationResult(isSuccess = false, error = ErrorType.AuthCancelled(errorMessage))
         } catch (e: GetCredentialException) {
-            ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(e.message.orEmpty()))
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
+            ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
         } catch (e: FirebaseAuthException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
             when (e) {
                 is FirebaseAuthInvalidCredentialsException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(errorMessage))
 
                 is FirebaseAuthUserCollisionException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthConflict(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthConflict(errorMessage))
 
                 else ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
             }
         }
     }
@@ -142,15 +154,16 @@ class AuthRepositoryImpl @Inject constructor(
             firebaseAuth.signInWithEmailAndPassword(email, password).await()
             ValidationResult(isSuccess = true, data = Unit)
         } catch (e: FirebaseAuthException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
             when (e) {
                 is FirebaseAuthInvalidCredentialsException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(errorMessage))
 
                 is FirebaseAuthInvalidUserException ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthCredentials(errorMessage))
 
                 else ->
-                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(e.message.orEmpty()))
+                    ValidationResult(isSuccess = false, error = ErrorType.AuthUnknown(errorMessage))
             }
         }
     }
@@ -166,9 +179,10 @@ class AuthRepositoryImpl @Inject constructor(
                 data = Unit
             )
         } catch (e: ClearCredentialException) {
+            val errorMessage = translateErrorMessage(e.message.orEmpty())
             ValidationResult(
                 isSuccess = false,
-                error = ErrorType.AuthCredentials(e.message.orEmpty())
+                error = ErrorType.AuthCredentials(errorMessage)
             )
         }
     }
@@ -194,6 +208,17 @@ class AuthRepositoryImpl @Inject constructor(
 
         awaitClose {
             firebaseAuth.removeAuthStateListener(authStateListener)
+        }
+    }
+
+    private suspend fun translateErrorMessage(errorMessage: String): String {
+        val currentLanguage = settingsRepository.getSettings().first().language
+
+        return when {
+            errorMessage.isBlank() -> errorMessage
+            currentLanguage == Language.ENGLISH -> errorMessage
+            else -> translationRepository.translate(errorMessage, Language.ENGLISH, currentLanguage)
+                .firstOrNull() ?: errorMessage
         }
     }
 }
