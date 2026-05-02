@@ -33,7 +33,7 @@ fun FilterRow(
         modifier = modifier
             .fillMaxWidth()
             .verticalScroll(scrollState),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         ActivityFilterChip(
